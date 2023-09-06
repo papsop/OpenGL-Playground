@@ -20,6 +20,7 @@ project "GLCore"
         "libs/glfw/include/",
         "libs/glm/",
         "libs/imgui/",
+        "libs/spblog/include",
     }
 
     files { "src/GLCore/**.cpp" }
@@ -44,6 +45,7 @@ project "GLSandbox"
         "libs/glfw/include/",
         "libs/glm/",
         "libs/imgui/",
+        "libs/spdlog/include/",
     }
 
     files { "src/GLSandbox/**.cpp" }
@@ -58,4 +60,5 @@ group "Dependencies"
     include "libs/glad.lua"
     include "libs/glm.lua"
     include "libs/imgui.lua"
+    -- spdlog works as header only, no need to make it into a static library
 group ""

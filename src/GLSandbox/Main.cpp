@@ -1,10 +1,12 @@
 #include <GLCore/Core/Application.h>
+#include <spdlog/spdlog.h>
 
 #include <iostream>
 #include <memory>
 int main(void)
 {
   auto app = std::make_unique<GLCore::Application>();
+  spdlog::info("Welcome to spdlog!");
   std::cin.ignore();
   return 0;
 }

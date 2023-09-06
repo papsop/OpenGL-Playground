@@ -20,7 +20,7 @@ project "GLCore"
         "libs/glfw/include/",
         "libs/glm/",
         "libs/imgui/",
-        "libs/spblog/include",
+        "libs/spdlog/include",
     }
 
     files { "src/GLCore/**.cpp" }

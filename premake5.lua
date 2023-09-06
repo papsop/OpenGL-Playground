@@ -1,10 +1,11 @@
-workspace "OpenGL-Playground"
+workspace "OpenGL_Playground"
     configurations { "Debug", "Release" }
-    startproject "OpenGL-Playground"
+    startproject "GLSandbox"
     location "project/"
+    flags { "MultiProcessorCompile" }
 
-project "OpenGL-Playground"
-    kind "ConsoleApp"
+project "GLCore"
+    kind "StaticLib"
     language "C++"
     cppdialect "C++17"
     architecture "x86_64"
@@ -14,16 +15,40 @@ project "OpenGL-Playground"
 
     includedirs
     {
-        "include/",
+        "src/",
         "libs/glad/include/",
         "libs/glfw/include/",
         "libs/glm/",
-        "libs/imgui/",        
+        "libs/imgui/",
     }
 
-    files { "src/*.cpp" }
+    files { "src/GLCore/**.cpp" }
 
-    links { "GLFW", "GLM", "GLAD", "ImGui"}
+    links { "GLFW", "GLM", "GLAD", "ImGui" }
+
+    filter "system:windows"
+    defines { "_WINDOWS" }
+
+project "GLSandbox"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++17"
+    architecture "x86_64"
+    targetdir "build/bin/%{cfg.buildcfg}"
+    objdir "build/obj/%{cfg.buildcfg}"
+
+    includedirs
+    {
+        "src/",
+        "libs/glad/include/",
+        "libs/glfw/include/",
+        "libs/glm/",
+        "libs/imgui/",
+    }
+
+    files { "src/GLSandbox/**.cpp" }
+
+    links { "GLCore" }
 
     filter "system:windows"
     defines { "_WINDOWS" }
@@ -33,3 +58,4 @@ group "Dependencies"
     include "libs/glad.lua"
     include "libs/glm.lua"
     include "libs/imgui.lua"
+group ""

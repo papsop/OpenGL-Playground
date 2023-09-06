@@ -27,7 +27,7 @@ project "GLCore"
     links { "GLFW", "GLM", "GLAD", "ImGui" }
 
     filter "system:windows"
-    defines { "_WINDOWS" }
+    defines { "_WINDOWS", "GLFW_INCLUDE_NONE", }
 
 project "GLSandbox"
     kind "ConsoleApp"
@@ -51,7 +51,7 @@ project "GLSandbox"
     links { "GLCore" }
 
     filter "system:windows"
-    defines { "_WINDOWS" }
+    defines { "_WINDOWS", "GLFW_INCLUDE_NONE",}
 
 group "Dependencies"
     include "libs/glfw.lua"

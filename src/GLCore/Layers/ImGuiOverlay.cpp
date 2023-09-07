@@ -9,8 +9,8 @@ void ImGuiOverlay::OnUpdate(Timestep dt) {}
 
 void ImGuiOverlay::OnImGuiUpdate(Timestep dt) {}
 
-void ImGuiOverlay::BeginImGuiFrame() {}
+void ImGuiOverlay::OnFrameBegin() {}
 
-void ImGuiOverlay::EndImGuiFrame() {}
+void ImGuiOverlay::OnFrameEnd() {}
 
 }  // namespace GLCore

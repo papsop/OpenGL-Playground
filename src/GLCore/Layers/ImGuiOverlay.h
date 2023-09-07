@@ -10,8 +10,8 @@ class ImGuiOverlay : public I_Layer {
   void OnUpdate(Timestep dt) override;
   void OnImGuiUpdate(Timestep dt) override;
 
-  void BeginImGuiFrame();
-  void EndImGuiFrame();
+  void OnFrameBegin() override;
+  void OnFrameEnd() override;
 
  private:
 };

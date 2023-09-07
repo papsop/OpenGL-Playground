@@ -9,6 +9,8 @@ class I_Layer {
   virtual void OnDetach(){};
   virtual void OnUpdate(Timestep dt){};
   virtual void OnImGuiUpdate(Timestep dt){};
+  virtual void OnFrameBegin(){};
+  virtual void OnFrameEnd(){};
 
   // TODO events
   const char* GetName() { return m_layerName; };

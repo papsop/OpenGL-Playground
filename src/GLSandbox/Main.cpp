@@ -1,4 +1,5 @@
 #include <GLCore/Core/Application.h>
+#include <GLCore/Core/Layer.h>
 #include <GLCore/Utils/Log.h>
 
 #include <iostream>
@@ -6,6 +7,7 @@
 int main(void)
 {
   auto app = std::make_unique<GLCore::Application>();
+
   std::cin.ignore();
   return 0;
 }

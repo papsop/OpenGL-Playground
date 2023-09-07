@@ -7,6 +7,11 @@ class I_Layer {
   virtual void OnDetach(){};
   virtual void OnUpdate(float dt){};
 
+  const char* GetName() { return m_layerName; };
+
+ protected:
+  const char* m_layerName;
+
  private:
 };
 }  // namespace GLCore

@@ -7,6 +7,7 @@ void Log::Init()
   if (m_logger != nullptr) return;  // assert?
 
   m_logger = spdlog::stdout_color_mt("GLCore");
+  m_logger->set_pattern("| %n | %-20s:%# | %^%-7l%$ | %v");
   m_logger->set_level(spdlog::level::trace);
   LOG_DEBUG("Initializing Logger");
 }

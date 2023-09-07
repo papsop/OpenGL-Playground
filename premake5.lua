@@ -23,12 +23,17 @@ project "GLCore"
         "libs/spdlog/include",
     }
 
-    files { "src/GLCore/**.cpp" }
+    vpaths { 
+        ["Headers/"] = "**.h",
+        ["Sources/"] = { "**.c", "**.cpp"},
+    }
+
+    files { "src/GLCore/**.cpp", "src/GLCore/**.h"}
 
     links { "GLFW", "GLM", "GLAD", "ImGui" }
 
     filter "system:windows"
-    defines { "_WINDOWS", "GLFW_INCLUDE_NONE", }
+    defines { "_WINDOWS", "GLFW_INCLUDE_NONE", "SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE" }
 
 project "GLSandbox"
     kind "ConsoleApp"
@@ -48,7 +53,12 @@ project "GLSandbox"
         "libs/spdlog/include/",
     }
 
-    files { "src/GLSandbox/**.cpp" }
+    vpaths { 
+        ["Headers/"] = "**.h",
+        ["Sources/"] = { "**.c", "**.cpp"},
+    }
+
+    files { "src/GLSandbox/**.cpp", "src/GLSandbox/**.h"}
 
     links { "GLCore" }
 

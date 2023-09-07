@@ -17,12 +17,14 @@ class Log {
 };
 }  // namespace GLCore
 
-#define LOG_DEBUG(...) GLCore::Log::GetLogger()->trace(##__VA_ARGS__)
-#define LOG_INFO(...) GLCore::Log::GetLogger()->info(##__VA_ARGS__)
-#define LOG_WARN(...) GLCore::Log::GetLogger()->warn(##__VA_ARGS__)
-#define LOG_ERROR(...) GLCore::Log::GetLogger()->error(##__VA_ARGS__)
-#define LOG_FATAL(...)                            \
-  GLCore::Log::GetLogger()->error(##__VA_ARGS__); \
+// TODO hide these when using Release build or nah?
+
+#define LOG_DEBUG(...) SPDLOG_LOGGER_DEBUG(GLCore::Log::GetLogger(), ##__VA_ARGS__)
+#define LOG_INFO(...) SPDLOG_LOGGER_INFO(GLCore::Log::GetLogger(), ##__VA_ARGS__)
+#define LOG_WARN(...) SPDLOG_LOGGER_WARN(GLCore::Log::GetLogger(), ##__VA_ARGS__)
+#define LOG_ERROR(...) SPDLOG_LOGGER_ERROR(GLCore::Log::GetLogger(), ##__VA_ARGS__)
+#define LOG_FATAL(...)      \
+  LOG_ERROR(##__VA_ARGS__); \
   abort();
 
 #define GL_ASSERT(exp, ...)   \

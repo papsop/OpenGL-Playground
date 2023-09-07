@@ -1,4 +1,5 @@
 #pragma once
+#include <GLCore/Core/LayerStack.h>
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
@@ -13,9 +14,11 @@ class Application {
   static Application& Instance();
 
  private:
+  void Initialize();
   void InitGL();
 
   inline static Application* m_instance = nullptr;
   GLFWwindow* m_window = nullptr;
+  LayerStack m_layerStack;
 };
 }  // namespace GLCore

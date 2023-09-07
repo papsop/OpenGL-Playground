@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 
 namespace GLCore {
+class ImGuiOverlay;
 /*
  *	A singleton object that takes care of the window/input handling and holds all the layers.
  */
@@ -13,6 +14,8 @@ class Application {
   ~Application();
   static Application& Instance();
 
+  void Run();
+
  private:
   void Initialize();
   void InitGL();
@@ -20,5 +23,7 @@ class Application {
   inline static Application* m_instance = nullptr;
   GLFWwindow* m_window = nullptr;
   LayerStack m_layerStack;
+  ImGuiOverlay* m_imGuiOverlay = nullptr;
+  bool m_isRunning = true;
 };
 }  // namespace GLCore

@@ -15,7 +15,7 @@ LayerStack::~LayerStack()
 
 void LayerStack::PushLayer(I_Layer* layer)
 {
-  LOG_DEBUG("Pushing layer");
+  LOG_INFO("Pushing layer '{0}'", layer->GetName());
   m_layers.emplace(m_layers.begin() + m_nextLayerIndex, layer);
   layer->OnAttach();
   m_nextLayerIndex++;
@@ -28,7 +28,7 @@ void LayerStack::PopLayer(I_Layer* layer)
 
 void LayerStack::PushOverlay(I_Layer* overlay)
 {
-  LOG_DEBUG("Pushing overlay");
+  LOG_INFO("Pushing overlay '{0}'", overlay->GetName());
   m_layers.emplace_back(overlay);
   overlay->OnAttach();
 }

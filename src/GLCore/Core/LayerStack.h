@@ -18,6 +18,9 @@ class LayerStack {
   void PushOverlay(I_Layer*);
   void PopOverlay(I_Layer*);
 
+  std::vector<I_Layer*>::iterator begin() { return m_layers.begin(); }
+  std::vector<I_Layer*>::iterator end() { return m_layers.end(); }
+
  private:
   std::vector<I_Layer*> m_layers;
   size_t m_nextLayerIndex = 0;

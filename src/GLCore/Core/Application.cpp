@@ -1,6 +1,8 @@
 #include <GLCore/Core/Application.h>
 #include <GLCore/Core/Layer.h>
+#include <GLCore/Layers/ImGuiOverlay.h>
 #include <GLCore/Utils/Log.h>
+#include <iostream>
 
 namespace GLCore {
 Application::Application()
@@ -16,19 +18,16 @@ Application& Application::Instance() { return *m_instance; }
 void Application::Initialize()
 {
   Log::Init();
+  LOG_INFO("Initializing Application");
   InitGL();
 
-  m_layerStack.PushLayer(new I_Layer());
-  m_layerStack.PushOverlay(new I_Layer());
-  m_layerStack.PushLayer(new I_Layer());
-
+  m_imGuiOverlay = new ImGuiOverlay();
+  m_layerStack.PushOverlay(m_imGuiOverlay);
   m_instance = this;
 }
 
 void Application::InitGL()
 {
-  LOG_ERROR("Initializing Application");
-
   GL_ASSERT(m_window == nullptr, "Application already created a window");
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -45,6 +44,11 @@ void Application::InitGL()
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     GL_ASSERT(false, "Unable to initialize GLAD");
   }
-  LOG_WARN("GLAD Initialized");
+  LOG_DEBUG("GLAD Initialized");
+
+  LOG_INFO("Application initialized");
 }
+
+void Application::Run() {}
+
 }  // namespace GLCore

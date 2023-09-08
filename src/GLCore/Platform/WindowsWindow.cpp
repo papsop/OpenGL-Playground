@@ -12,6 +12,9 @@ WindowsWindow::~WindowsWindow()
 
 void WindowsWindow::Init(WindowDef def)
 {
+  if (m_window) {
+    Destroy();
+  }
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -43,10 +46,12 @@ void WindowsWindow::Destroy()
   glfwDestroyWindow(m_window);
   glfwTerminate();
   m_window = nullptr;
+  LOG_INFO("WindowsWindow destroyed");
 }
 
 void WindowsWindow::Update(Timestep ts)
 {
+  LOG_DEBUG("{0}", ts.GetMilliseconds());
   glfwSwapBuffers(m_window);
   glfwPollEvents();
 }

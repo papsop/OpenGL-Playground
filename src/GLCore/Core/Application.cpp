@@ -49,8 +49,15 @@ void Application::Run()
 #error "Platform not supported"
 #endif
 
+  float lastFrameTime = 0.0f;
+  size_t frameCount = 0;
+
   while (m_isRunning) {
-    Timestep ts(0.0f);
+    frameCount++;
+    float currentTime = static_cast<float>(glfwGetTime());
+    Timestep ts = currentTime - lastFrameTime;
+    lastFrameTime = currentTime;
+
     m_window->Update(ts);
   }
 

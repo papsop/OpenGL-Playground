@@ -1,60 +1,13 @@
 #include <GLCore/Layers/TriangleTestLayer.h>
+
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
 namespace GLCore {
 
-const char* vertexShaderSource =
-    "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-const char* fragmentShaderSource =
-    "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\n\0";
-
 void TriangleTestLayer::OnAttach()
 {
-  // build and compile our shader program
-  // ------------------------------------
-  // vertex shader
-  unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-  glCompileShader(vertexShader);
-  // check for shader compile errors
-  int success;
-  char infoLog[512];
-  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-  }
-  // fragment shader
-  unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-  glCompileShader(fragmentShader);
-  // check for shader compile errors
-  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-  }
-  // link shaders
-  m_shaderProgram = glCreateProgram();
-  glAttachShader(m_shaderProgram, vertexShader);
-  glAttachShader(m_shaderProgram, fragmentShader);
-  glLinkProgram(m_shaderProgram);
-  // check for linking errors
-  glGetProgramiv(m_shaderProgram, GL_LINK_STATUS, &success);
-  if (!success) {
-    glGetProgramInfoLog(m_shaderProgram, 512, NULL, infoLog);
-  }
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
+  m_shader.LoadShadersFromFiles("shader.vert.glsl", "shader.frag.glsl");
 
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
@@ -100,7 +53,7 @@ void TriangleTestLayer::OnAttach()
 void TriangleTestLayer::OnUpdate(Timestep dt)
 {
   // draw our first triangle
-  glUseProgram(m_shaderProgram);
+  m_shader.Use();
   glBindVertexArray(m_VAO);  // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
   // glDrawArrays(GL_TRIANGLES, 0, 6);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

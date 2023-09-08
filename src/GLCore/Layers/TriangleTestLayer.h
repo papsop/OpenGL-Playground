@@ -1,5 +1,6 @@
 #pragma once
 #include <GLCore/Core/Layer.h>
+#include <GLCore/Utils/Shader.h>
 
 namespace GLCore {
 class TriangleTestLayer : public I_Layer {
@@ -10,7 +11,7 @@ class TriangleTestLayer : public I_Layer {
   void OnAttach() override;
 
  private:
-  unsigned int m_shaderProgram;
+  Shader m_shader;
   unsigned int m_VAO;
 };
 }  // namespace GLCore

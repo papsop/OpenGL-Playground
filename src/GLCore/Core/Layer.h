@@ -4,23 +4,30 @@
 namespace GLCore {
 class I_Layer {
  public:
-  I_Layer(const char* name) : m_layerName(name){};
+  I_Layer(const char* name, bool locked = false) : m_layerName(name), m_isLocked(locked){};
   virtual void OnAttach(){};
   virtual void OnDetach(){};
+
+  virtual void OnFrameBegin(){};
   virtual void OnUpdate(Timestep dt){};
   virtual void OnImGuiUpdate(Timestep dt){};
-  virtual void OnFrameBegin(){};
   virtual void OnFrameEnd(){};
 
   // TODO events
-  const char* GetName() { return m_layerName; };
+  const char* GetName()
+  {
+    return m_layerName;
+  };
 
   void SetEnabled(bool val);
   bool IsEnabled() const;
+  bool IsLocked() const;
+  bool ShouldUpdate() const;
 
  protected:
   const char* m_layerName = "default";
-  bool m_enabled = true;
+  bool m_enabled = true;  // controls update
+  const bool m_isLocked;  // always enabled, can't get disabled
 
  private:
 };

@@ -5,7 +5,7 @@
 #include <memory>
 
 namespace GLCore {
-class ImGuiOverlay;
+class AppControlOverlay;
 /*
  *	A singleton object that takes care of the window/input handling and holds all the layers.
  */
@@ -21,11 +21,14 @@ class Application {
  private:
   void Initialize();
   void InitGL();
+  LayerStack* GetLayerStack();  // for AppControlOverlay
 
   inline static Application* m_instance = nullptr;
   bool m_isRunning = true;
   LayerStack m_layerStack;
-  ImGuiOverlay* m_imGuiOverlay = nullptr;
+
   std::unique_ptr<I_Window> m_window = nullptr;
+
+  friend class AppControlOverlay;
 };
 }  // namespace GLCore

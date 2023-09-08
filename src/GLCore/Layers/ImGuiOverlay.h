@@ -4,7 +4,7 @@
 namespace GLCore {
 class ImGuiOverlay : public I_Layer {
  public:
-  ImGuiOverlay() : I_Layer("ImGui"){};
+  ImGuiOverlay() : I_Layer("ImGui", true){};
   void OnAttach() override;
   void OnDetach() override;
   void OnUpdate(Timestep dt) override;

@@ -1,6 +1,8 @@
 #include <GLCore/Core/Application.h>
 #include <GLCore/Core/Layer.h>
 #include <GLCore/Layers/ImGuiOverlay.h>
+#include <GLCore/Layers/AppControlOverlay.h>
+#include <GLCore/Layers/TriangleTestLayer.h>
 #include <GLCore/Utils/Log.h>
 #include <GLCore/Platform/WindowsWindow.h>
 
@@ -17,6 +19,7 @@ Application::Application()
 
 Application::~Application()
 {
+  LOG_INFO("Destroying application.");
 }
 
 Application& Application::Instance()
@@ -46,8 +49,10 @@ void Application::Run()
 #error "Platform not supported"
 #endif
 
-  m_imGuiOverlay = new ImGuiOverlay();
-  m_layerStack.PushOverlay(m_imGuiOverlay);
+  m_layerStack.PushOverlay(new ImGuiOverlay());
+  m_layerStack.PushOverlay(new AppControlOverlay());
+
+  m_layerStack.PushLayer(new TriangleTestLayer());
 
   float lastFrameTime = 0.0f;
   size_t frameCount = 0;
@@ -59,9 +64,26 @@ void Application::Run()
     lastFrameTime = currentTime;
 
     m_window->OnFrameBegin();
-    m_imGuiOverlay->OnFrameBegin();
-    m_imGuiOverlay->OnImGuiUpdate(ts);
-    m_imGuiOverlay->OnFrameEnd();
+
+    // FRAME BEGIN
+    for (auto* layer : m_layerStack) {
+      if (layer->ShouldUpdate()) layer->OnFrameBegin();
+    }
+
+    // UPDATE
+    for (auto* layer : m_layerStack) {
+      if (layer->ShouldUpdate()) layer->OnUpdate(ts);
+    }
+
+    // IMGUI UPDATE
+    for (auto* layer : m_layerStack) {
+      if (layer->ShouldUpdate()) layer->OnImGuiUpdate(ts);
+    }
+    // FRAME END
+    for (auto* layer : m_layerStack) {
+      if (layer->ShouldUpdate()) layer->OnFrameEnd();
+    }
+
     m_window->OnFrameEnd();
   }
 
@@ -72,6 +94,11 @@ I_Window* Application::GetWindow()
 {
   GL_ASSERT(m_window != nullptr, "No window available just yet");
   return m_window.get();
+}
+
+GLCore::LayerStack* Application::GetLayerStack()
+{
+  return &m_layerStack;
 }
 
 }  // namespace GLCore

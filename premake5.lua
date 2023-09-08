@@ -19,7 +19,7 @@ project "GLCore"
         "libs/glad/include/",
         "libs/glfw/include/",
         "libs/glm/",
-        "libs/imgui/imgui/",
+        "libs/imgui/",
         "libs/spdlog/include",
     }
 
@@ -66,9 +66,9 @@ project "GLSandbox"
     defines { "_WINDOWS", "GLFW_INCLUDE_NONE",}
 
 group "Dependencies"
-    includeexternal "libs/glfw.lua"
-    includeexternal "libs/glad.lua"
-    includeexternal "libs/glm.lua"
-    includeexternal "libs/imgui.lua"
+    include "libs/glfw.lua"
+    include "libs/glad.lua"
+    include "libs/glm.lua"
+    include "libs/imgui.lua"
     -- spdlog works as header only, no need to make it into a static library
 group ""

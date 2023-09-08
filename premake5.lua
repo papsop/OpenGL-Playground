@@ -19,7 +19,7 @@ project "GLCore"
         "libs/glad/include/",
         "libs/glfw/include/",
         "libs/glm/",
-        "libs/dearimgui/",
+        "libs/imgui/",
         "libs/spdlog/include",
     }
 
@@ -49,7 +49,7 @@ project "GLSandbox"
         "libs/glad/include/",
         "libs/glfw/include/",
         "libs/glm/",
-        "libs/dearimgui/",
+        "libs/imgui/",
         "libs/spdlog/include/",
     }
 

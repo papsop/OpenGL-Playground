@@ -1,6 +1,6 @@
 project "GLM"
 	kind "StaticLib"
-	language "C"
+	language "C++"
 	architecture "x86_64"
 
 	targetdir "../build/bin/%{cfg.buildcfg}"

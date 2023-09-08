@@ -38,9 +38,6 @@ void Application::InitGL()
 
 void Application::Run()
 {
-  // m_imGuiOverlay = new ImGuiOverlay();
-  // m_layerStack.PushOverlay(m_imGuiOverlay);
-
 #ifdef _WINDOWS
   LOG_INFO("Creating a WindowsWindow");
   m_window = std::make_unique<WindowsWindow>();
@@ -48,6 +45,9 @@ void Application::Run()
 #else
 #error "Platform not supported"
 #endif
+
+  m_imGuiOverlay = new ImGuiOverlay();
+  m_layerStack.PushOverlay(m_imGuiOverlay);
 
   float lastFrameTime = 0.0f;
   size_t frameCount = 0;
@@ -58,10 +58,20 @@ void Application::Run()
     Timestep ts = currentTime - lastFrameTime;
     lastFrameTime = currentTime;
 
-    m_window->Update(ts);
+    m_window->OnFrameBegin();
+    m_imGuiOverlay->OnFrameBegin();
+    m_imGuiOverlay->OnImGuiUpdate(ts);
+    m_imGuiOverlay->OnFrameEnd();
+    m_window->OnFrameEnd();
   }
 
   m_window->Destroy();
+}
+
+I_Window* Application::GetWindow()
+{
+  GL_ASSERT(m_window != nullptr, "No window available just yet");
+  return m_window.get();
 }
 
 }  // namespace GLCore

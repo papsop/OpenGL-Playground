@@ -10,12 +10,16 @@ class WindowsWindow : public I_Window {
   WindowsWindow() = default;
   ~WindowsWindow() override;
 
-  void Update(Timestep ts) override;
-  void Init(WindowDef def) override;
   void Destroy() override;
 
   uint32_t GetWidth() const override;
   uint32_t GetHeight() const override;
+
+  void Init(WindowDef def = WindowDef()) override;
+  void* GetVoidWindow() override;
+
+  void OnFrameBegin() override;
+  void OnFrameEnd() override;
 
  private:
   GLFWwindow* m_window;

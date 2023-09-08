@@ -10,7 +10,7 @@ WindowsWindow::~WindowsWindow()
   }
 }
 
-void WindowsWindow::Init(WindowDef def)
+void WindowsWindow::Init(WindowDef def /*= WindowDef()*/)
 {
   if (m_window) {
     Destroy();
@@ -41,19 +41,29 @@ void WindowsWindow::Init(WindowDef def)
   LOG_INFO("WindowsWindow created");
 }
 
+void* WindowsWindow::GetVoidWindow()
+{
+  return m_window;
+}
+
+void WindowsWindow::OnFrameBegin()
+{
+  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void WindowsWindow::OnFrameEnd()
+{
+  glfwPollEvents();
+  glfwSwapBuffers(m_window);
+}
+
 void WindowsWindow::Destroy()
 {
   glfwDestroyWindow(m_window);
   glfwTerminate();
   m_window = nullptr;
   LOG_INFO("WindowsWindow destroyed");
-}
-
-void WindowsWindow::Update(Timestep ts)
-{
-  LOG_DEBUG("{0}", ts.GetMilliseconds());
-  glfwSwapBuffers(m_window);
-  glfwPollEvents();
 }
 
 uint32_t WindowsWindow::GetWidth() const

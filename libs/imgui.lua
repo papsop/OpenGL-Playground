@@ -1,30 +1,32 @@
 project "ImGui"
 	kind "StaticLib"
-	language "C"
+	language "C++"
 	architecture "x86_64"
+	staticruntime "on"
 
 	targetdir "../build/bin/%{cfg.buildcfg}"
 	objdir "../build/obj/%{cfg.buildcfg}"
 	
-	includedirs { "dearimgui/", "glad/include", "glfw/include/" }
+	includedirs { "imgui/", "glad/include", "glfw/include/" }
 
 	files
 	{
-		"dearimgui/imconfig.h",
-		"dearimgui/imgui.h",
-		"dearimgui/imgui.cpp",
-		"dearimgui/imgui_draw.cpp",
-		"dearimgui/imgui_internal.h",
-		"dearimgui/imgui_widgets.cpp",
-		"dearimgui/imstb_rectpack.h",
-		"dearimgui/imstb_textedit.h",
-		"dearimgui/imstb_truetype.h",
-		"dearimgui/imgui_demo.cpp",
-		"dearimgui/imgui_impl_glfw.h",
-		"dearimgui/imgui_impl_glfw.cpp",
-		"dearimgui/imgui_impl_opengl3.h",
-		"dearimgui/imgui_impl_opengl3_loader.h",
-		"dearimgui/imgui_impl_opengl3.cpp",
+		"imgui/imconfig.h",
+		"imgui/imgui.h",
+		"imgui/imgui.cpp",
+		"imgui/imgui_draw.cpp",
+		"imgui/imgui_internal.h",
+		"imgui/imgui_widgets.cpp",
+		"imgui/imgui_tables.cpp",
+		"imgui/imstb_rectpack.h",
+		"imgui/imstb_textedit.h",
+		"imgui/imstb_truetype.h",
+		"imgui/imgui_demo.cpp",
+		"imgui/imgui_impl_glfw.h",
+		"imgui/imgui_impl_glfw.cpp",
+		"imgui/imgui_impl_opengl3.h",
+		"imgui/imgui_impl_opengl3_loader.h",
+		"imgui/imgui_impl_opengl3.cpp",
 	}
 
 	defines 

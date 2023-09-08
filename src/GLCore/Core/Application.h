@@ -16,6 +16,7 @@ class Application {
   static Application& Instance();
 
   void Run();
+  I_Window* GetWindow();
 
  private:
   void Initialize();

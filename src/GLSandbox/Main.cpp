@@ -7,8 +7,7 @@
 int main(void)
 {
   auto app = std::make_unique<GLCore::Application>();
-
-  std::cin.ignore();
+  app->Run();
   return 0;
 }
 

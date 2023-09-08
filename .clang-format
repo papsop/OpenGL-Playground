@@ -1,6 +1,7 @@
 Language: Cpp
 BasedOnStyle: Google
 ColumnLimit: 160
-BreakBeforeBraces: Stroustrup
 IncludeBlocks: Preserve
 SortIncludes: Never
+BreakBeforeBraces: Stroustrup
+AllowShortFunctionsOnASingleLine: false

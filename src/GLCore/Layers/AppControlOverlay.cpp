@@ -25,7 +25,9 @@ void AppControlOverlay::OnUpdate(Timestep dt)
 
 void AppControlOverlay::OnImGuiUpdate(Timestep dt)
 {
-  ImGui::Begin("Application control");
+  ImGuiWindowFlags windowFlags = ImGuiWindowFlags_AlwaysAutoResize;
+  ImGui::Begin("Application control", NULL, windowFlags);
+  ImGui::Text("FPS: %.1lf", 1000.0f / dt.GetMilliseconds());
   ImGui::Text("Frame time (ms): %.5lf", dt.GetMilliseconds());
   ImGui::Separator();
   ImGui::Text("Layers");

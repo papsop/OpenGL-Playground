@@ -51,44 +51,15 @@ void TriangleTestLayer::OnAttach()
   // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
   // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
   glBindVertexArray(0);
-
-  // ================================================================================================
-  glGenFramebuffers(1, &m_FBO);
-  glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
-
-  glGenTextures(1, &m_texture);
-  glBindTexture(GL_TEXTURE_2D, m_texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1280, 720, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
-
-  glGenRenderbuffers(1, &m_RBO);
-  glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1280, 720);
-  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
-
-  // if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
-
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
 void TriangleTestLayer::OnDetach()
 {
-  glDeleteFramebuffers(1, &m_VAO);
-  glDeleteTextures(1, &m_texture);
-  glDeleteRenderbuffers(1, &m_FBO);
+  glDeleteVertexArrays(1, &m_VAO);
 }
 
 void TriangleTestLayer::OnUpdate(Timestep dt)
 {
-  glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);  // render to framebuffer
-
-  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glEnable(GL_DEPTH_TEST);
   // draw our first triangle
   m_shader.Use();
   glBindVertexArray(m_VAO);  // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
@@ -97,17 +68,10 @@ void TriangleTestLayer::OnUpdate(Timestep dt)
 
   glBindVertexArray(0);
   glUseProgram(0);
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);  // unbind framebuffer
-  glDisable(GL_DEPTH_TEST);
 }
 
 void TriangleTestLayer::OnImGuiUpdate(Timestep dt)
 {
-  ImGui::Begin("Render window");
-
-  ImGui::Image((void*)m_texture, ImVec2(1280, 720), ImVec2(0, 1), ImVec2(1, 0));
-
-  ImGui::End();
 }
 
 }  // namespace GLCore

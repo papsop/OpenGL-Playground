@@ -3,6 +3,7 @@
 #include <GLCore/Layers/ImGuiOverlay.h>
 #include <GLCore/Layers/AppControlOverlay.h>
 #include <GLCore/Layers/TriangleTestLayer.h>
+#include <GLCore/Layers/ImGuiPanelRenderOverlay.h>
 #include <GLCore/Utils/Log.h>
 #include <GLCore/Platform/WindowsWindow.h>
 
@@ -48,9 +49,9 @@ void Application::Run()
 #else
 #error "Platform not supported"
 #endif
-
   m_layerStack.PushOverlay(new ImGuiOverlay());
   m_layerStack.PushOverlay(new AppControlOverlay());
+  m_layerStack.PushOverlay(new ImGuiPanelRenderOverlay());
 
   m_layerStack.PushLayer(new TriangleTestLayer());
 
@@ -79,9 +80,10 @@ void Application::Run()
     for (auto* layer : m_layerStack) {
       if (layer->ShouldUpdate()) layer->OnImGuiUpdate(ts);
     }
-    // FRAME END
-    for (auto* layer : m_layerStack) {
-      if (layer->ShouldUpdate()) layer->OnFrameEnd();
+
+    // FRAME END, reversed order
+    for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); ++it) {
+      if ((*it)->ShouldUpdate()) (*it)->OnFrameEnd();
     }
 
     m_window->OnFrameEnd();

@@ -15,8 +15,5 @@ class TriangleTestLayer : public I_Layer {
  private:
   Shader m_shader;
   unsigned int m_VAO;
-  unsigned int m_FBO;
-  unsigned int m_RBO;
-  unsigned int m_texture;
 };
 }  // namespace GLCore

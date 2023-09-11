@@ -25,7 +25,6 @@ void WindowsWindow::Init(WindowDef def /*= WindowDef()*/)
   LOG_DEBUG("GLFW Initialized");
 
   glfwMakeContextCurrent(m_window);
-  // glfwSetFramebufferSizeCallback()
 
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     GL_ASSERT(false, "Unable to initialize GLAD");

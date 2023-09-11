@@ -61,23 +61,20 @@ void ImGuiOverlay::OnFrameBegin()
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
 
-  ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+  // Global dockspace
+  ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
   const ImGuiViewport* viewport = ImGui::GetMainViewport();
   ImGui::SetNextWindowPos(viewport->WorkPos);
   ImGui::SetNextWindowSize(viewport->WorkSize);
   ImGui::SetNextWindowViewport(viewport->ID);
-  ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-  ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-  window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+  window_flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
   window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
-  ImGui::Begin("Docking", NULL, window_flags);
-  ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+  ImGui::Begin("Dockspace", NULL, window_flags);
+  ImGuiID dockspace_id = ImGui::GetID("Dockspace");
 
   static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
   ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-  ImGui::PopStyleVar();
-  ImGui::PopStyleVar();
   ImGui::End();
 }
 

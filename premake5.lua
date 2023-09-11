@@ -63,7 +63,7 @@ project "GLSandbox"
     links { "GLCore" }
 
     filter "system:windows"
-    defines { "_WINDOWS", "GLFW_INCLUDE_NONE",}
+        defines { "_WINDOWS", "GLFW_INCLUDE_NONE",}
 
 group "Dependencies"
     include "libs/glfw.lua"

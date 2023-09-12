@@ -17,5 +17,7 @@ class AppControlOverlay : public I_Layer {
 
  private:
   LayerStack* m_layerStack;
+  size_t m_fpsValueOffset = 0;  // for wrapping
+  float m_fpsValues[144] = {};
 };
 }  // namespace GLCore

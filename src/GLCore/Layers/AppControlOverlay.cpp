@@ -25,12 +25,30 @@ void AppControlOverlay::OnUpdate(Timestep dt)
 
 void AppControlOverlay::OnImGuiUpdate(Timestep dt)
 {
+  // ================================================
   ImGuiWindowFlags windowFlags = ImGuiWindowFlags_AlwaysAutoResize;
   ImGui::Begin("Application control", NULL, windowFlags);
-  ImGui::Text("FPS: %.1lf", 1000.0f / dt.GetMilliseconds());
-  ImGui::Text("Frame time (ms): %.5lf", dt.GetMilliseconds());
   ImGui::Separator();
-  ImGui::Text("Layers");
+  ImGui::Text("FPS:");
+  ImGui::BulletText("FPS: %.1lf", 1000.0f / dt.GetMilliseconds());
+  ImGui::BulletText("Frame time (ms): %.3f", dt.GetMilliseconds());
+
+  m_fpsValues[m_fpsValueOffset] = dt.GetMilliseconds();
+  m_fpsValueOffset = (m_fpsValueOffset + 1) % IM_ARRAYSIZE(m_fpsValues);
+  {
+    float average = 0.0f;
+    for (int n = 0; n < IM_ARRAYSIZE(m_fpsValues); n++) {
+      average += m_fpsValues[n];
+    }
+    average /= (float)IM_ARRAYSIZE(m_fpsValues);
+    char overlay[32];
+    sprintf(overlay, "avg %.3fms", average);
+
+    ImGui::PlotLines("Frame times", m_fpsValues, IM_ARRAYSIZE(m_fpsValues), m_fpsValueOffset, overlay, 0.0f, 1.0f, ImVec2(0, 80.0f));
+  }
+  // ================================================
+  ImGui::Separator();
+  ImGui::Text("LAYERS:");
   for (auto& layer : *m_layerStack) {
     ImGui::BeginDisabled(layer->IsLocked());
 
@@ -52,7 +70,6 @@ void AppControlOverlay::OnImGuiUpdate(Timestep dt)
       }
     }
   }
-
   ImGui::End();
 }
 

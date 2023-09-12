@@ -38,6 +38,7 @@ void WindowsWindow::Init(WindowDef def /*= WindowDef()*/)
   LOG_DEBUG("  Version: {0}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 
   LOG_INFO("WindowsWindow created");
+  // glfwSwapInterval(0); // vsync off
 }
 
 void* WindowsWindow::GetVoidWindow()

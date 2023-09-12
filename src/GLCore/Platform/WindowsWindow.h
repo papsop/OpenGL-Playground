@@ -21,7 +21,11 @@ class WindowsWindow : public I_Window {
   void OnFrameBegin() override;
   void OnFrameEnd() override;
 
+  bool IsVSync() override;
+  void SetVSync(bool val) override;
+
  private:
   GLFWwindow* m_window;
+  bool m_vSyncEnabled = true;
 };
 }  // namespace GLCore

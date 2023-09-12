@@ -18,6 +18,9 @@ class Application {
   void Run();
   I_Window* GetWindow();
 
+  bool IsVSync();
+  void SetVSync(bool val);
+
  private:
   void Initialize();
   void InitGL();

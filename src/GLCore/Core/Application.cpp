@@ -98,6 +98,16 @@ I_Window* Application::GetWindow()
   return m_window.get();
 }
 
+bool Application::IsVSync()
+{
+  return m_window->IsVSync();
+}
+
+void Application::SetVSync(bool val)
+{
+  m_window->SetVSync(val);
+}
+
 GLCore::LayerStack* Application::GetLayerStack()
 {
   return &m_layerStack;

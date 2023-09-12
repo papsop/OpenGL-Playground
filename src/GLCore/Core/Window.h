@@ -21,14 +21,14 @@ class I_Window {
 
   virtual uint32_t GetWidth() const = 0;
   virtual uint32_t GetHeight() const = 0;
+  virtual void* GetVoidWindow() = 0;
 
   virtual void OnFrameBegin() = 0;
   virtual void OnFrameEnd() = 0;
   virtual void Init(WindowDef def = WindowDef()) = 0;
   virtual void Destroy() = 0;
 
-  virtual void* GetVoidWindow() = 0;
-
- private:
+  virtual bool IsVSync() = 0;
+  virtual void SetVSync(bool val) = 0;
 };
 }  // namespace GLCore

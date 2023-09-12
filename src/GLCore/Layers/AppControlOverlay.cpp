@@ -9,6 +9,7 @@ namespace GLCore {
 void AppControlOverlay::OnAttach()
 {
   m_layerStack = Application::Instance().GetLayerStack();
+  m_application = &Application::Instance();
 }
 
 void AppControlOverlay::OnDetach()
@@ -33,6 +34,12 @@ void AppControlOverlay::OnImGuiUpdate(Timestep dt)
   ImGui::BulletText("FPS: %.1lf", 1000.0f / dt.GetMilliseconds());
   ImGui::BulletText("Frame time (ms): %.3f", dt.GetMilliseconds());
 
+  {
+    bool temp = m_application->IsVSync();
+    ImGui::Checkbox("VSync", &temp);
+    if (temp != m_application->IsVSync()) m_application->SetVSync(temp);
+  }
+
   m_fpsValues[m_fpsValueOffset] = dt.GetMilliseconds();
   m_fpsValueOffset = (m_fpsValueOffset + 1) % IM_ARRAYSIZE(m_fpsValues);
   {
@@ -51,10 +58,11 @@ void AppControlOverlay::OnImGuiUpdate(Timestep dt)
   ImGui::Text("LAYERS:");
   for (auto& layer : *m_layerStack) {
     ImGui::BeginDisabled(layer->IsLocked());
-
-    bool temp = layer->IsEnabled();
-    ImGui::Checkbox(layer->GetName(), &temp);
-    layer->SetEnabled(temp);
+    {
+      bool temp = layer->IsEnabled();
+      ImGui::Checkbox(layer->GetName(), &temp);
+      layer->SetEnabled(temp);
+    }
 
     ImGui::EndDisabled();
 

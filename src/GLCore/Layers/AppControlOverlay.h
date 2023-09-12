@@ -3,6 +3,8 @@
 #include <GLCore/Core/LayerStack.h>
 
 namespace GLCore {
+class Application;
+
 class AppControlOverlay : public I_Layer {
  public:
   AppControlOverlay() : I_Layer("AppControl", true){};
@@ -16,6 +18,7 @@ class AppControlOverlay : public I_Layer {
   void OnFrameEnd() override;
 
  private:
+  Application* m_application;
   LayerStack* m_layerStack;
   size_t m_fpsValueOffset = 0;  // for wrapping
   float m_fpsValues[144] = {};

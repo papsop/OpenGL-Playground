@@ -38,7 +38,7 @@ void WindowsWindow::Init(WindowDef def /*= WindowDef()*/)
   LOG_DEBUG("  Version: {0}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 
   LOG_INFO("WindowsWindow created");
-  // glfwSwapInterval(0); // vsync off
+  SetVSync(m_vSyncEnabled);
 }
 
 void* WindowsWindow::GetVoidWindow()
@@ -56,6 +56,23 @@ void WindowsWindow::OnFrameEnd()
 {
   glfwPollEvents();
   glfwSwapBuffers(m_window);
+}
+
+bool WindowsWindow::IsVSync()
+{
+  return m_vSyncEnabled;
+}
+
+void WindowsWindow::SetVSync(bool val)
+{
+  // if (val == m_vSyncEnabled) return;  // ignore call
+
+  if (val)
+    glfwSwapInterval(1);
+  else
+    glfwSwapInterval(0);
+
+  m_vSyncEnabled = val;
 }
 
 void WindowsWindow::Destroy()

@@ -5,7 +5,7 @@ namespace GLCore {
 
 class ImGuiPanelRenderOverlay : public I_Layer {
  public:
-  ImGuiPanelRenderOverlay() : I_Layer("Panel render")
+  ImGuiPanelRenderOverlay() : I_Layer("Panel render", true)
   {
   }
   void OnAttach() override;

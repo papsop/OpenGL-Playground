@@ -10,7 +10,10 @@ class Log {
   using ptr_Logger = std::shared_ptr<spdlog::logger>;
 
   static void Init();
-  inline static ptr_Logger& GetLogger() { return m_logger; };
+  inline static ptr_Logger& GetLogger()
+  {
+    return m_logger;
+  };
 
  private:
   inline static ptr_Logger m_logger = nullptr;
@@ -32,3 +35,5 @@ class Log {
     LOG_ERROR(##__VA_ARGS__); \
     abort();                  \
   }
+
+// TODO: handle opengl errors: https://docs.gl/gl4/glDebugMessageCallback, doesn't work with class functions tho

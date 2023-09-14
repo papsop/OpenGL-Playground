@@ -28,7 +28,7 @@ void AppControlOverlay::OnImGuiUpdate(Timestep dt)
 {
   // ================================================
   ImGuiWindowFlags windowFlags = ImGuiWindowFlags_AlwaysAutoResize;
-  ImGui::Begin("Application control", NULL, windowFlags);
+  ImGui::Begin(GetName(), NULL, windowFlags);
   ImGui::Separator();
   ImGui::Text("FPS:");
   ImGui::BulletText("FPS: %.1lf", 1000.0f / dt.GetMilliseconds());

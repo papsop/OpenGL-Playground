@@ -7,7 +7,7 @@ class Application;
 
 class AppControlOverlay : public I_Layer {
  public:
-  AppControlOverlay() : I_Layer("AppControl", true){};
+  AppControlOverlay() : I_Layer("Application control", true){};
 
   void OnAttach() override;
   void OnDetach() override;

@@ -1,7 +1,7 @@
 #pragma once
 #include <GLCore/Core/LayerStack.h>
 #include <GLCore/Core/Window.h>
-
+#include <GLCore/Core/Renderer.h>
 #include <memory>
 
 namespace GLCore {
@@ -20,6 +20,7 @@ class Application {
 
   bool IsVSync();
   void SetVSync(bool val);
+  Renderer2D* GetRenderer();
 
  private:
   void Initialize();
@@ -29,6 +30,7 @@ class Application {
   inline static Application* m_instance = nullptr;
   bool m_isRunning = true;
   LayerStack m_layerStack;
+  std::unique_ptr<Renderer2D> m_renderer;
 
   std::unique_ptr<I_Window> m_window = nullptr;
 

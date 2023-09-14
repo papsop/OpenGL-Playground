@@ -73,7 +73,7 @@ void ImGuiPanelRenderOverlay::RescaleFrameBuffer(float width, float height)
 
 void ImGuiPanelRenderOverlay::OnImGuiUpdate(Timestep dt)
 {
-  ImGui::Begin("Render window");
+  ImGui::Begin(GetName());
 
   float width = ImGui::GetContentRegionAvail().x;
   float height = ImGui::GetContentRegionAvail().y;

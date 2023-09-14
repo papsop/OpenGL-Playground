@@ -1,5 +1,6 @@
 #include <GLCore/Core/Application.h>
 #include <GLCore/Core/Layer.h>
+#include <GLCore/Core/Renderer.h>
 #include <GLCore/Layers/ImGuiOverlay.h>
 #include <GLCore/Layers/AppControlOverlay.h>
 #include <GLCore/Layers/TriangleTestLayer.h>
@@ -9,6 +10,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include <memory>
 #include <iostream>
 
 namespace GLCore {
@@ -21,6 +23,8 @@ Application::Application()
 Application::~Application()
 {
   LOG_INFO("Destroying application.");
+  m_renderer->Destroy();
+  m_renderer = nullptr;
 }
 
 Application& Application::Instance()
@@ -33,6 +37,7 @@ void Application::Initialize()
   Log::Init();
   LOG_INFO("Initializing Application");
   InitGL();
+  m_renderer = std::make_unique<Renderer2D>();
   m_instance = this;
 }
 
@@ -49,6 +54,7 @@ void Application::Run()
 #else
 #error "Platform not supported"
 #endif
+  m_renderer->Create();
   m_layerStack.PushOverlay(new ImGuiOverlay());
   m_layerStack.PushOverlay(new AppControlOverlay());
   m_layerStack.PushOverlay(new ImGuiPanelRenderOverlay());
@@ -81,6 +87,8 @@ void Application::Run()
       if (layer->ShouldUpdate()) layer->OnImGuiUpdate(ts);
     }
 
+    m_renderer->Flush();
+
     // FRAME END, reversed order
     for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); ++it) {
       if ((*it)->ShouldUpdate()) (*it)->OnFrameEnd();
@@ -106,6 +114,11 @@ bool Application::IsVSync()
 void Application::SetVSync(bool val)
 {
   m_window->SetVSync(val);
+}
+
+GLCore::Renderer2D* Application::GetRenderer()
+{
+  return m_renderer.get();
 }
 
 GLCore::LayerStack* Application::GetLayerStack()

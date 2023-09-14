@@ -3,8 +3,7 @@
 #include <GLCore/Core/Renderer.h>
 #include <GLCore/Layers/ImGuiOverlay.h>
 #include <GLCore/Layers/AppControlOverlay.h>
-#include <GLCore/Layers/TriangleTestLayer.h>
-#include <GLCore/Layers/ImGuiPanelRenderOverlay.h>
+#include <GLCore/Layers/SandboxCanvasOverlay.h>
 #include <GLCore/Utils/Log.h>
 #include <GLCore/Platform/WindowsWindow.h>
 
@@ -25,11 +24,24 @@ Application::~Application()
   LOG_INFO("Destroying application.");
   m_renderer->Destroy();
   m_renderer = nullptr;
+
+  m_sandboxCanvas->Destroy();
+  m_sandboxCanvas = nullptr;
 }
 
 Application& Application::Instance()
 {
   return *m_instance;
+}
+
+void Application::PushLayer(I_Layer* layer)
+{
+  m_layerStack.PushLayer(layer);
+}
+
+void Application::PushOverlay(I_Layer* overlay)
+{
+  m_layerStack.PushOverlay(overlay);
 }
 
 void Application::Initialize()
@@ -38,6 +50,7 @@ void Application::Initialize()
   LOG_INFO("Initializing Application");
   InitGL();
   m_renderer = std::make_unique<Renderer2D>();
+  m_sandboxCanvas = std::make_unique<SandboxCanvas>();
   m_instance = this;
 }
 
@@ -55,11 +68,11 @@ void Application::Run()
 #error "Platform not supported"
 #endif
   m_renderer->Create();
-  m_layerStack.PushOverlay(new ImGuiOverlay());
-  m_layerStack.PushOverlay(new AppControlOverlay());
-  m_layerStack.PushOverlay(new ImGuiPanelRenderOverlay());
+  m_sandboxCanvas->Create();
 
-  m_layerStack.PushLayer(new TriangleTestLayer());
+  PushOverlay(new ImGuiOverlay());
+  PushOverlay(new AppControlOverlay());
+  PushOverlay(new SandboxCanvasOverlay());
 
   float lastFrameTime = 0.0f;
   size_t frameCount = 0;
@@ -77,17 +90,18 @@ void Application::Run()
       if (layer->ShouldUpdate()) layer->OnFrameBegin();
     }
 
+    m_sandboxCanvas->Bind();
     // UPDATE
     for (auto* layer : m_layerStack) {
       if (layer->ShouldUpdate()) layer->OnUpdate(ts);
     }
+    m_renderer->Flush();
+    m_sandboxCanvas->Unbind();
 
     // IMGUI UPDATE
     for (auto* layer : m_layerStack) {
       if (layer->ShouldUpdate()) layer->OnImGuiUpdate(ts);
     }
-
-    m_renderer->Flush();
 
     // FRAME END, reversed order
     for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); ++it) {
@@ -119,6 +133,11 @@ void Application::SetVSync(bool val)
 GLCore::Renderer2D* Application::GetRenderer()
 {
   return m_renderer.get();
+}
+
+GLCore::SandboxCanvas* Application::GetSandboxCanvas()
+{
+  return m_sandboxCanvas.get();
 }
 
 GLCore::LayerStack* Application::GetLayerStack()

@@ -1,19 +1,19 @@
 #pragma once
 #include <GLCore/Core/Layer.h>
-#include <GLCore/Utils/Shader.h>
 
 namespace GLCore {
-class TriangleTestLayer : public I_Layer {
+
+class SandboxCanvas;
+class SandboxCanvasOverlay : public I_Layer {
  public:
-  TriangleTestLayer() : I_Layer("Triangle test"){};
+  SandboxCanvasOverlay() : I_Layer("Sandbox canvas", true)
+  {
+  }
   void OnAttach() override;
   void OnDetach() override;
-
-  void OnUpdate(Timestep dt) override;
   void OnImGuiUpdate(Timestep dt) override;
 
  private:
-  Shader m_shader;
-  unsigned int m_VAO;
+  SandboxCanvas* m_sandboxCanvas;
 };
 }  // namespace GLCore

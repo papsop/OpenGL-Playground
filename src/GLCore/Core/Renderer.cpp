@@ -1,4 +1,5 @@
 #include <GLCore/Core/Renderer.h>
+#include <GLCore/Core/Application.h>
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
@@ -75,6 +76,11 @@ void LinesRenderer::Vertex(glm::vec2 p, glm::vec4 color)
   m_vertices[m_vertexCount] = p;
   m_colors[m_vertexCount] = color;
   m_vertexCount++;
+}
+
+Renderer2D* Renderer2D::Get()
+{
+  return Application::Instance().GetRenderer();
 }
 
 // =============================================================

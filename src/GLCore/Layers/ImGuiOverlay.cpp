@@ -4,6 +4,7 @@
 
 #include <GLFW/glfw3.h>
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
@@ -76,6 +77,18 @@ void ImGuiOverlay::OnFrameBegin()
   static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
   ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
   ImGui::End();
+
+  //   if (!m_dockspaceInit) {
+  //     // ImGui::DockBuilderRemoveNode(dockspace_id);
+  //     ImGuiID dock1 = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f, nullptr, &dockspace_id);
+  //     ImGuiID dock2 = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.8f, nullptr, &dockspace_id);
+  //
+  //     ImGui::DockBuilderDockWindow("Application control", dock1);
+  //     ImGui::DockBuilderDockWindow("Sandbox canvas", dock2);
+  //
+  //     ImGui::DockBuilderFinish(dockspace_id);
+  //     m_dockspaceInit = true;
+  //   }
 }
 
 void ImGuiOverlay::OnFrameEnd()

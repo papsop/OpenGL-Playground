@@ -1,12 +1,14 @@
 #include <GLCore/Core/Application.h>
-#include <GLCore/Core/Layer.h>
-#include <GLCore/Utils/Log.h>
+
+#include <GLSandbox/Layers/TestLayer.h>
 
 #include <iostream>
 #include <memory>
 int main(void)
 {
   auto app = std::make_unique<GLCore::Application>();
+  app->PushLayer(new GLSandbox::TestLayer());
   app->Run();
+
   return 0;
 }

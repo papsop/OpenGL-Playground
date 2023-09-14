@@ -33,6 +33,7 @@ class LinesRenderer {
 
 class Renderer2D {
  public:
+  static Renderer2D* Get();
   void Create();
   void Destroy();
 

@@ -2,6 +2,8 @@
 #include <GLCore/Core/LayerStack.h>
 #include <GLCore/Core/Window.h>
 #include <GLCore/Core/Renderer.h>
+#include <GLCore/Core/SandboxCanvas.h>
+
 #include <memory>
 
 namespace GLCore {
@@ -15,12 +17,17 @@ class Application {
   ~Application();
   static Application& Instance();
 
+  void PushLayer(I_Layer* layer);
+  void PushOverlay(I_Layer* overlay);
+
   void Run();
-  I_Window* GetWindow();
 
   bool IsVSync();
   void SetVSync(bool val);
+
+  I_Window* GetWindow();
   Renderer2D* GetRenderer();
+  SandboxCanvas* GetSandboxCanvas();
 
  private:
   void Initialize();
@@ -31,6 +38,7 @@ class Application {
   bool m_isRunning = true;
   LayerStack m_layerStack;
   std::unique_ptr<Renderer2D> m_renderer;
+  std::unique_ptr<SandboxCanvas> m_sandboxCanvas;
 
   std::unique_ptr<I_Window> m_window = nullptr;
 

@@ -14,5 +14,6 @@ class ImGuiOverlay : public I_Layer {
   void OnFrameEnd() override;
 
  private:
+  bool m_dockspaceInit = false;
 };
 }  // namespace GLCore

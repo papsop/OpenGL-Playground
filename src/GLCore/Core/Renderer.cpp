@@ -10,7 +10,7 @@ namespace GLCore {
 // =============================================================
 void LinesRenderer::Create()
 {
-  // m_basicShader.LoadShadersFromFiles("../assets/shaders/shader.vert.glsl", "../assets/shaders/shader.frag.glsl");
+  m_basicShader.LoadShadersFromFiles("../assets/shaders/shader.vert.glsl", "../assets/shaders/shader.frag.glsl");
 
   m_vertexCount = 0;
   m_vertexAttribIndex = 0;

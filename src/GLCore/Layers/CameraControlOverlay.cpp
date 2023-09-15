@@ -13,6 +13,22 @@ void CameraControlOverlay::OnAttach()
 void CameraControlOverlay::OnImGuiUpdate(Timestep dt)
 {
   ImGui::Begin(GetName());
+  OrthographicCameraData cameraData = m_camera->GetCameraData();
+  if (ImGui::Button("Reset to default")) {
+    m_camera->ResetToDefaultData();
+  }
+  else {
+    ImGui::Text("Orthographic borders:");
+    ImGui::SliderFloat("Left", &cameraData.Borders[0], -10.0f, 10.0f);
+    ImGui::SliderFloat("Right", &cameraData.Borders[1], -10.0f, 10.0f);
+    ImGui::SliderFloat("Bottom", &cameraData.Borders[2], -10.0f, 10.0f);
+    ImGui::SliderFloat("Top", &cameraData.Borders[3], -10.0f, 10.0f);
+
+    ImGui::Text("Position");
+    ImGui::SliderFloat("x", &cameraData.Position[0], -10.0f, 10.0f);
+    ImGui::SliderFloat("y", &cameraData.Position[1], -10.0f, 10.0f);
+    m_camera->SetCameraData(cameraData);
+  }
 
   ImGui::End();
 }

@@ -1,10 +1,14 @@
 #include <GLCore/Core/Application.h>
 #include <GLCore/Core/Layer.h>
 #include <GLCore/Core/Renderer.h>
+
 #include <GLCore/Layers/ImGuiOverlay.h>
 #include <GLCore/Layers/AppControlOverlay.h>
 #include <GLCore/Layers/SandboxCanvasOverlay.h>
+#include <GLCore/Layers/CameraControlOverlay.h>
+
 #include <GLCore/Utils/Log.h>
+
 #include <GLCore/Platform/WindowsWindow.h>
 
 #include <GLFW/glfw3.h>
@@ -51,6 +55,7 @@ void Application::Initialize()
   InitGL();
   m_renderer = std::make_unique<Renderer2D>();
   m_sandboxCanvas = std::make_unique<SandboxCanvas>();
+  m_orthoCamera = std::make_unique<OrthographicCamera>(-5.0f, 5.0f, -5.0f, 5.0f);
   m_instance = this;
 }
 
@@ -73,6 +78,7 @@ void Application::Run()
   PushOverlay(new ImGuiOverlay());
   PushOverlay(new AppControlOverlay());
   PushOverlay(new SandboxCanvasOverlay());
+  PushOverlay(new CameraControlOverlay());
 
   float lastFrameTime = 0.0f;
   size_t frameCount = 0;
@@ -138,6 +144,11 @@ GLCore::Renderer2D* Application::GetRenderer()
 GLCore::SandboxCanvas* Application::GetSandboxCanvas()
 {
   return m_sandboxCanvas.get();
+}
+
+GLCore::OrthographicCamera* Application::GetMainCamera()
+{
+  return m_orthoCamera.get();
 }
 
 GLCore::LayerStack* Application::GetLayerStack()

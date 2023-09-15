@@ -3,6 +3,7 @@
 #include <GLCore/Core/Window.h>
 #include <GLCore/Core/Renderer.h>
 #include <GLCore/Core/SandboxCanvas.h>
+#include <GLCore/Utils/OrtographicCamera.h>
 
 #include <memory>
 
@@ -28,6 +29,7 @@ class Application {
   I_Window* GetWindow();
   Renderer2D* GetRenderer();
   SandboxCanvas* GetSandboxCanvas();
+  OrthographicCamera* GetMainCamera();
 
  private:
   void Initialize();
@@ -39,6 +41,7 @@ class Application {
   LayerStack m_layerStack;
   std::unique_ptr<Renderer2D> m_renderer;
   std::unique_ptr<SandboxCanvas> m_sandboxCanvas;
+  std::unique_ptr<OrthographicCamera> m_orthoCamera;
 
   std::unique_ptr<I_Window> m_window = nullptr;
 

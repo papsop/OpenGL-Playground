@@ -52,6 +52,7 @@ void LinesRenderer::Flush()
   if (m_vertexCount == 0) return;
 
   m_basicShader.Use();
+
   glBindVertexArray(m_VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[0]);
@@ -59,6 +60,8 @@ void LinesRenderer::Flush()
 
   glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[1]);
   glBufferSubData(GL_ARRAY_BUFFER, 0, m_vertexCount * sizeof(glm::vec4), m_colors);
+
+  m_basicShader.SetUniform("vProjectionMatrix", Application::Instance().GetMainCamera()->GetProjectionMatrix());
 
   glDrawArrays(GL_LINES, 0, m_vertexCount);
 

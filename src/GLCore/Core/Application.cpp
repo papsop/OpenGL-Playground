@@ -8,6 +8,7 @@
 #include <GLCore/Layers/CameraControlOverlay.h>
 
 #include <GLCore/Utils/Log.h>
+#include <GLCore/Utils/IDGenerator.h>
 
 #include <GLCore/Platform/WindowsWindow.h>
 
@@ -56,7 +57,6 @@ void Application::Initialize()
   m_renderer = std::make_unique<Renderer2D>();
   m_sandboxCanvas = std::make_unique<SandboxCanvas>();
   m_orthoCamera = std::make_unique<OrthographicCamera>(-5.0f, 5.0f, -5.0f, 5.0f);
-  m_orthoCamera->SetPosition({1.0f, 1.0f, -3.0f});
   m_instance = this;
 }
 

@@ -25,9 +25,9 @@ class I_Layer {
   bool ShouldUpdate() const;
 
  protected:
-  const char* m_layerName = "default";
-  bool m_enabled = true;  // controls update
-  const bool m_isLocked;  // always enabled, can't get disabled
+  const char* m_layerName = "unnamed";  // shows up in application control panel
+  bool m_enabled = true;                // controls update
+  const bool m_isLocked;                // always enabled, can't get disabled
 
  private:
 };

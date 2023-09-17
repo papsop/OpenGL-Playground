@@ -1,6 +1,7 @@
 #include <GLCore/Core/Application.h>
 #include <GLCore/Core/Layer.h>
 #include <GLCore/Core/Renderer.h>
+#include <GLCore/Core/Events.h>
 
 #include <GLCore/Layers/ImGuiOverlay.h>
 #include <GLCore/Layers/AppControlOverlay.h>

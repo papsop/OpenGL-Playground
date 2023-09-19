@@ -1,8 +1,21 @@
 #include <GLCore/Platform/WindowsWindow.h>
 #include <GLCore/Utils/Log.h>
+#include <GLCore/Core/Application.h>
+#include <GLCore/Core/Events.h>
 
 namespace GLCore {
+// =============================================================
+// Static callbacks for GLFW (it doesn't support c++ function, have to do it C style)
+static void window_close_callback(GLFWwindow* window)
+{
+  glfwSetWindowShouldClose(window, GLFW_FALSE);
+  WindowEvent e;
+  e.Type = WindowEvent::Close;
 
+  DISPATCH_EVENT(e);
+}
+
+// =============================================================
 WindowsWindow::~WindowsWindow()
 {
   if (m_window) {
@@ -39,6 +52,8 @@ void WindowsWindow::Init(WindowDef def /*= WindowDef()*/)
 
   LOG_INFO("WindowsWindow created");
   SetVSync(m_vSyncEnabled);
+
+  glfwSetWindowCloseCallback(m_window, window_close_callback);
 }
 
 void* WindowsWindow::GetVoidWindow()

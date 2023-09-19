@@ -84,7 +84,7 @@ void Application::Run()
   PushOverlay(new SandboxCanvasOverlay());
   PushOverlay(new CameraControlOverlay());
 
-  REGISTER_EVENT_CALLBACK(ApplicationEvent, this, &Application::OnApplicationEvent);
+  REGISTER_EVENT_CALLBACK(WindowEvent, this, &Application::OnWindowEvent);
 
   float lastFrameTime = 0.0f;
   size_t frameCount = 0;
@@ -124,6 +124,10 @@ void Application::Run()
 
     m_eventDispatcher->ProcessAllEvents();
   }
+
+  ApplicationEvent e;
+  e.Type = ApplicationEvent::Close;
+  DISPATCH_EVENT(e);
 
   m_window->Destroy();
 }

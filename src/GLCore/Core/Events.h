@@ -99,7 +99,6 @@ class EventDispatcher {
 
     EventContainer<T>* container = static_cast<EventContainer<T>*>(m_eventContainers[containerID].get());
     container->AddListener(listener, func);
-    LOG_WARN("Registering listener");
   }
 
   template <typename T>
@@ -128,16 +127,36 @@ class EventDispatcher {
 // =========================================
 
 struct ApplicationEvent : public GLCoreEventBase {
-  bool TestData;
+  enum EventType {
+    Close,
+  };
+
+  EventType Type;
+};
+
+struct WindowEvent : public GLCoreEventBase {
+  enum EventType {
+    Close,
+  };
+
+  EventType Type;
 };
 
 }  // namespace GLCore
 
+// =========================================
+// Helper macros
+// =========================================
 #define GL_BIND_FUNCTION_1(instance, function) std::bind(function, instance, std::placeholders::_1)
 
-#define REGISTER_EVENT_CALLBACK(eventType, instance, function)                                                                          \
-  {                                                                                                                                     \
-    Application::Instance().GetEventDispatcher()->RegisterListener<eventType>((void*)instance, GL_BIND_FUNCTION_1(instance, function)); \
+#define REGISTER_EVENT_CALLBACK(eventType, instance, function)                                                                                  \
+  {                                                                                                                                             \
+    GLCore::Application::Instance().GetEventDispatcher()->RegisterListener<eventType>((void*)instance, GL_BIND_FUNCTION_1(instance, function)); \
+  }
+
+#define DISPATCH_EVENT(event)                                              \
+  {                                                                        \
+    GLCore::Application::Instance().GetEventDispatcher()->Dispatch(event); \
   }
 
 // m_eventDispatcher->RegisterListener<ApplicationEvent>((void*)this, std::bind(&Application::OnApplicationEvent, this, std::placeholders::_1));

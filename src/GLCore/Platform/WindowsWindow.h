@@ -24,6 +24,8 @@ class WindowsWindow : public I_Window {
   bool IsVSync() override;
   void SetVSync(bool val) override;
 
+  void OnWindowCloseCallback(GLFWwindow* window);
+
  private:
   GLFWwindow* m_window;
   bool m_vSyncEnabled = true;

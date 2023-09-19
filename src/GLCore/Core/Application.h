@@ -7,7 +7,7 @@
 #include <GLCore/Utils/OrtographicCamera.h>
 
 #include <memory>
-
+#include <iostream>
 namespace GLCore {
 class AppControlOverlay;
 /*
@@ -33,9 +33,11 @@ class Application {
   OrthographicCamera* GetMainCamera();
   EventDispatcher* GetEventDispatcher();
 
-  void OnApplicationEvent(const ApplicationEvent& event)
+  void OnWindowEvent(const WindowEvent& event)
   {
-    LOG_INFO("RECEIVED EVENT");
+    if (event.Type == WindowEvent::Close) {
+      m_isRunning = false;
+    }
   }
 
  private:

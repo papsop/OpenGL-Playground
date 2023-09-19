@@ -3,6 +3,7 @@
 #include <GLCore/Core/Window.h>
 #include <GLCore/Core/Renderer.h>
 #include <GLCore/Core/SandboxCanvas.h>
+#include <GLCore/Core/Events.h>
 #include <GLCore/Utils/OrtographicCamera.h>
 
 #include <memory>
@@ -30,6 +31,11 @@ class Application {
   Renderer2D* GetRenderer();
   SandboxCanvas* GetSandboxCanvas();
   OrthographicCamera* GetMainCamera();
+  EventDispatcher* GetEventDispatcher();
+
+  void OnApplicationEvent(const ApplicationEvent& event)
+  {
+  }
 
  private:
   void Initialize();
@@ -44,6 +50,8 @@ class Application {
   std::unique_ptr<OrthographicCamera> m_orthoCamera;
 
   std::unique_ptr<I_Window> m_window = nullptr;
+
+  std::unique_ptr<EventDispatcher> m_eventDispatcher;
 
   friend class AppControlOverlay;
 };

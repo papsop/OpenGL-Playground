@@ -24,11 +24,11 @@ project "GLCore"
     }
 
     vpaths { 
-        ["Headers/"] = "**.h",
+        ["Headers/"] = { "**.h", "**.inl" },
         ["Sources/"] = { "**.c", "**.cpp"},
     }
 
-    files { "src/GLCore/**.cpp", "src/GLCore/**.h"}
+    files { "src/GLCore/**.cpp", "src/GLCore/**.h", "src/GLCore/**.inl"}
 
     links { "GLFW", "GLM", "GLAD", "ImGui" }
 
@@ -54,11 +54,11 @@ project "GLSandbox"
     }
 
     vpaths { 
-        ["Headers/"] = "**.h",
+        ["Headers/"] = { "**.h", "**.inl" },
         ["Sources/"] = { "**.c", "**.cpp"},
     }
 
-    files { "src/GLSandbox/**.cpp", "src/GLSandbox/**.h"}
+    files { "src/GLSandbox/**.cpp", "src/GLSandbox/**.h", "src/GLSandbox/**.inl"}
 
     links { "GLCore" }
 

@@ -37,6 +37,7 @@ Application::~Application()
 
 Application& Application::Instance()
 {
+  GL_ASSERT(m_instance != nullptr, "Application instance not yet initialized");
   return *m_instance;
 }
 
@@ -58,6 +59,7 @@ void Application::Initialize()
   m_renderer = std::make_unique<Renderer2D>();
   m_sandboxCanvas = std::make_unique<SandboxCanvas>();
   m_orthoCamera = std::make_unique<OrthographicCamera>(-5.0f, 5.0f, -5.0f, 5.0f);
+  m_eventDispatcher = std::make_unique<EventDispatcher>();
   m_instance = this;
 }
 
@@ -81,6 +83,8 @@ void Application::Run()
   PushOverlay(new AppControlOverlay());
   PushOverlay(new SandboxCanvasOverlay());
   PushOverlay(new CameraControlOverlay());
+
+  REGISTER_EVENT_CALLBACK(ApplicationEvent, this, &Application::OnApplicationEvent);
 
   float lastFrameTime = 0.0f;
   size_t frameCount = 0;
@@ -140,17 +144,26 @@ void Application::SetVSync(bool val)
 
 GLCore::Renderer2D* Application::GetRenderer()
 {
+  GL_ASSERT(m_renderer != nullptr, "Renderer doesn't exist");
   return m_renderer.get();
 }
 
 GLCore::SandboxCanvas* Application::GetSandboxCanvas()
 {
+  GL_ASSERT(m_sandboxCanvas != nullptr, "SandboxCanvas doesn't exist");
   return m_sandboxCanvas.get();
 }
 
 GLCore::OrthographicCamera* Application::GetMainCamera()
 {
+  GL_ASSERT(m_orthoCamera != nullptr, "MainCamera doesn't exist");
   return m_orthoCamera.get();
+}
+
+GLCore::EventDispatcher* Application::GetEventDispatcher()
+{
+  GL_ASSERT(m_eventDispatcher != nullptr, "EventDispatcher doesn't exist");
+  return m_eventDispatcher.get();
 }
 
 GLCore::LayerStack* Application::GetLayerStack()

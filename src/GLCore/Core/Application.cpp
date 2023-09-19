@@ -121,6 +121,8 @@ void Application::Run()
     }
 
     m_window->OnFrameEnd();
+
+    m_eventDispatcher->ProcessAllEvents();
   }
 
   m_window->Destroy();

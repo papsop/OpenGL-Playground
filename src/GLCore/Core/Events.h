@@ -22,6 +22,7 @@ struct GLCoreEventBase {
 class EventContainerBase {
  public:
   virtual ~EventContainerBase() = default;
+  virtual void ProcessAllEvents() = 0;
 };
 
 template <typename T, typename = std::enable_if_t<std::is_base_of_v<GLCoreEventBase, T>>>
@@ -52,19 +53,19 @@ class EventContainer : public EventContainerBase {
     else
       m_eventQueue.push_back(event);
   }
-  void ProcessEvent(T Event)
+  void ProcessEvent(T event)
   {
     if (event.Handled) return;
 
-    for (auto& func : m_listeners) {
-      func(event);
+    for (const auto& [listener, function] : m_listeners) {
+      function(event);
     }
     event.Handled = true;
   }
 
-  void ProcessAllEvents()
+  void ProcessAllEvents() override
   {
-    for (auto T& event : m_eventQueue) {
+    for (const T& event : m_eventQueue) {
       ProcessEvent(event);
     }
     m_eventQueue.clear();
@@ -99,6 +100,23 @@ class EventDispatcher {
     EventContainer<T>* container = static_cast<EventContainer<T>*>(m_eventContainers[containerID].get());
     container->AddListener(listener, func);
     LOG_WARN("Registering listener");
+  }
+
+  template <typename T>
+  void Dispatch(T event)
+  {
+    size_t containerID = IDGenerator<GLCoreEventBase>::GetID<T>();
+
+    if (m_eventContainers.find(containerID) == m_eventContainers.end()) return;  // no listeners
+    EventContainer<T>* container = static_cast<EventContainer<T>*>(m_eventContainers[containerID].get());
+    container->AddEvent(event);
+  }
+
+  void ProcessAllEvents()
+  {
+    for (auto& container : m_eventContainers) {
+      container.second->ProcessAllEvents();
+    }
   }
 
  private:

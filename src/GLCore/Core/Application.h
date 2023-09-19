@@ -35,6 +35,7 @@ class Application {
 
   void OnApplicationEvent(const ApplicationEvent& event)
   {
+    LOG_INFO("RECEIVED EVENT");
   }
 
  private:

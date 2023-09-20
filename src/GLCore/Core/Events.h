@@ -153,8 +153,10 @@ struct SandboxCanvasMouseEvent : public GLCoreEventBase {
   enum EventType {
     Hover,
     LeftClickPressed,
+    LeftClickDown,
     LeftClickReleased,
     RightClickPressed,
+    RightClickDown,
     RightClickReleased,
   };
 

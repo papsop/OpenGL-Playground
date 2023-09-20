@@ -35,6 +35,10 @@ void SandboxCanvasOverlay::HandleCanvasMouseEvents()
     DISPATCH_EVENT(SandboxCanvasMouseEvent(SandboxCanvasMouseEvent::LeftClickReleased, {mousePos.x, mousePos.y}, true));
   }
 
+  if (ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
+    DISPATCH_EVENT(SandboxCanvasMouseEvent(SandboxCanvasMouseEvent::LeftClickDown, {mousePos.x, mousePos.y}, true));
+  }
+
   // RIGHT
   if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
     DISPATCH_EVENT(SandboxCanvasMouseEvent(SandboxCanvasMouseEvent::RightClickPressed, {mousePos.x, mousePos.y}, true));
@@ -42,6 +46,10 @@ void SandboxCanvasOverlay::HandleCanvasMouseEvents()
 
   if (ImGui::IsMouseReleased(ImGuiMouseButton_Right)) {
     DISPATCH_EVENT(SandboxCanvasMouseEvent(SandboxCanvasMouseEvent::RightClickReleased, {mousePos.x, mousePos.y}, true));
+  }
+
+  if (ImGui::IsMouseDown(ImGuiMouseButton_Right)) {
+    DISPATCH_EVENT(SandboxCanvasMouseEvent(SandboxCanvasMouseEvent::RightClickDown, {mousePos.x, mousePos.y}, true));
   }
 }
 
@@ -71,10 +79,12 @@ void SandboxCanvasOverlay::OnImGuiUpdate(Timestep dt)
 
     glm::vec2 screenPosition = {mousePos.x, mousePos.y};
     glm::vec2 worldPosition = Application::Instance().GetMainCamera()->ScreenToWorld(screenPosition);
+    glm::vec2 mouseDelta = {io.MouseDelta.x, io.MouseDelta.y};
 
     auto* drawList = ImGui::GetForegroundDrawList();
     char temp[255];
-    sprintf(temp, "Screen: [%.2lf, %.2lf]\nWorld: [%.2lf, %.2lf]", screenPosition.x, screenPosition.y, worldPosition.x, worldPosition.y);
+    sprintf(temp, "Screen: [%.2lf, %.2lf]\nWorld: [%.2lf, %.2lf]\nMouseDelta: [%.2lf, %.2lf]", screenPosition.x, screenPosition.y, worldPosition.x,
+            worldPosition.y, mouseDelta.x, mouseDelta.y);
     drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), pos, ImColor(255, 255, 0, 255), temp, 0, 0.0f, 0);
   }
 

@@ -17,7 +17,7 @@ class TestLayer : public GLCore::I_Layer {
 
  private:
   glm::vec2 m_lastPoint;
-  bool m_adding = false;
+  // bool m_adding = false;
   std::vector<std::pair<glm::vec2, glm::vec2> > m_lines;  // for testing
 };
 }  // namespace GLSandbox

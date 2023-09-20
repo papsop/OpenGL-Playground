@@ -2,19 +2,20 @@
 #include <GLCore/Core/Application.h>
 
 #include <glm/gtc/matrix_transform.hpp>
-
+#include <imgui.h>
 namespace GLCore {
 
 void OrthographicCamera::Create(float left, float right, float bottom, float top)
 {
   SetProjection(left, right, bottom, top);
-  m_data.Position = {0.0f, 0.0f, -0.3f};
+  m_data.Position = {0.0f, 0.0f};
   m_defaultData = m_data;
 
   REGISTER_EVENT_CALLBACK(SandboxCanvasEvent, this, &OrthographicCamera::OnSandboxCanvasResize);
+  REGISTER_EVENT_CALLBACK(SandboxCanvasMouseEvent, this, &OrthographicCamera::OnSandboxCanvasMouseEvent);
 }
 
-void OrthographicCamera::SetPosition(glm::vec3 position)
+void OrthographicCamera::SetPosition(glm::vec2 position)
 {
   m_data.Position = position;
   RecalculateProjectionMatrix();
@@ -78,11 +79,22 @@ void OrthographicCamera::OnSandboxCanvasResize(const SandboxCanvasEvent& event)
   }
 }
 
+void OrthographicCamera::OnSandboxCanvasMouseEvent(const SandboxCanvasMouseEvent& event)
+{
+  if (event.Type != SandboxCanvasMouseEvent::RightClickDown) return;
+
+  ImGuiIO& io = ImGui::GetIO();
+
+  m_data.Position = ScreenToWorld(event.Position);
+
+  RecalculateProjectionMatrix();
+}
+
 // TODO: compare old/new data, maybe we don't have to recalculate every frame
 // cba right now
 void OrthographicCamera::RecalculateProjectionMatrix()
 {
-  glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_data.Position);
+  glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_data.GetPositionVec3());
   glm::mat4 viewMatrix = glm::inverse(transform);
 
   m_projectionMat = glm::ortho(m_data.Borders[0], m_data.Borders[1], m_data.Borders[1], m_data.Borders[2], -1000.0f, 1000.0f);

@@ -14,6 +14,11 @@ namespace GLCore {
 // =======================================================
 // Base for all events
 struct GLCoreEventBase {
+  GLCoreEventBase() = default;
+  GLCoreEventBase(bool immediate) : Immediate(Immediate)
+  {
+  }
+
   bool Handled = false;
   bool Immediate = false;  // Should we sent it instantly or wait until end of frame processing?
 };
@@ -129,7 +134,7 @@ class EventDispatcher {
 // =========================================
 
 struct ApplicationEvent : public GLCoreEventBase {
-  enum class EventType {
+  enum EventType {
     Close,
   };
 
@@ -137,19 +142,25 @@ struct ApplicationEvent : public GLCoreEventBase {
 };
 
 struct WindowEvent : public GLCoreEventBase {
-  enum class EventType {
+  enum EventType {
     Close,
   };
 
   EventType Type;
 };
 
-struct InputEvent : public GLCoreEventBase {
-  enum class EventType {
+struct MouseInputEvent : public GLCoreEventBase {
+  enum EventType {
     Hover,
-    LeftClick,
-    RightClick,
+    LeftClickPressed,
+    LeftClickReleased,
+    RightClickPressed,
+    RightClickReleased,
   };
+
+  MouseInputEvent(EventType type, glm::vec2 pos, bool immediate) : GLCoreEventBase(immediate), Type(type), Position(pos)
+  {
+  }
 
   EventType Type;
   glm::vec2 Position;

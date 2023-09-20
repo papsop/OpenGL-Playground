@@ -14,6 +14,7 @@ class SandboxCanvasOverlay : public I_Layer {
   void OnImGuiUpdate(Timestep dt) override;
 
  private:
+  void HandleCanvasMouseEvents();
   SandboxCanvas* m_sandboxCanvas;
 };
 }  // namespace GLCore

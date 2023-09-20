@@ -18,7 +18,7 @@ void CameraControlOverlay::OnImGuiUpdate(Timestep dt)
     m_camera->ResetToDefaultData();
   }
   else {
-    ImGui::Text("Orthographic borders:");
+    ImGui::Text("Camera settings:");
     ImGui::SliderFloat("Left", &cameraData.Borders[0], -10.0f, 10.0f);
     ImGui::SliderFloat("Right", &cameraData.Borders[1], -10.0f, 10.0f);
     ImGui::SliderFloat("Bottom", &cameraData.Borders[2], -10.0f, 10.0f);

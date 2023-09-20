@@ -1,13 +1,17 @@
 #include <GLCore/Utils/OrtographicCamera.h>
+#include <GLCore/Core/Application.h>
+
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace GLCore {
 
-OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top)
+void OrthographicCamera::Create(float left, float right, float bottom, float top)
 {
   SetProjection(left, right, bottom, top);
   m_data.Position = {0.0f, 0.0f, -0.3f};
   m_defaultData = m_data;
+
+  REGISTER_EVENT_CALLBACK(SandboxCanvasEvent, this, &OrthographicCamera::OnSandboxCanvasResize);
 }
 
 void OrthographicCamera::SetPosition(glm::vec3 position)
@@ -45,6 +49,33 @@ void OrthographicCamera::ResetToDefaultData()
 glm::mat4 OrthographicCamera::GetProjectionMatrix()
 {
   return m_projectionMat;
+}
+
+glm::vec2 OrthographicCamera::ScreenToWorld(glm::vec2 screenPos)
+{
+  // screen space (-1;1), [0,0] is middle of the screen
+  glm::vec2 result = ((screenPos / m_canvasSize) * glm::vec2(2, 2)) - glm::vec2(1, 1);
+
+  // get lengths of camera borders
+  auto& b = m_data.Borders;
+  float width = abs(std::min(b[0], b[1]) - std::max(b[0], b[1]));
+  float height = abs(std::min(b[2], b[3]) - std::max(b[2], b[3]));
+
+  // map interval (-1;1) to (min_border, max_border)
+  result.x *= (width - abs(std::min(b[0], b[1])));
+  result.y *= (height - abs(std::min(b[2], b[3])));
+
+  // move by camera position
+  result += glm::vec2(m_data.Position.x, m_data.Position.y);
+  return result;
+}
+
+void OrthographicCamera::OnSandboxCanvasResize(const SandboxCanvasEvent& event)
+{
+  if (event.Type == SandboxCanvasEvent::Resize) {
+    m_canvasSize = event.Data.NewSize;
+    LOG_INFO("received canvas resized event");
+  }
 }
 
 // TODO: compare old/new data, maybe we don't have to recalculate every frame

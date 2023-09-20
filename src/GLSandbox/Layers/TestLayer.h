@@ -13,6 +13,11 @@ class TestLayer : public GLCore::I_Layer {
   void OnDetach() override;
 
   void OnUpdate(GLCore::Timestep dt) override;
-  void OnMouseInputEvent(const GLCore::MouseInputEvent& e);
+  void OnSandboxCanvasMouseEvent(const GLCore::SandboxCanvasMouseEvent& e);
+
+ private:
+  glm::vec2 m_lastPoint;
+  bool m_adding = false;
+  std::vector<std::pair<glm::vec2, glm::vec2> > m_lines;  // for testing
 };
 }  // namespace GLSandbox

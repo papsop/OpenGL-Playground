@@ -1,4 +1,6 @@
 #include <GLCore/Core/SandboxCanvas.h>
+#include <GLCore/Core/Application.h>
+#include <GLCore/Core/Events.h>
 
 namespace GLCore {
 
@@ -39,6 +41,8 @@ void SandboxCanvas::Destroy()
 
 void SandboxCanvas::ResizeCanvas(glm::vec2 size)
 {
+  if (m_size == size) return;
+
   m_size = size;
 
   glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -50,6 +54,11 @@ void SandboxCanvas::ResizeCanvas(glm::vec2 size)
   glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_size.x, m_size.y);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
+
+  SandboxCanvasEvent e(SandboxCanvasEvent::Resize);
+  e.Immediate = true;
+  e.Data.NewSize = m_size;
+  DISPATCH_EVENT(e);
 }
 
 void SandboxCanvas::Bind()

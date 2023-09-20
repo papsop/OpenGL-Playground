@@ -1,4 +1,6 @@
 #pragma once
+#include <GLCore/Core/Events.h>
+
 #include <glm/glm.hpp>
 
 namespace GLCore {
@@ -23,7 +25,7 @@ struct OrthographicCameraData {
 
 class OrthographicCamera {
  public:
-  OrthographicCamera(float left, float right, float bottom, float top);
+  void Create(float left, float right, float bottom, float top);
 
   void SetPosition(glm::vec3 position);
   void SetProjection(float left, float right, float bottom, float top);
@@ -34,11 +36,16 @@ class OrthographicCamera {
 
   glm::mat4 GetProjectionMatrix();
 
+  glm::vec2 ScreenToWorld(glm::vec2);
+
+  void OnSandboxCanvasResize(const SandboxCanvasEvent& event);
+
  private:
   void RecalculateProjectionMatrix();
 
   OrthographicCameraData m_defaultData;
   OrthographicCameraData m_data;
   glm::mat4 m_projectionMat;
+  glm::vec2 m_canvasSize;
 };
 }  // namespace GLCore

@@ -58,7 +58,7 @@ void Application::Initialize()
   InitGL();
   m_renderer = std::make_unique<Renderer2D>();
   m_sandboxCanvas = std::make_unique<SandboxCanvas>();
-  m_orthoCamera = std::make_unique<OrthographicCamera>(-5.0f, 5.0f, -5.0f, 5.0f);
+  m_orthoCamera = std::make_unique<OrthographicCamera>();
   m_eventDispatcher = std::make_unique<EventDispatcher>();
 
 #ifdef _WINDOWS
@@ -80,6 +80,7 @@ void Application::Run()
 {
   m_renderer->Create();
   m_sandboxCanvas->Create();
+  m_orthoCamera->Create(-5.0f, 5.0f, -5.0f, 5.0f);
 
   PushOverlay(new ImGuiOverlay());
   PushOverlay(new AppControlOverlay());

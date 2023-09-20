@@ -149,7 +149,7 @@ struct WindowEvent : public GLCoreEventBase {
   EventType Type;
 };
 
-struct MouseInputEvent : public GLCoreEventBase {
+struct SandboxCanvasMouseEvent : public GLCoreEventBase {
   enum EventType {
     Hover,
     LeftClickPressed,
@@ -158,12 +158,25 @@ struct MouseInputEvent : public GLCoreEventBase {
     RightClickReleased,
   };
 
-  MouseInputEvent(EventType type, glm::vec2 pos, bool immediate) : GLCoreEventBase(immediate), Type(type), Position(pos)
+  SandboxCanvasMouseEvent(EventType type, glm::vec2 pos, bool immediate) : GLCoreEventBase(immediate), Type(type), Position(pos)
   {
   }
 
   EventType Type;
   glm::vec2 Position;
+};
+
+struct SandboxCanvasEvent : public GLCoreEventBase {
+  enum EventType {
+    Resize,
+  };
+
+  EventType Type;
+  union {
+    glm::vec2 NewSize;
+  } Data;
+
+  SandboxCanvasEvent(EventType type) : Type(type){};
 };
 
 }  // namespace GLCore

@@ -2,6 +2,8 @@
 #include <GLCore/Utils/IDGenerator.h>
 #include <GLCore/Utils/Log.h>
 
+#include <glm/vec2.hpp>
+
 #include <functional>
 #include <vector>
 #include <utility>
@@ -127,7 +129,7 @@ class EventDispatcher {
 // =========================================
 
 struct ApplicationEvent : public GLCoreEventBase {
-  enum EventType {
+  enum class EventType {
     Close,
   };
 
@@ -135,11 +137,22 @@ struct ApplicationEvent : public GLCoreEventBase {
 };
 
 struct WindowEvent : public GLCoreEventBase {
-  enum EventType {
+  enum class EventType {
     Close,
   };
 
   EventType Type;
+};
+
+struct InputEvent : public GLCoreEventBase {
+  enum class EventType {
+    Hover,
+    LeftClick,
+    RightClick,
+  };
+
+  EventType Type;
+  glm::vec2 Position;
 };
 
 }  // namespace GLCore

@@ -60,7 +60,16 @@ void Application::Initialize()
   m_sandboxCanvas = std::make_unique<SandboxCanvas>();
   m_orthoCamera = std::make_unique<OrthographicCamera>(-5.0f, 5.0f, -5.0f, 5.0f);
   m_eventDispatcher = std::make_unique<EventDispatcher>();
+
+#ifdef _WINDOWS
+  LOG_INFO("Creating a WindowsWindow");
+  m_window = std::make_unique<WindowsWindow>();
+  m_window->Init(/* default */);
+#else
+#error "Platform not supported"
+#endif
   m_instance = this;
+  LOG_INFO("Application initialized");
 }
 
 void Application::InitGL()
@@ -69,13 +78,6 @@ void Application::InitGL()
 
 void Application::Run()
 {
-#ifdef _WINDOWS
-  LOG_INFO("Creating a WindowsWindow");
-  m_window = std::make_unique<WindowsWindow>();
-  m_window->Init(/* default */);
-#else
-#error "Platform not supported"
-#endif
   m_renderer->Create();
   m_sandboxCanvas->Create();
 

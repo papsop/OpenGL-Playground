@@ -9,7 +9,7 @@
 #include <memory>
 #include <iostream>
 namespace GLCore {
-class AppControlOverlay;
+class ApplicationControlLayer;
 /*
  *	A singleton object that takes care of the window/input handling and holds all the layers.
  */
@@ -56,6 +56,6 @@ class Application {
 
   std::unique_ptr<EventDispatcher> m_eventDispatcher;
 
-  friend class AppControlOverlay;
+  friend class ApplicationControlLayer;
 };
 }  // namespace GLCore

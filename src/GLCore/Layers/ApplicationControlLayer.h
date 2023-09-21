@@ -5,9 +5,9 @@
 namespace GLCore {
 class Application;
 
-class AppControlOverlay : public I_Layer {
+class ApplicationControlLayer : public I_Layer {
  public:
-  AppControlOverlay() : I_Layer("Application control", true){};
+  ApplicationControlLayer() : I_Layer("Application control", true){};
 
   void OnAttach() override;
   void OnDetach() override;

@@ -1,4 +1,4 @@
-#include <GLCore/Layers/SandboxCanvasOverlay.h>
+#include <GLCore/Layers/SandboxCanvasLayer.h>
 #include <GLCore/Utils/Log.h>
 #include <GLCore/Core/Application.h>
 
@@ -8,17 +8,17 @@
 
 namespace GLCore {
 
-void SandboxCanvasOverlay::OnAttach()
+void SandboxCanvasLayer::OnAttach()
 {
   m_sandboxCanvas = Application::Instance().GetSandboxCanvas();
 }
 
-void SandboxCanvasOverlay::OnDetach()
+void SandboxCanvasLayer::OnDetach()
 {
   m_sandboxCanvas = nullptr;
 }
 
-void SandboxCanvasOverlay::HandleCanvasMouseEvents()
+void SandboxCanvasLayer::HandleCanvasMouseEvents()
 {
   ImGuiIO& io = ImGui::GetIO();
   ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();
@@ -53,7 +53,7 @@ void SandboxCanvasOverlay::HandleCanvasMouseEvents()
   }
 }
 
-void SandboxCanvasOverlay::OnImGuiUpdate(Timestep dt)
+void SandboxCanvasLayer::OnImGuiUpdate(Timestep dt)
 {
   ImGui::Begin(GetName());
 

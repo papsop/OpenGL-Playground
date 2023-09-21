@@ -3,9 +3,9 @@
 #include <GLCore/Utils/OrtographicCamera.h>
 
 namespace GLCore {
-class CameraControlOverlay : public I_Layer {
+class CameraControlLayer : public I_Layer {
  public:
-  CameraControlOverlay() : I_Layer("Camera control")
+  CameraControlLayer() : I_Layer("Camera control")
   {
   }
   void OnImGuiUpdate(Timestep dt) override;

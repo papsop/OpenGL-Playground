@@ -1,16 +1,16 @@
-#include <GLCore/Layers/CameraControlOverlay.h>
+#include <GLCore/Layers/CameraControlLayer.h>
 #include <GLCore/Core/Application.h>
 
 #include <imgui.h>
 
 namespace GLCore {
 
-void CameraControlOverlay::OnAttach()
+void CameraControlLayer::OnAttach()
 {
   m_camera = Application::Instance().GetMainCamera();
 }
 
-void CameraControlOverlay::OnImGuiUpdate(Timestep dt)
+void CameraControlLayer::OnImGuiUpdate(Timestep dt)
 {
   ImGui::Begin(GetName());
   OrthographicCameraData cameraData = m_camera->GetCameraData();

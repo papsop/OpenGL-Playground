@@ -4,9 +4,9 @@
 namespace GLCore {
 
 class SandboxCanvas;
-class SandboxCanvasOverlay : public I_Layer {
+class SandboxCanvasLayer : public I_Layer {
  public:
-  SandboxCanvasOverlay() : I_Layer("Sandbox canvas", true)
+  SandboxCanvasLayer() : I_Layer("Sandbox canvas", true)
   {
   }
   void OnAttach() override;

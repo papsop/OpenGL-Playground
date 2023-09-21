@@ -4,9 +4,9 @@
 #include <GLCore/Core/Events.h>
 
 #include <GLCore/Layers/ImGuiOverlay.h>
-#include <GLCore/Layers/AppControlOverlay.h>
-#include <GLCore/Layers/SandboxCanvasOverlay.h>
-#include <GLCore/Layers/CameraControlOverlay.h>
+#include <GLCore/Layers/ApplicationControlLayer.h>
+#include <GLCore/Layers/SandboxCanvasLayer.h>
+#include <GLCore/Layers/CameraControlLayer.h>
 
 #include <GLCore/Utils/Log.h>
 #include <GLCore/Utils/IDGenerator.h>
@@ -83,9 +83,9 @@ void Application::Run()
   m_orthoCamera->Create(-5.0f, 5.0f, -5.0f, 5.0f);
 
   PushOverlay(new ImGuiOverlay());
-  PushOverlay(new AppControlOverlay());
-  PushOverlay(new SandboxCanvasOverlay());
-  PushOverlay(new CameraControlOverlay());
+  PushLayer(new SandboxCanvasLayer());
+  PushLayer(new ApplicationControlLayer());
+  PushLayer(new CameraControlLayer());
 
   REGISTER_EVENT_CALLBACK(WindowEvent, this, &Application::OnWindowEvent);
 

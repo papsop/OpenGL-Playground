@@ -1,4 +1,4 @@
-#include <GLCore/Layers/AppControlOverlay.h>
+#include <GLCore/Layers/ApplicationControlLayer.h>
 #include <GLCore/Core/Application.h>
 #include <GLCore/Utils/Log.h>
 
@@ -6,25 +6,25 @@
 
 namespace GLCore {
 
-void AppControlOverlay::OnAttach()
+void ApplicationControlLayer::OnAttach()
 {
   m_layerStack = Application::Instance().GetLayerStack();
   m_application = &Application::Instance();
 }
 
-void AppControlOverlay::OnDetach()
+void ApplicationControlLayer::OnDetach()
 {
 }
 
-void AppControlOverlay::OnFrameBegin()
+void ApplicationControlLayer::OnFrameBegin()
 {
 }
 
-void AppControlOverlay::OnUpdate(Timestep dt)
+void ApplicationControlLayer::OnUpdate(Timestep dt)
 {
 }
 
-void AppControlOverlay::OnImGuiUpdate(Timestep dt)
+void ApplicationControlLayer::OnImGuiUpdate(Timestep dt)
 {
   // ================================================
   // ImGuiWindowFlags windowFlags = ImGuiWindowFlags_AlwaysAutoResize;
@@ -81,7 +81,7 @@ void AppControlOverlay::OnImGuiUpdate(Timestep dt)
   ImGui::End();
 }
 
-void AppControlOverlay::OnFrameEnd()
+void ApplicationControlLayer::OnFrameEnd()
 {
 }
 

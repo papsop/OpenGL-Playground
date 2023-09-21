@@ -55,7 +55,7 @@ void SandboxCanvas::ResizeCanvas(glm::vec2 size)
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_size.x, m_size.y);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
 
-  SandboxCanvasEvent e(SandboxCanvasEvent::Resize);
+  E_SandboxCanvasEvent e(E_SandboxCanvasEvent::Resize);
   e.Immediate = true;
   e.Data.NewSize = m_size;
   DISPATCH_EVENT(e);

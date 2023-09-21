@@ -33,9 +33,9 @@ class Application {
   OrthographicCamera* GetMainCamera();
   EventDispatcher* GetEventDispatcher();
 
-  void OnWindowEvent(const WindowEvent& event)
+  void OnWindowEvent(const E_WindowEvent& event)
   {
-    if (event.Type == WindowEvent::Close) {
+    if (event.Type == E_WindowEvent::Close) {
       m_isRunning = false;
     }
   }

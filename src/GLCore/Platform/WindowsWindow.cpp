@@ -9,8 +9,8 @@ namespace GLCore {
 static void window_close_callback(GLFWwindow* window)
 {
   glfwSetWindowShouldClose(window, GLFW_FALSE);
-  WindowEvent e;
-  e.Type = WindowEvent::Close;
+  E_WindowEvent e;
+  e.Type = E_WindowEvent::Close;
 
   DISPATCH_EVENT(e);
 }

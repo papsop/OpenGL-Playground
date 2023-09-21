@@ -12,6 +12,7 @@ class OrthographicCamera {
   void SetPosition(glm::vec2 position);
   void SetProjection(float left, float right, float bottom, float top);
   void SetZoom(float zoom);
+  void SetCanvasSize(glm::vec2 size);
 
   glm::vec2 GetPosition();
   float GetZoom();
@@ -19,9 +20,6 @@ class OrthographicCamera {
   glm::mat4 GetProjectionMatrix();
 
   glm::vec2 ScreenToWorld(glm::vec2);
-
-  void OnSandboxCanvasResize(const SandboxCanvasEvent& event);
-  void OnSandboxCanvasMouseEvent(const SandboxCanvasMouseEvent& event);
 
  private:
   void RecalculateProjectionMatrix();

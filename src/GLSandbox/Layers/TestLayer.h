@@ -13,7 +13,7 @@ class TestLayer : public GLCore::I_Layer {
   void OnDetach() override;
 
   void OnUpdate(GLCore::Timestep dt) override;
-  void OnSandboxCanvasMouseEvent(const GLCore::SandboxCanvasMouseEvent& e);
+  void OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEvent& e);
 
  private:
   glm::vec2 m_lastPoint;

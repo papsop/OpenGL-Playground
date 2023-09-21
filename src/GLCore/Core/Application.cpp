@@ -88,7 +88,7 @@ void Application::Run()
   PushLayer(new ApplicationControlLayer());
   PushLayer(new CameraControlLayer());
 
-  REGISTER_EVENT_CALLBACK(WindowEvent, this, &Application::OnWindowEvent);
+  REGISTER_EVENT_CALLBACK(E_WindowEvent, this, &Application::OnWindowEvent);
 
   float lastFrameTime = 0.0f;
   size_t frameCount = 0;
@@ -129,11 +129,11 @@ void Application::Run()
     m_eventDispatcher->ProcessAllEvents();
   }
 
-  ApplicationEvent e;
-  e.Type = ApplicationEvent::Close;
+  E_ApplicationEvent e;
+  e.Type = E_ApplicationEvent::Close;
   DISPATCH_EVENT(e);
 
-  UNREGISTER_EVENT_CALLBACK(WindowEvent, this);
+  UNREGISTER_EVENT_CALLBACK(E_WindowEvent, this);
 
   m_layerStack = nullptr;       // destroy
   m_eventDispatcher = nullptr;  // destroy

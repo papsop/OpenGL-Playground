@@ -15,10 +15,11 @@ class CameraControlLayer : public I_Layer {
   void OnAttach() override;
   void OnDetach() override;
 
-  void OnSandboxCanvasResize(const SandboxCanvasEvent& event);
-  void OnSandboxCanvasMouseEvent(const SandboxCanvasMouseEvent& event);
+  void OnSandboxCanvasResize(const E_SandboxCanvasEvent& event);
+  void OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEvent& event);
 
  private:
   OrthographicCamera* m_camera;
+  glm::vec2 m_lastMousePos;
 };
 }  // namespace GLCore

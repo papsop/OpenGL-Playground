@@ -28,28 +28,28 @@ void SandboxCanvasLayer::HandleCanvasMouseEvents()
   const ImVec2 mousePos = ImVec2(io.MousePos.x - canvas_p0.x, io.MousePos.y - canvas_p0.y);
   // LEFT
   if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-    DISPATCH_EVENT(SandboxCanvasMouseEvent(SandboxCanvasMouseEvent::LeftClickPressed, {mousePos.x, mousePos.y}, true));
+    DISPATCH_EVENT(E_SandboxCanvasMouseEvent(E_SandboxCanvasMouseEvent::LeftClickPressed, {mousePos.x, mousePos.y}, true));
   }
 
   if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
-    DISPATCH_EVENT(SandboxCanvasMouseEvent(SandboxCanvasMouseEvent::LeftClickReleased, {mousePos.x, mousePos.y}, true));
+    DISPATCH_EVENT(E_SandboxCanvasMouseEvent(E_SandboxCanvasMouseEvent::LeftClickReleased, {mousePos.x, mousePos.y}, true));
   }
 
   if (ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
-    DISPATCH_EVENT(SandboxCanvasMouseEvent(SandboxCanvasMouseEvent::LeftClickDown, {mousePos.x, mousePos.y}, true));
+    DISPATCH_EVENT(E_SandboxCanvasMouseEvent(E_SandboxCanvasMouseEvent::LeftClickDown, {mousePos.x, mousePos.y}, true));
   }
 
   // RIGHT
   if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
-    DISPATCH_EVENT(SandboxCanvasMouseEvent(SandboxCanvasMouseEvent::RightClickPressed, {mousePos.x, mousePos.y}, true));
+    DISPATCH_EVENT(E_SandboxCanvasMouseEvent(E_SandboxCanvasMouseEvent::RightClickPressed, {mousePos.x, mousePos.y}, true));
   }
 
   if (ImGui::IsMouseReleased(ImGuiMouseButton_Right)) {
-    DISPATCH_EVENT(SandboxCanvasMouseEvent(SandboxCanvasMouseEvent::RightClickReleased, {mousePos.x, mousePos.y}, true));
+    DISPATCH_EVENT(E_SandboxCanvasMouseEvent(E_SandboxCanvasMouseEvent::RightClickReleased, {mousePos.x, mousePos.y}, true));
   }
 
   if (ImGui::IsMouseDown(ImGuiMouseButton_Right)) {
-    DISPATCH_EVENT(SandboxCanvasMouseEvent(SandboxCanvasMouseEvent::RightClickDown, {mousePos.x, mousePos.y}, true));
+    DISPATCH_EVENT(E_SandboxCanvasMouseEvent(E_SandboxCanvasMouseEvent::RightClickDown, {mousePos.x, mousePos.y}, true));
   }
 }
 
@@ -66,6 +66,8 @@ void SandboxCanvasLayer::OnImGuiUpdate(Timestep dt)
 
   ImGui::ImageButton(texture, ImVec2(canvasPanelSize.x, canvasPanelSize.y), ImVec2(0, 1), ImVec2(1, 0), 0);
 
+  // ==================================
+  // Debug yellow text of positions
   {
     ImGuiIO& io = ImGui::GetIO();
     ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();

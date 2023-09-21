@@ -144,7 +144,7 @@ class EventDispatcher {
 // GLCore events
 // =========================================
 
-struct ApplicationEvent : public GLCoreEventBase {
+struct E_ApplicationEvent : public GLCoreEventBase {
   enum EventType {
     Close,
   };
@@ -152,7 +152,7 @@ struct ApplicationEvent : public GLCoreEventBase {
   EventType Type;
 };
 
-struct WindowEvent : public GLCoreEventBase {
+struct E_WindowEvent : public GLCoreEventBase {
   enum EventType {
     Close,
   };
@@ -160,7 +160,7 @@ struct WindowEvent : public GLCoreEventBase {
   EventType Type;
 };
 
-struct SandboxCanvasMouseEvent : public GLCoreEventBase {
+struct E_SandboxCanvasMouseEvent : public GLCoreEventBase {
   enum EventType {
     Hover,
     LeftClickPressed,
@@ -171,7 +171,7 @@ struct SandboxCanvasMouseEvent : public GLCoreEventBase {
     RightClickReleased,
   };
 
-  SandboxCanvasMouseEvent(EventType type, glm::vec2 pos, bool immediate) : GLCoreEventBase(immediate), Type(type), Position(pos)
+  E_SandboxCanvasMouseEvent(EventType type, glm::vec2 pos, bool immediate) : GLCoreEventBase(immediate), Type(type), Position(pos)
   {
   }
 
@@ -179,7 +179,7 @@ struct SandboxCanvasMouseEvent : public GLCoreEventBase {
   glm::vec2 Position;
 };
 
-struct SandboxCanvasEvent : public GLCoreEventBase {
+struct E_SandboxCanvasEvent : public GLCoreEventBase {
   enum EventType {
     Resize,
   };
@@ -189,7 +189,7 @@ struct SandboxCanvasEvent : public GLCoreEventBase {
     glm::vec2 NewSize;
   } Data;
 
-  SandboxCanvasEvent(EventType type) : Type(type){};
+  E_SandboxCanvasEvent(EventType type) : Type(type){};
 };
 
 }  // namespace GLCore

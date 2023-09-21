@@ -52,6 +52,7 @@ class OrthographicCamera {
   OrthographicCameraData m_data;
   glm::mat4 m_projectionMat;
   glm::vec2 m_canvasSize;
-  float m_sensitivity = 0.05f;
+
+  glm::vec2 m_lastEventMousePosition;
 };
 }  // namespace GLCore

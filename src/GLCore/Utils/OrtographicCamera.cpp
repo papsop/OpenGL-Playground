@@ -81,13 +81,21 @@ void OrthographicCamera::OnSandboxCanvasResize(const SandboxCanvasEvent& event)
 
 void OrthographicCamera::OnSandboxCanvasMouseEvent(const SandboxCanvasMouseEvent& event)
 {
-  if (event.Type != SandboxCanvasMouseEvent::RightClickDown) return;
+  if (event.Type != SandboxCanvasMouseEvent::RightClickDown && event.Type != SandboxCanvasMouseEvent::RightClickPressed &&
+      event.Type != SandboxCanvasMouseEvent::RightClickReleased)
+    return;
 
-  ImGuiIO& io = ImGui::GetIO();
-
-  m_data.Position = ScreenToWorld(event.Position);
-
-  RecalculateProjectionMatrix();
+  if (event.Type == SandboxCanvasMouseEvent::RightClickPressed || event.Type == SandboxCanvasMouseEvent::RightClickReleased) {
+    // m_lastFrameMousePosition = ScreenToWorld(event.Position);
+  }
+  else {
+    glm::vec2 mousePos = ScreenToWorld(event.Position);
+    glm::vec2 offset = mousePos - m_lastEventMousePosition;
+    m_data.Position -= offset;
+    RecalculateProjectionMatrix();
+  }
+  // can't use "mousePos", have to recalculate, since we changed ProjectionMatrix
+  m_lastEventMousePosition = ScreenToWorld(event.Position);
 }
 
 // TODO: compare old/new data, maybe we don't have to recalculate every frame

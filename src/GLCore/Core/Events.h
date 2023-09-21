@@ -42,6 +42,7 @@ class EventContainer : public EventContainerBase {
     m_eventQueue.clear();
     m_listeners.clear();
   }
+
   // Keep this here, I don't know how to put it into .inl file, since Class T and Function U are different /shrug
   void AddListener(void* listener, EventCallback func)
   {
@@ -50,7 +51,7 @@ class EventContainer : public EventContainerBase {
 
   void RemoveListener(void* listener)
   {
-    // todo
+    m_listeners.erase(listener);
   }
 
   void AddEvent(T event)
@@ -106,6 +107,16 @@ class EventDispatcher {
 
     EventContainer<T>* container = static_cast<EventContainer<T>*>(m_eventContainers[containerID].get());
     container->AddListener(listener, func);
+  }
+
+  template <typename T>
+  void UnregisterListener(void* listener)
+  {
+    size_t containerID = IDGenerator<GLCoreEventBase>::GetID<T>();
+    if (m_eventContainers.find(containerID) != m_eventContainers.end()) {
+      auto* container = static_cast<EventContainer<T>*>(m_eventContainers[containerID].get());
+      container->RemoveListener(listener);
+    }
   }
 
   template <typename T>
@@ -191,6 +202,11 @@ struct SandboxCanvasEvent : public GLCoreEventBase {
 #define REGISTER_EVENT_CALLBACK(eventType, instance, function)                                                                                  \
   {                                                                                                                                             \
     GLCore::Application::Instance().GetEventDispatcher()->RegisterListener<eventType>((void*)instance, GL_BIND_FUNCTION_1(instance, function)); \
+  }
+
+#define UNREGISTER_EVENT_CALLBACK(eventType, instance)                                                    \
+  {                                                                                                       \
+    GLCore::Application::Instance().GetEventDispatcher()->UnregisterListener<eventType>((void*)instance); \
   }
 
 #define DISPATCH_EVENT(event)                                              \

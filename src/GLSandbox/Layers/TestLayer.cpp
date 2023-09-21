@@ -34,7 +34,7 @@ void TestLayer::OnAttach()
 
 void TestLayer::OnDetach()
 {
-  // todo add unregister callback
+  UNREGISTER_EVENT_CALLBACK(GLCore::SandboxCanvasMouseEvent, this);
 }
 
 }  // namespace GLSandbox

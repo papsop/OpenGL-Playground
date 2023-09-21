@@ -12,6 +12,7 @@ class LayerStack {
  public:
   LayerStack();
   ~LayerStack();
+
   void PushLayer(I_Layer*);
   void PopLayer(I_Layer*);
 

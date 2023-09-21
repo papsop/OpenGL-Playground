@@ -5,38 +5,16 @@
 
 namespace GLCore {
 
-struct OrthographicCameraData {
-  glm::vec4 Borders;  // left, right, bottom, top
-  glm::vec2 Position;
-  glm::vec3 GetPositionVec3()
-  {
-    return glm::vec3(Position.x, Position.y, -3.0f);  // meh
-  }
-  OrthographicCameraData() = default;
-  OrthographicCameraData(glm::vec4 b, glm::vec3 p) : Borders(b), Position(p){};
-  OrthographicCameraData(const OrthographicCameraData& other) : Borders(other.Borders), Position(other.Position){};
-
-  bool operator==(const OrthographicCameraData& other)
-  {
-    return other.Borders == Borders && other.Position == Position;
-  }
-
-  bool operator!=(const OrthographicCameraData& other)
-  {
-    return !(*this == other);
-  }
-};
-
 class OrthographicCamera {
  public:
   void Create(float left, float right, float bottom, float top);
 
   void SetPosition(glm::vec2 position);
   void SetProjection(float left, float right, float bottom, float top);
+  void SetZoom(float zoom);
 
-  OrthographicCameraData GetCameraData();
-  void SetCameraData(OrthographicCameraData data);
-  void ResetToDefaultData();
+  glm::vec2 GetPosition();
+  float GetZoom();
 
   glm::mat4 GetProjectionMatrix();
 
@@ -48,10 +26,16 @@ class OrthographicCamera {
  private:
   void RecalculateProjectionMatrix();
 
-  OrthographicCameraData m_defaultData;
-  OrthographicCameraData m_data;
   glm::mat4 m_projectionMat;
   glm::vec2 m_canvasSize;
+
+  float m_left;
+  float m_right;
+  float m_bottom;
+  float m_top;
+
+  glm::vec2 m_position;
+  float m_zoom;
 
   glm::vec2 m_lastEventMousePosition;
 };

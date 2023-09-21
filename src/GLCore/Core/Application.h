@@ -47,7 +47,7 @@ class Application {
 
   inline static Application* m_instance = nullptr;
   bool m_isRunning = true;
-  LayerStack m_layerStack;
+  std::unique_ptr<LayerStack> m_layerStack;
   std::unique_ptr<Renderer2D> m_renderer;
   std::unique_ptr<SandboxCanvas> m_sandboxCanvas;
   std::unique_ptr<OrthographicCamera> m_orthoCamera;

@@ -43,12 +43,12 @@ Application& Application::Instance()
 
 void Application::PushLayer(I_Layer* layer)
 {
-  m_layerStack.PushLayer(layer);
+  m_layerStack->PushLayer(layer);
 }
 
 void Application::PushOverlay(I_Layer* overlay)
 {
-  m_layerStack.PushOverlay(overlay);
+  m_layerStack->PushOverlay(overlay);
 }
 
 void Application::Initialize()
@@ -56,6 +56,7 @@ void Application::Initialize()
   Log::Init();
   LOG_INFO("Initializing Application");
   InitGL();
+  m_layerStack = std::make_unique<LayerStack>();
   m_renderer = std::make_unique<Renderer2D>();
   m_sandboxCanvas = std::make_unique<SandboxCanvas>();
   m_orthoCamera = std::make_unique<OrthographicCamera>();
@@ -101,25 +102,25 @@ void Application::Run()
     m_window->OnFrameBegin();
 
     // FRAME BEGIN
-    for (auto* layer : m_layerStack) {
+    for (auto* layer : *m_layerStack) {
       if (layer->ShouldUpdate()) layer->OnFrameBegin();
     }
 
     m_sandboxCanvas->Bind();
     // UPDATE
-    for (auto* layer : m_layerStack) {
+    for (auto* layer : *m_layerStack) {
       if (layer->ShouldUpdate()) layer->OnUpdate(ts);
     }
     m_renderer->Flush();
     m_sandboxCanvas->Unbind();
 
     // IMGUI UPDATE
-    for (auto* layer : m_layerStack) {
+    for (auto* layer : *m_layerStack) {
       if (layer->ShouldUpdate()) layer->OnImGuiUpdate(ts);
     }
 
     // FRAME END, reversed order
-    for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); ++it) {
+    for (auto it = (*m_layerStack).rbegin(); it != (*m_layerStack).rend(); ++it) {
       if ((*it)->ShouldUpdate()) (*it)->OnFrameEnd();
     }
 
@@ -132,6 +133,10 @@ void Application::Run()
   e.Type = ApplicationEvent::Close;
   DISPATCH_EVENT(e);
 
+  UNREGISTER_EVENT_CALLBACK(WindowEvent, this);
+
+  m_layerStack = nullptr;       // destroy
+  m_eventDispatcher = nullptr;  // destroy
   m_window->Destroy();
 }
 
@@ -151,33 +156,33 @@ void Application::SetVSync(bool val)
   m_window->SetVSync(val);
 }
 
-GLCore::Renderer2D* Application::GetRenderer()
+Renderer2D* Application::GetRenderer()
 {
   GL_ASSERT(m_renderer != nullptr, "Renderer doesn't exist");
   return m_renderer.get();
 }
 
-GLCore::SandboxCanvas* Application::GetSandboxCanvas()
+SandboxCanvas* Application::GetSandboxCanvas()
 {
   GL_ASSERT(m_sandboxCanvas != nullptr, "SandboxCanvas doesn't exist");
   return m_sandboxCanvas.get();
 }
 
-GLCore::OrthographicCamera* Application::GetMainCamera()
+OrthographicCamera* Application::GetMainCamera()
 {
   GL_ASSERT(m_orthoCamera != nullptr, "MainCamera doesn't exist");
   return m_orthoCamera.get();
 }
 
-GLCore::EventDispatcher* Application::GetEventDispatcher()
+EventDispatcher* Application::GetEventDispatcher()
 {
   GL_ASSERT(m_eventDispatcher != nullptr, "EventDispatcher doesn't exist");
   return m_eventDispatcher.get();
 }
 
-GLCore::LayerStack* Application::GetLayerStack()
+LayerStack* Application::GetLayerStack()
 {
-  return &m_layerStack;
+  return m_layerStack.get();
 }
 
 }  // namespace GLCore

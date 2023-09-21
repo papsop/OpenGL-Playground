@@ -2,18 +2,19 @@
 #include <GLCore/Core/Layer.h>
 #include <GLCore/Utils/Log.h>
 
-namespace GLCore
-{
+namespace GLCore {
 
-LayerStack::LayerStack() : m_layers() {}
+LayerStack::LayerStack() : m_layers()
+{
+}
 
 LayerStack::~LayerStack()
 {
-  for (auto* layer : m_layers)
-  {
+  for (auto* layer : m_layers) {
     layer->OnDetach();
     delete layer;
   }
+  m_layers.clear();
 }
 
 void LayerStack::PushLayer(I_Layer* layer)

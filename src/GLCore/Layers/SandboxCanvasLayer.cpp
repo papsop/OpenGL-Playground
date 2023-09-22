@@ -81,12 +81,10 @@ void SandboxCanvasLayer::OnImGuiUpdate(Timestep dt)
 
     glm::vec2 screenPosition = {mousePos.x, mousePos.y};
     glm::vec2 worldPosition = Application::Instance().GetMainCamera()->ScreenToWorld(screenPosition);
-    glm::vec2 mouseDelta = {io.MouseDelta.x, io.MouseDelta.y};
 
     auto* drawList = ImGui::GetForegroundDrawList();
     char temp[255];
-    sprintf(temp, "Screen: [%.2lf, %.2lf]\nWorld: [%.2lf, %.2lf]\nMouseDelta: [%.2lf, %.2lf]", screenPosition.x, screenPosition.y, worldPosition.x,
-            worldPosition.y, mouseDelta.x, mouseDelta.y);
+    sprintf(temp, "Screen: [%.2lf, %.2lf]\nWorld: [%.2lf, %.2lf]", screenPosition.x, screenPosition.y, worldPosition.x, worldPosition.y);
     drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), pos, ImColor(255, 255, 0, 255), temp, 0, 0.0f, 0);
   }
 

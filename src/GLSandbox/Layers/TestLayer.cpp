@@ -6,6 +6,8 @@ void GLSandbox::TestLayer::OnUpdate(GLCore::Timestep dt)
 {
   GLCore::Renderer2D::Get()->DrawLine({0.0, 0.0f}, {5.0f, 5.0f}, {1.0f, 0.0f, 0.0f, 1.0f});
   GLCore::Renderer2D::Get()->DrawLine({0.0, 0.0f}, {5.0f, -5.0f}, {0.0f, 1.0f, 0.0f, 1.0f});
+  GLCore::Renderer2D::Get()->DrawLine({0.0, 0.0f}, {-5.0f, -5.0f}, {0.0f, 0.0f, 1.0f, 1.0f});
+  GLCore::Renderer2D::Get()->DrawLine({0.0, 0.0f}, {-5.0f, 5.0f}, {1.0f, 0.0f, 1.0f, 1.0f});
 
   for (auto& line : m_lines) {
     GLCore::Renderer2D::Get()->DrawLine(line.first, line.second, {1.0f, 0.0f, 0.0f, 1.0f});
@@ -24,7 +26,6 @@ void TestLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEven
   }
   else if (e.Type == GLCore::E_SandboxCanvasMouseEvent::LeftClickReleased) {
     m_lines.push_back(std::make_pair(m_lastPoint, worldPos));
-    LOG_INFO("Adding line between [{0}, {1}] and [{2}, {3}]", m_lastPoint.x, m_lastPoint.y, worldPos.x, worldPos.y);
   }
 }
 void TestLayer::OnAttach()

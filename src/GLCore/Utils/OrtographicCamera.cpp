@@ -63,6 +63,7 @@ glm::vec2 OrthographicCamera::ScreenToWorld(glm::vec2 screenPos)
   float topZ = m_top / m_zoom;
 
   glm::vec2 result = ((screenPos / m_canvasSize) * glm::vec2(2, 2)) - glm::vec2(1, 1);
+  result.y *= -1.0;  // need to flip, so it corresponds to opengl world coords
 
   // get lengths of camera borders
   float width = abs(std::min(leftZ, rightZ) - std::max(leftZ, rightZ));

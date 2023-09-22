@@ -36,8 +36,8 @@ void CameraControlLayer::OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEve
 
   if (event.Type == E_SandboxCanvasMouseEvent::RightClickDown) {
     glm::vec2 offset = mousePos - m_lastMousePos;
-    offset.x *= -1.0f;
-    m_camera->SetPosition(m_camera->GetPosition() + offset);
+
+    m_camera->SetPosition(m_camera->GetPosition() - offset);  // subtract so the position follows mouse instead of reverse
 
     m_lastMousePos = m_camera->ScreenToWorld(event.Position);  // recalculate, because Camera changed projection
   }

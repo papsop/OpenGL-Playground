@@ -12,20 +12,35 @@ void GLSandbox::TestLayer::OnUpdate(GLCore::Timestep dt)
   for (auto& line : m_lines) {
     GLCore::Renderer2D::Get()->DrawLine(line.first, line.second, {1.0f, 0.0f, 0.0f, 1.0f});
   }
-}
 
+  if (m_drawing) {
+    GLCore::Renderer2D::Get()->DrawLine(m_linePreview.first, m_linePreview.second, {1.0f, 1.0f, 0.0f, .5f});
+  }
+}
 void TestLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEvent& e)
 {
-  if (e.Type != GLCore::E_SandboxCanvasMouseEvent::LeftClickPressed && e.Type != GLCore::E_SandboxCanvasMouseEvent::LeftClickReleased) return;
   // LOG_INFO("received leftclick p mouse event");
 
   glm::vec2 worldPos = GLCore::Application::Instance().GetMainCamera()->ScreenToWorld(e.Position);
 
+  // Drawing
   if (e.Type == GLCore::E_SandboxCanvasMouseEvent::LeftClickPressed) {
     m_lastPoint = worldPos;
+    m_drawing = true;
   }
-  else if (e.Type == GLCore::E_SandboxCanvasMouseEvent::LeftClickReleased) {
+  else if (e.Type == GLCore::E_SandboxCanvasMouseEvent::LeftClickReleased && m_drawing) {
     m_lines.push_back(std::make_pair(m_lastPoint, worldPos));
+    m_drawing = false;
+  }
+
+  // Cancel drawing
+  if (e.Type == GLCore::E_SandboxCanvasMouseEvent::RightClickReleased) {
+    m_drawing = false;
+  }
+
+  // Preview
+  if (e.Type == GLCore::E_SandboxCanvasMouseEvent::LeftClickDown) {
+    m_linePreview = std::make_pair(m_lastPoint, worldPos);
   }
 }
 void TestLayer::OnAttach()

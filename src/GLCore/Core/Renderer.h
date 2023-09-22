@@ -17,6 +17,8 @@ class LinesRenderer {
 
   void Vertex(glm::vec2 p, glm::vec4 color);
 
+  size_t Count();
+
  private:
   GLuint m_VAO;
   GLuint m_VBOs[2];
@@ -45,6 +47,9 @@ class Renderer2D {
   void DrawLine(glm::vec2 a, glm::vec2 b, glm::vec4 color);
   void DrawCircle(){};    // todo
   void DrawTriangle(){};  // todo
+
+  size_t GetLinesCount();
+
  private:
   LinesRenderer m_lines;
 };

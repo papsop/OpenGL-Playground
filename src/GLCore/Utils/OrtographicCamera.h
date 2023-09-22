@@ -5,6 +5,17 @@
 
 namespace GLCore {
 
+struct CalculatedCameraData {
+  float Zoom;
+  glm::vec4 Borders;
+  glm::vec2 Position;
+
+  bool operator==(const CalculatedCameraData& other)
+  {
+    return Zoom == other.Zoom && Borders == other.Borders && Position == other.Position;
+  }
+};
+
 class OrthographicCamera {
  public:
   void Create(float left, float right, float bottom, float top);
@@ -23,6 +34,7 @@ class OrthographicCamera {
 
  private:
   void RecalculateProjectionMatrix();
+  CalculatedCameraData m_calculatedData;
 
   glm::mat4 m_projectionMat;
   glm::vec2 m_canvasSize;

@@ -81,6 +81,15 @@ void LinesRenderer::Vertex(glm::vec2 p, glm::vec4 color)
   m_vertexCount++;
 }
 
+size_t LinesRenderer::Count()
+{
+  // This is going to be 0 when ImGui layer tries to get it. It's because we Flush() at the end of framebuffer frame.
+  // Flush() resets number of vertices for this frame, so it's going to be 0 til next frame.
+  // TODO: Count vertices separately during stat counting for this frame
+  // TODO: Add more stats like: render time
+  return m_vertexCount;
+}
+
 Renderer2D* Renderer2D::Get()
 {
   return Application::Instance().GetRenderer();
@@ -108,6 +117,11 @@ void Renderer2D::DrawLine(glm::vec2 a, glm::vec2 b, glm::vec4 color)
 {
   m_lines.Vertex(a, color);
   m_lines.Vertex(b, color);
+}
+
+size_t Renderer2D::GetLinesCount()
+{
+  return m_lines.Count();
 }
 
 }  // namespace GLCore

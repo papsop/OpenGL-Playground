@@ -7,6 +7,7 @@
 #include <GLCore/Layers/ApplicationControlLayer.h>
 #include <GLCore/Layers/SandboxCanvasLayer.h>
 #include <GLCore/Layers/CameraControlLayer.h>
+#include <GLCore/Layers/RendererControlLayer.h>
 
 #include <GLCore/Utils/Log.h>
 #include <GLCore/Utils/IDGenerator.h>
@@ -87,6 +88,7 @@ void Application::Run()
   PushLayer(new SandboxCanvasLayer());
   PushLayer(new ApplicationControlLayer());
   PushLayer(new CameraControlLayer());
+  PushLayer(new RendererControlLayer());
 
   REGISTER_EVENT_CALLBACK(E_WindowEvent, this, &Application::OnWindowEvent);
 

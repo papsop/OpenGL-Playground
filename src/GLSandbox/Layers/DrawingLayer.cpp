@@ -1,8 +1,8 @@
-#include <GLSandbox/Layers/TestLayer.h>
+#include <GLSandbox/Layers/DrawingLayer.h>
 #include <GLCore/Core/Application.h>
 
 namespace GLSandbox {
-void GLSandbox::TestLayer::OnUpdate(GLCore::Timestep dt)
+void GLSandbox::DrawingLayer::OnUpdate(GLCore::Timestep dt)
 {
   GLCore::Renderer2D::Get()->DrawLine({0.0, 0.0f}, {5.0f, 5.0f}, {1.0f, 0.0f, 0.0f, 1.0f});
   GLCore::Renderer2D::Get()->DrawLine({0.0, 0.0f}, {5.0f, -5.0f}, {0.0f, 1.0f, 0.0f, 1.0f});
@@ -17,7 +17,7 @@ void GLSandbox::TestLayer::OnUpdate(GLCore::Timestep dt)
     GLCore::Renderer2D::Get()->DrawLine(m_linePreview.first, m_linePreview.second, {1.0f, 1.0f, 0.0f, .5f});
   }
 }
-void TestLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEvent& e)
+void DrawingLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEvent& e)
 {
   // LOG_INFO("received leftclick p mouse event");
 
@@ -26,6 +26,7 @@ void TestLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEven
   // Drawing
   if (e.Type == GLCore::E_SandboxCanvasMouseEvent::LeftClickPressed) {
     m_lastPoint = worldPos;
+    m_linePreview = std::make_pair(m_lastPoint, m_lastPoint);
     m_drawing = true;
   }
   else if (e.Type == GLCore::E_SandboxCanvasMouseEvent::LeftClickReleased && m_drawing) {
@@ -43,12 +44,12 @@ void TestLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEven
     m_linePreview = std::make_pair(m_lastPoint, worldPos);
   }
 }
-void TestLayer::OnAttach()
+void DrawingLayer::OnAttach()
 {
-  REGISTER_EVENT_CALLBACK(GLCore::E_SandboxCanvasMouseEvent, this, &TestLayer::OnSandboxCanvasMouseEvent);
+  REGISTER_EVENT_CALLBACK(GLCore::E_SandboxCanvasMouseEvent, this, &DrawingLayer::OnSandboxCanvasMouseEvent);
 }
 
-void TestLayer::OnDetach()
+void DrawingLayer::OnDetach()
 {
   UNREGISTER_EVENT_CALLBACK(GLCore::E_SandboxCanvasMouseEvent, this);
 }

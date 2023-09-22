@@ -35,7 +35,6 @@ void OrthographicCamera::SetZoom(float zoom)
 void OrthographicCamera::SetCanvasSize(glm::vec2 size)
 {
   m_canvasSize = size;
-  LOG_INFO("Canvas resized");
   // no need to recalculate, this only affects ScreenToWorld()
 }
 
@@ -78,15 +77,24 @@ glm::vec2 OrthographicCamera::ScreenToWorld(glm::vec2 screenPos)
   return result;
 }
 
-// TODO: compare old/new data, maybe we don't have to recalculate every frame
-// cba right now
 void OrthographicCamera::RecalculateProjectionMatrix()
 {
+  CalculatedCameraData newData;
+  newData.Borders[0] = m_left;
+  newData.Borders[1] = m_right;
+  newData.Borders[2] = m_bottom;
+  newData.Borders[3] = m_top;
+  newData.Position = m_position;
+  newData.Zoom = m_zoom;
+
+  if (newData == m_calculatedData) return;  // ignore, same data
+
   glm::vec3 positionVec3 = glm::vec3(m_position.x, m_position.y, -3.0f);
   glm::mat4 transform = glm::translate(glm::mat4(1.0f), positionVec3);
   glm::mat4 viewMatrix = glm::inverse(transform);
 
   m_projectionMat = glm::ortho(m_left / m_zoom, m_right / m_zoom, m_bottom / m_zoom, m_top / m_zoom, -1000.0f, 1000.0f);
   m_projectionMat = m_projectionMat * viewMatrix;
+  m_calculatedData = newData;
 }
 }  // namespace GLCore

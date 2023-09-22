@@ -3,9 +3,9 @@
 #include <GLCore/Core/Events.h>
 
 namespace GLSandbox {
-class TestLayer : public GLCore::I_Layer {
+class DrawingLayer : public GLCore::I_Layer {
  public:
-  TestLayer() : I_Layer("Sandbox test layer")
+  DrawingLayer() : I_Layer("Drawing layer")
   {
   }
 

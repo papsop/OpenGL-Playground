@@ -51,6 +51,11 @@ void SandboxCanvasLayer::HandleCanvasMouseEvents()
   if (ImGui::IsMouseDown(ImGuiMouseButton_Right)) {
     DISPATCH_EVENT(E_SandboxCanvasMouseEvent(E_SandboxCanvasMouseEvent::RightClickDown, {mousePos.x, mousePos.y}, true));
   }
+
+  // mouse wheel
+  if (io.MouseWheel != 0.0f) {
+    DISPATCH_EVENT(E_SandboxCanvasMouseEvent(E_SandboxCanvasMouseEvent::WheelUsed, io.MouseWheel, true));
+  }
 }
 
 void SandboxCanvasLayer::OnImGuiUpdate(Timestep dt)

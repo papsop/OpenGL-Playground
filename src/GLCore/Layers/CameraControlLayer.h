@@ -21,5 +21,6 @@ class CameraControlLayer : public I_Layer {
  private:
   OrthographicCamera* m_camera;
   glm::vec2 m_lastMousePos;
+  float m_mouseWheelSensitivity = 0.3f;
 };
 }  // namespace GLCore

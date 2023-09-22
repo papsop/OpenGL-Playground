@@ -41,6 +41,10 @@ void CameraControlLayer::OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEve
 
     m_lastMousePos = m_camera->ScreenToWorld(event.Position);  // recalculate, because Camera changed projection
   }
+
+  if (event.Type == E_SandboxCanvasMouseEvent::WheelUsed) {
+    m_camera->SetZoom(m_camera->GetZoom() + (event.Wheel * m_mouseWheelSensitivity));
+  }
 }
 
 void CameraControlLayer::OnImGuiUpdate(Timestep dt)

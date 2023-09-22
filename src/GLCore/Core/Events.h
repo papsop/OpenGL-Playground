@@ -169,14 +169,20 @@ struct E_SandboxCanvasMouseEvent : public GLCoreEventBase {
     RightClickPressed,
     RightClickDown,
     RightClickReleased,
+    WheelUsed,
   };
 
   E_SandboxCanvasMouseEvent(EventType type, glm::vec2 pos, bool immediate) : GLCoreEventBase(immediate), Type(type), Position(pos)
   {
   }
 
+  E_SandboxCanvasMouseEvent(EventType type, float wheel, bool immediate) : GLCoreEventBase(immediate), Type(type), Wheel(wheel)
+  {
+  }
+
   EventType Type;
   glm::vec2 Position;
+  float Wheel;
 };
 
 struct E_SandboxCanvasEvent : public GLCoreEventBase {

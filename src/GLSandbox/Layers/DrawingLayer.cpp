@@ -9,6 +9,8 @@ void GLSandbox::DrawingLayer::OnUpdate(GLCore::Timestep dt)
   GLCore::Renderer2D::Get()->DrawLine({0.0, 0.0f}, {-5.0f, -5.0f}, {0.0f, 0.0f, 1.0f, 1.0f});
   GLCore::Renderer2D::Get()->DrawLine({0.0, 0.0f}, {-5.0f, 5.0f}, {1.0f, 0.0f, 1.0f, 1.0f});
 
+  GLCore::Renderer2D::Get()->DrawCircle({0.0, 0.0f}, 2.0f, {1.0f, 1.0f, 1.0f, 1.0f});
+
   for (auto& line : m_lines) {
     GLCore::Renderer2D::Get()->DrawLine(line.first, line.second, {1.0f, 0.0f, 0.0f, 1.0f});
   }

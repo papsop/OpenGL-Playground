@@ -44,7 +44,7 @@ class Renderer2D {
 
   // Drawing interface
   void DrawLine(glm::vec2 a, glm::vec2 b, glm::vec4 color);
-  void DrawCircle(){};    // todo
+  void DrawCircle(glm::vec2 center, float radius, glm::vec4 color);
   void DrawTriangle(){};  // todo
 
   size_t GetLinesCount();

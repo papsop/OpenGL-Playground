@@ -1,6 +1,8 @@
 #include <GLCore/Core/Renderer.h>
 #include <GLCore/Core/Application.h>
 
+#include <glm/ext/scalar_constants.hpp>
+
 namespace GLCore {
 
 // =============================================================
@@ -115,6 +117,29 @@ void Renderer2D::DrawLine(glm::vec2 a, glm::vec2 b, glm::vec4 color)
 {
   m_lines.Vertex(a, color);
   m_lines.Vertex(b, color);
+}
+
+void Renderer2D::DrawCircle(glm::vec2 center, float radius, glm::vec4 color)
+{
+  // for an actual nice circle, canvas has to be square, otherwise it get stretched
+  float increments = 20.0f;
+  float relativeIncrement = glm::pi<float>() * 2.0f / increments;
+  float sinInc = sin(relativeIncrement);
+  float cosInc = cos(relativeIncrement);
+  glm::vec2 p1{1.0f, 0.0f};
+  glm::vec2 w1 = center + radius * p1;
+  for (size_t i = 0; i < increments; i++) {
+    // https://math.stackexchange.com/a/814981
+    glm::vec2 p2;
+    p2.x = cosInc * p1.x - sinInc * p1.y;
+    p2.y = sinInc * p1.x + cosInc * p1.y;
+    glm::vec2 w2;
+    w2 = center + radius * p2;
+    m_lines.Vertex(w1, color);
+    m_lines.Vertex(w2, color);
+    w1 = w2;
+    p1 = p2;
+  }
 }
 
 size_t Renderer2D::GetLinesCount()

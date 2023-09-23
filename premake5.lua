@@ -61,6 +61,7 @@ project "GLSandbox"
     files { "src/GLSandbox/**.cpp", "src/GLSandbox/**.h", "src/GLSandbox/**.inl"}
 
     links { "GLCore" }
+    ignoredefaultlibraries { "libcmtd.lib" } -- causes LNK4098 if included
 
     filter "system:windows"
         defines { "_WINDOWS", "GLFW_INCLUDE_NONE",}

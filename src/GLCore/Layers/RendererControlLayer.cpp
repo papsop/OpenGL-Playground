@@ -6,9 +6,9 @@ namespace GLCore {
 
 void RendererControlLayer::OnImGuiUpdate(Timestep dt)
 {
-  ImGui::Begin(GetName());
+  // ImGui::Begin(GetName());
 
-  ImGui::End();
+  // ImGui::End();
 }
 
 void RendererControlLayer::OnAttach()

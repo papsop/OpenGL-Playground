@@ -1,7 +1,5 @@
 #include <GLCore/Core/Renderer.h>
 #include <GLCore/Core/Application.h>
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
 
 namespace GLCore {
 

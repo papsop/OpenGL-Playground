@@ -1,5 +1,4 @@
 #include <GLCore/Core/Application.h>
-
 #include <GLSandbox/Layers/DrawingLayer.h>
 
 #include <iostream>

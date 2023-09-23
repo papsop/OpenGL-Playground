@@ -5,17 +5,6 @@
 
 namespace GLCore {
 
-struct CalculatedCameraData {
-  float Zoom;
-  glm::vec4 Borders;
-  glm::vec2 Position;
-
-  bool operator==(const CalculatedCameraData& other)
-  {
-    return Zoom == other.Zoom && Borders == other.Borders && Position == other.Position;
-  }
-};
-
 class OrthographicCamera {
  public:
   void Create(float left, float right, float bottom, float top);
@@ -23,7 +12,7 @@ class OrthographicCamera {
   void SetPosition(glm::vec2 position);
   void SetProjection(float left, float right, float bottom, float top);
   void SetZoom(float zoom);
-  void SetCanvasSize(glm::vec2 size);
+  void SetCanvasSize(int width, int height);
 
   glm::vec2 GetPosition();
   float GetZoom();
@@ -33,11 +22,23 @@ class OrthographicCamera {
   glm::vec2 ScreenToWorld(glm::vec2);
 
  private:
+  struct CalculatedCameraData {
+    float Zoom;
+    glm::vec4 Borders;
+    glm::vec2 Position;
+
+    bool operator==(const CalculatedCameraData& other)
+    {
+      return Zoom == other.Zoom && Borders == other.Borders && Position == other.Position;
+    }
+  };
+
   void RecalculateProjectionMatrix();
   CalculatedCameraData m_calculatedData;
 
   glm::mat4 m_projectionMat;
-  glm::vec2 m_canvasSize;
+  int m_canvasWidth;
+  int m_canvasHeight;
 
   float m_left;
   float m_right;

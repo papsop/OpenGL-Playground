@@ -191,9 +191,8 @@ struct E_SandboxCanvasEvent : public GLCoreEventBase {
   };
 
   EventType Type;
-  union {
-    glm::vec2 NewSize;
-  } Data;
+  int Width;
+  int Height;
 
   E_SandboxCanvasEvent(EventType type) : Type(type){};
 };

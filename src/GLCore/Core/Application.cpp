@@ -14,7 +14,7 @@
 
 #include <GLCore/Platform/WindowsWindow.h>
 
-#include <GLFW/glfw3.h>
+#include <GLCore/Core/GLFWGlad.h>
 
 #include <memory>
 #include <iostream>

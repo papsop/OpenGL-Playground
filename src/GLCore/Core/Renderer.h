@@ -1,7 +1,6 @@
 #pragma once
 #include <GLCore/Utils/Shader.h>
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include <GLCore/Core/GLFWGlad.h>
 
 #include <GLM/vec2.hpp>
 #include <GLM/vec4.hpp>
@@ -28,7 +27,7 @@ class LinesRenderer {
   static constexpr size_t MAX_VERTICES = 1024;
   glm::vec2 m_vertices[1024];
   glm::vec4 m_colors[1024];
-  size_t m_vertexCount;
+  int m_vertexCount;
 
   Shader m_basicShader;
 };

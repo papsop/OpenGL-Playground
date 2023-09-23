@@ -1,7 +1,6 @@
 #pragma once
 #include <GLCore/Core/Window.h>
-#include <GLFW/glfw3.h>
-#include <GLAD/glad.h>
+#include <GLCore/Core/GLFWGlad.h>
 
 namespace GLCore {
 

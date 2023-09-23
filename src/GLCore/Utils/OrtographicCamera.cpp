@@ -32,9 +32,10 @@ void OrthographicCamera::SetZoom(float zoom)
   RecalculateProjectionMatrix();
 }
 
-void OrthographicCamera::SetCanvasSize(glm::vec2 size)
+void OrthographicCamera::SetCanvasSize(GLsizei width, GLsizei height)
 {
-  m_canvasSize = size;
+  m_canvasWidth = width;
+  m_canvasHeight = height;
   // no need to recalculate, this only affects ScreenToWorld()
 }
 
@@ -61,7 +62,7 @@ glm::vec2 OrthographicCamera::ScreenToWorld(glm::vec2 screenPos)
   float bottomZ = m_bottom / m_zoom;
   float topZ = m_top / m_zoom;
 
-  glm::vec2 result = ((screenPos / m_canvasSize) * glm::vec2(2, 2)) - glm::vec2(1, 1);
+  glm::vec2 result = ((screenPos / glm::vec2{m_canvasWidth, m_canvasHeight}) * glm::vec2(2, 2)) - glm::vec2(1, 1);
   result.y *= -1.0;  // need to flip, so it corresponds to opengl world coords
 
   // get lengths of camera borders

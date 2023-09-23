@@ -22,7 +22,7 @@ void CameraControlLayer::OnDetach()
 void CameraControlLayer::OnSandboxCanvasResize(const E_SandboxCanvasEvent& event)
 {
   if (event.Type == E_SandboxCanvasEvent::Resize) {
-    m_camera->SetCanvasSize(event.Data.NewSize);
+    m_camera->SetCanvasSize(event.Width, event.Height);
   }
 }
 

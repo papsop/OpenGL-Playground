@@ -20,7 +20,7 @@ class ApplicationControlLayer : public I_Layer {
  private:
   Application* m_application;
   LayerStack* m_layerStack;
-  size_t m_fpsValueOffset = 0;  // for wrapping
+  int m_fpsValueOffset = 0;  // for wrapping
   float m_fpsValues[144] = {};
 };
 }  // namespace GLCore

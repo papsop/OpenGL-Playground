@@ -2,7 +2,8 @@
 #include <GlCore/Core/Application.h>
 #include <GLCore/Utils/Log.h>
 
-#include <GLFW/glfw3.h>
+#include <GLCore/Core/GLFWGlad.h>
+
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imgui_impl_glfw.h>

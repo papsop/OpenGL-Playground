@@ -1,6 +1,5 @@
 #pragma once
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include <GLCore/Core/GLFWGlad.h>
 #include <glm/vec2.hpp>
 
 namespace GLCore {
@@ -9,16 +8,18 @@ class SandboxCanvas {
   void Create();
   void Destroy();
 
-  void ResizeCanvas(glm::vec2 size);
+  void ResizeCanvas(GLsizei width, GLsizei height);
 
   void Bind();
   void Unbind();
 
-  glm::vec2 GetSize();
-  GLuint GetTextureID();
+  GLsizei GetWidth();
+  GLsizei GetHeight();
+  uint64_t GetTextureID();
 
  private:
-  glm::vec2 m_size;
+  GLsizei m_width;
+  GLsizei m_height;
 
   GLuint m_FBO;
   GLuint m_texture;

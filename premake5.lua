@@ -4,6 +4,7 @@ workspace "OpenGL_Playground"
     location "project/"
     flags { "MultiProcessorCompile" }
 
+-- ===========================================================================
 project "GLCore"
     kind "StaticLib"
     language "C++"
@@ -35,6 +36,25 @@ project "GLCore"
     filter "system:windows"
     defines { "_WINDOWS", "GLFW_INCLUDE_NONE", "SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE" }
 
+-- ===========================================================================
+project "Physics"
+    kind "StaticLib"
+    language "C++"
+    cppdialect "C++17"
+    architecture "x86_64"
+
+    targetdir "build/bin/%{cfg.buildcfg}"
+    objdir "build/obj/%{cfg.buildcfg}"
+
+    links { "GLM" } -- maybe make our own vector lib later, for now just use glm
+
+    vpaths { 
+        ["Headers/"] = { "**.h", "**.inl" },
+        ["Sources/"] = { "**.c", "**.cpp"},
+    }
+
+    files { "src/Physics/**.cpp", "src/Physics/**.h", "src/Physics/**.inl"}
+-- ===========================================================================
 project "GLSandbox"
     kind "ConsoleApp"
     language "C++"
@@ -60,7 +80,7 @@ project "GLSandbox"
 
     files { "src/GLSandbox/**.cpp", "src/GLSandbox/**.h", "src/GLSandbox/**.inl"}
 
-    links { "GLCore" }
+    links { "GLCore", "Physics" }
     ignoredefaultlibraries { "libcmtd.lib" } -- causes LNK4098 if included
 
     filter "system:windows"

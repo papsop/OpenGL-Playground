@@ -9,6 +9,7 @@ void OrthographicCamera::Create(OrtographicProjectionParams params)
 {
   SetProjection(params);
   SetZoom(1.0f);
+  LOG_INFO("{0}, {1}", GetCameraWidth(), GetCameraHeight());
 }
 
 void OrthographicCamera::SetPosition(glm::vec2 position)
@@ -29,11 +30,12 @@ void OrthographicCamera::SetZoom(float zoom)
   RecalculateProjectionMatrix();
 }
 
-void OrthographicCamera::SetCanvasSize(GLsizei width, GLsizei height)
+void OrthographicCamera::SetCanvasSize(float width, float height)
 {
   m_canvasWidth = width;
   m_canvasHeight = height;
-  // no need to recalculate, this only affects ScreenToWorld()
+  // LOG_INFO("Canvas ratio: {0}", m_canvasWidth / m_canvasHeight);
+  RecalculateProjectionMatrix();
 }
 
 glm::vec2 OrthographicCamera::GetPosition()
@@ -100,13 +102,26 @@ void OrthographicCamera::RecalculateProjectionMatrix()
   newParams.Position = m_position;
   newParams.Zoom = m_zoom;
 
-  if (newParams == m_params) return;  // ignore, same data
+  // if (newParams == m_params) return;  // ignore, same data
 
   glm::vec3 positionVec3 = glm::vec3(m_position.x, m_position.y, -3.0f);
   glm::mat4 transform = glm::translate(glm::mat4(1.0f), positionVec3);
   glm::mat4 viewMatrix = glm::inverse(transform);
 
-  m_projectionMat = glm::ortho(m_params.Left / m_zoom, m_params.Right / m_zoom, m_params.Bottom / m_zoom, m_params.Top / m_zoom, -1000.0f, 1000.0f);
+  float canvasAspect = m_canvasWidth / m_canvasHeight;
+  float cameraAspect = GetCameraWidth() / GetCameraHeight();
+
+  // LOG_INFO("canvas: {0}, camera: {1}", canvasAspect, cameraAspect);
+  if (canvasAspect > cameraAspect) {
+    float ratio = canvasAspect / cameraAspect;
+    m_projectionMat =
+        glm::ortho(ratio * (m_params.Left / m_zoom), ratio * (m_params.Right / m_zoom), m_params.Bottom / m_zoom, m_params.Top / m_zoom, -1000.0f, 1000.0f);
+  }
+  else {
+    float ratio = cameraAspect / canvasAspect;
+    m_projectionMat =
+        glm::ortho(m_params.Left / m_zoom, m_params.Right / m_zoom, ratio * (m_params.Bottom / m_zoom), ratio * (m_params.Top / m_zoom), -1000.0f, 1000.0f);
+  }
   m_projectionMat = m_projectionMat * viewMatrix;
   m_params = newParams;
 }

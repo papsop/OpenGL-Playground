@@ -191,8 +191,8 @@ struct E_SandboxCanvasEvent : public GLCoreEventBase {
   };
 
   EventType Type;
-  int Width;
-  int Height;
+  float Width;
+  float Height;
 
   E_SandboxCanvasEvent(EventType type) : Type(type){};
 };

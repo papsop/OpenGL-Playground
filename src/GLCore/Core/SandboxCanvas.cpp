@@ -58,8 +58,8 @@ void SandboxCanvas::ResizeCanvas(GLsizei width, GLsizei height)
 
   E_SandboxCanvasEvent e(E_SandboxCanvasEvent::Resize);
   e.Immediate = true;
-  e.Width = m_width;
-  e.Height = m_height;
+  e.Width = static_cast<float>(m_width);
+  e.Height = static_cast<float>(m_height);
   DISPATCH_EVENT(e);
 }
 

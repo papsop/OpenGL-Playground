@@ -39,7 +39,8 @@ class OrthographicCamera {
   void SetPosition(glm::vec2 position);
   void SetProjection(OrtographicProjectionParams params);
   void SetZoom(float zoom);
-  void SetCanvasSize(int width, int height);
+
+  void SetCanvasSize(float width, float height);
 
   glm::vec2 GetPosition();
   float GetZoom();
@@ -56,8 +57,8 @@ class OrthographicCamera {
 
   OrtographicProjectionParams m_params;
   glm::mat4 m_projectionMat;
-  int m_canvasWidth;
-  int m_canvasHeight;
+  float m_canvasWidth;
+  float m_canvasHeight;
 
   glm::vec2 m_position;
   float m_zoom;

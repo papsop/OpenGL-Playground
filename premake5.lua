@@ -80,7 +80,7 @@ project "GLSandbox"
 
     files { "src/GLSandbox/**.cpp", "src/GLSandbox/**.h", "src/GLSandbox/**.inl"}
 
-    links { "GLCore", "Physics" }
+    links { "GLCore", } --"Physics" }
     ignoredefaultlibraries { "libcmtd.lib" } -- causes LNK4098 if included
 
     filter "system:windows"

@@ -82,7 +82,7 @@ void Application::Run()
 {
   m_renderer->Create();
   m_sandboxCanvas->Create();
-  m_orthoCamera->Create(-5.0f, 5.0f, -5.0f, 5.0f);
+  m_orthoCamera->Create({-5.0f, 5.0f, -5.0f, 5.0f});
 
   PushOverlay(new ImGuiOverlay());
   PushLayer(new SandboxCanvasLayer());

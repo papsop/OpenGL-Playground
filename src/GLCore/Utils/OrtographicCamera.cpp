@@ -5,9 +5,9 @@
 #include <imgui.h>
 namespace GLCore {
 
-void OrthographicCamera::Create(float left, float right, float bottom, float top)
+void OrthographicCamera::Create(OrtographicProjectionParams params)
 {
-  SetProjection(left, right, bottom, top);
+  SetProjection(params);
   SetZoom(1.0f);
 }
 
@@ -17,12 +17,9 @@ void OrthographicCamera::SetPosition(glm::vec2 position)
   RecalculateProjectionMatrix();
 }
 
-void OrthographicCamera::SetProjection(float left, float right, float bottom, float top)
+void OrthographicCamera::SetProjection(OrtographicProjectionParams params)
 {
-  m_left = left;
-  m_right = right;
-  m_bottom = bottom;
-  m_top = top;
+  m_params = params;
   RecalculateProjectionMatrix();
 }
 
@@ -49,6 +46,25 @@ float OrthographicCamera::GetZoom()
   return m_zoom;
 }
 
+OrtographicProjectionParams OrthographicCamera::GetCameraParams()
+{
+  return m_params;
+}
+
+float OrthographicCamera::GetCameraWidth()
+{
+  float leftZ = m_params.Left / m_zoom;
+  float rightZ = m_params.Right / m_zoom;
+  return abs(std::min(leftZ, rightZ) - std::max(leftZ, rightZ));
+}
+
+float OrthographicCamera::GetCameraHeight()
+{
+  float bottomZ = m_params.Bottom / m_zoom;
+  float topZ = m_params.Top / m_zoom;
+  return abs(std::min(bottomZ, topZ) - std::max(bottomZ, topZ));
+}
+
 glm::mat4 OrthographicCamera::GetProjectionMatrix()
 {
   return m_projectionMat;
@@ -57,17 +73,17 @@ glm::mat4 OrthographicCamera::GetProjectionMatrix()
 glm::vec2 OrthographicCamera::ScreenToWorld(glm::vec2 screenPos)
 {
   // screen space (-1;1), [0,0] is middle of the screen
-  float leftZ = m_left / m_zoom;
-  float rightZ = m_right / m_zoom;
-  float bottomZ = m_bottom / m_zoom;
-  float topZ = m_top / m_zoom;
+  float leftZ = m_params.Left / m_zoom;
+  float rightZ = m_params.Right / m_zoom;
+  float bottomZ = m_params.Bottom / m_zoom;
+  float topZ = m_params.Top / m_zoom;
 
   glm::vec2 result = ((screenPos / glm::vec2{m_canvasWidth, m_canvasHeight}) * glm::vec2(2, 2)) - glm::vec2(1, 1);
   result.y *= -1.0;  // need to flip, so it corresponds to opengl world coords
 
   // get lengths of camera borders
-  float width = abs(std::min(leftZ, rightZ) - std::max(leftZ, rightZ));
-  float height = abs(std::min(bottomZ, topZ) - std::max(bottomZ, topZ));
+  float width = GetCameraWidth();
+  float height = GetCameraHeight();
 
   // map interval (-1;1) to (min_border, max_border)
   result.x *= (width - abs(std::min(leftZ, rightZ)));
@@ -80,22 +96,18 @@ glm::vec2 OrthographicCamera::ScreenToWorld(glm::vec2 screenPos)
 
 void OrthographicCamera::RecalculateProjectionMatrix()
 {
-  CalculatedCameraData newData;
-  newData.Borders[0] = m_left;
-  newData.Borders[1] = m_right;
-  newData.Borders[2] = m_bottom;
-  newData.Borders[3] = m_top;
-  newData.Position = m_position;
-  newData.Zoom = m_zoom;
+  OrtographicProjectionParams newParams(m_params);
+  newParams.Position = m_position;
+  newParams.Zoom = m_zoom;
 
-  if (newData == m_calculatedData) return;  // ignore, same data
+  if (newParams == m_params) return;  // ignore, same data
 
   glm::vec3 positionVec3 = glm::vec3(m_position.x, m_position.y, -3.0f);
   glm::mat4 transform = glm::translate(glm::mat4(1.0f), positionVec3);
   glm::mat4 viewMatrix = glm::inverse(transform);
 
-  m_projectionMat = glm::ortho(m_left / m_zoom, m_right / m_zoom, m_bottom / m_zoom, m_top / m_zoom, -1000.0f, 1000.0f);
+  m_projectionMat = glm::ortho(m_params.Left / m_zoom, m_params.Right / m_zoom, m_params.Bottom / m_zoom, m_params.Top / m_zoom, -1000.0f, 1000.0f);
   m_projectionMat = m_projectionMat * viewMatrix;
-  m_calculatedData = newData;
+  m_params = newParams;
 }
 }  // namespace GLCore

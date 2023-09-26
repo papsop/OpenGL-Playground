@@ -8,7 +8,7 @@ namespace GLCore {
 
 void OrthographicCamera::Create(glm::vec2 size, glm::vec2 position)
 {
-  m_cameraSize = size;
+  m_cameraMainSize = size;
   m_zoom = 1.0f;
   m_position = position;
   RecalculateProjectionMatrix();
@@ -38,11 +38,11 @@ void OrthographicCamera::SetCanvasSize(glm::vec2 size)
   RecalculateProjectionMatrix();
 }
 
-void OrthographicCamera::SetCameraSize(glm::vec2 size)
+void OrthographicCamera::SetCameraMainSize(glm::vec2 size)
 {
-  if (m_cameraSize == size) return;
+  if (m_cameraMainSize == size) return;
 
-  m_cameraSize = size;
+  m_cameraMainSize = size;
   RecalculateProjectionMatrix();
 }
 
@@ -58,18 +58,12 @@ float OrthographicCamera::GetZoom()
 
 float OrthographicCamera::GetWidth()
 {
-  // float left = (m_cameraSize.x / -2.0f) / m_zoom;
-  // float right = (m_cameraSize.x / 2.0f) / m_zoom;
-  // return abs(left - right);
-  return m_aspectedCameraSize.x;
+  return m_cameraAspectedSize.x;
 }
 
 float OrthographicCamera::GetHeight()
 {
-  // float bottom = (m_cameraSize.y / -2.0f) / m_zoom;
-  // float top = (m_cameraSize.y / 2.0f) / m_zoom;
-  // return abs(bottom - top);
-  return m_aspectedCameraSize.y;
+  return m_cameraAspectedSize.y;
 }
 
 glm::mat4 OrthographicCamera::GetProjectionMatrix()
@@ -98,10 +92,10 @@ glm::vec2 OrthographicCamera::ScreenToWorld(glm::vec2 screenPos)
 glm::vec4 OrthographicCamera::GetProjectionParams()
 {
   glm::vec4 params;
-  params[0] = (m_cameraSize.x / -2.0f) / m_zoom;
-  params[1] = (m_cameraSize.x / 2.0f) / m_zoom;
-  params[2] = (m_cameraSize.y / -2.0f) / m_zoom;
-  params[3] = (m_cameraSize.y / 2.0f) / m_zoom;
+  params[0] = (m_cameraMainSize.x / -2.0f) / m_zoom;
+  params[1] = (m_cameraMainSize.x / 2.0f) / m_zoom;
+  params[2] = (m_cameraMainSize.y / -2.0f) / m_zoom;
+  params[3] = (m_cameraMainSize.y / 2.0f) / m_zoom;
   return params;
 }
 
@@ -114,19 +108,19 @@ void OrthographicCamera::RecalculateProjectionMatrix()
   glm::mat4 viewMatrix = glm::inverse(transform);
 
   float canvasAspect = m_canvasSize.x / m_canvasSize.y;
-  float cameraAspect = m_cameraSize.x / m_cameraSize.y;
+  float cameraAspect = m_cameraMainSize.x / m_cameraMainSize.y;
 
   // LOG_INFO("canvas: {0}, camera: {1}", canvasAspect, cameraAspect);
-  m_aspectedCameraSize = m_cameraSize;
+  m_cameraAspectedSize = m_cameraMainSize;
   if (canvasAspect > cameraAspect) {
     float ratio = canvasAspect / cameraAspect;
     m_projectionMat = glm::ortho(ratio * projectParams[0], ratio * projectParams[1], projectParams[2], projectParams[3], -1000.0f, 1000.0f);
-    m_aspectedCameraSize.x *= ratio;
+    m_cameraAspectedSize.x *= ratio;
   }
   else {
     float ratio = cameraAspect / canvasAspect;
     m_projectionMat = glm::ortho(projectParams[0], projectParams[1], ratio * projectParams[2], ratio * projectParams[3], -1000.0f, 1000.0f);
-    m_aspectedCameraSize.y *= ratio;
+    m_cameraAspectedSize.y *= ratio;
   }
   m_projectionMat = m_projectionMat * viewMatrix;
 }

@@ -5,30 +5,6 @@
 
 namespace GLCore {
 
-// struct OrtographicProjectionParams {
-//   float Left;
-//   float Right;
-//   float Bottom;
-//   float Top;
-//
-//   float Zoom;
-//   glm::vec2 Position;
-//
-//   OrtographicProjectionParams() = default;
-//
-//   OrtographicProjectionParams(float left, float right, float bottom, float top)
-//       : Left(left), Right(right), Bottom(bottom), Top(top), Zoom(1.0f), Position(0.0f, 0.0f)
-//   {
-//   }
-//
-//   OrtographicProjectionParams(const OrtographicProjectionParams& o) = default;
-//
-//   bool operator==(const OrtographicProjectionParams& o)
-//   {
-//     return (Left == o.Left && Right == o.Right && Bottom == o.Bottom && Top == o.Top && Zoom == o.Zoom && Position == o.Position);
-//   }
-// };
-
 class OrthographicCamera {
  public:
   OrthographicCamera() = default;
@@ -40,7 +16,7 @@ class OrthographicCamera {
   void SetZoom(float zoom);
 
   void SetCanvasSize(glm::vec2 size);
-  void SetCameraSize(glm::vec2 size);
+  void SetCameraMainSize(glm::vec2 size);
 
   glm::vec2 GetPosition();
   float GetZoom();
@@ -58,9 +34,9 @@ class OrthographicCamera {
 
   glm::mat4 m_projectionMat;
 
-  glm::vec2 m_canvasSize;
-  glm::vec2 m_aspectedCameraSize;
-  glm::vec2 m_cameraSize;
+  glm::vec2 m_canvasSize;          // size of ImGui canvas, used for aspect ratio calculation
+  glm::vec2 m_cameraAspectedSize;  // this size is modified by aspect ratio and canvas size
+  glm::vec2 m_cameraMainSize;      // this size will always be shown
 
   glm::vec2 m_position;
   float m_zoom;

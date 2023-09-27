@@ -25,9 +25,10 @@ void SandLayer::OnAttach()
   // QUAD
   float quadVertices[] = {// vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
                           // positions   // texCoords
-                          -1.0f, 1.0f, 0.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 1.0f, 0.0f,
+                          -2.0f, 2.0f, 0.0f, 2.0f, -2.0f, -2.0f, 0.0f, 0.0f, 2.0f, -2.0f, 2.0f, 0.0f,
 
-                          -1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  -1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f};
+                          -2.0f, 2.0f, 0.0f, 2.0f, 2.0f,  -2.0f, 2.0f, 0.0f, 2.0f, 2.0f,  2.0f, 2.0f};
+
   glGenVertexArrays(1, &m_quadVAO);
   glGenBuffers(1, &m_quadVBO);
   glBindVertexArray(m_quadVAO);
@@ -50,15 +51,26 @@ void SandLayer::OnUpdate(GLCore::Timestep dt)
 {
   unsigned char* nextPixel = &m_pixelsBuffer[0];
   for (int i = 0; i < m_pixelsWidth * m_pixelsHeight; i++) {
-    const unsigned char channel = static_cast<unsigned char>(255.0);
-    *nextPixel = 125;
-    ++nextPixel;
-    *nextPixel = 125;
-    ++nextPixel;
-    *nextPixel = 125;
-    ++nextPixel;
-    *nextPixel = 255;
-    ++nextPixel;
+    if (i % 5 == 0) {
+      *nextPixel = 0;
+      ++nextPixel;
+      *nextPixel = 0;
+      ++nextPixel;
+      *nextPixel = 0;
+      ++nextPixel;
+      *nextPixel = 255;
+      ++nextPixel;
+    }
+    else {
+      *nextPixel = 125;
+      ++nextPixel;
+      *nextPixel = 125;
+      ++nextPixel;
+      *nextPixel = 125;
+      ++nextPixel;
+      *nextPixel = 255;
+      ++nextPixel;
+    }
   }
 
   glBindTexture(GL_TEXTURE_2D, m_textureID);
@@ -66,6 +78,8 @@ void SandLayer::OnUpdate(GLCore::Timestep dt)
   glBindTexture(GL_TEXTURE_2D, 0);
 
   m_textureShader.Use();
+  m_textureShader.SetUniform("vProjectionMatrix", GLCore::Application::Instance().GetMainCamera()->GetProjectionMatrix());
+
   glBindVertexArray(m_quadVAO);
   glBindTexture(GL_TEXTURE_2D, m_textureID);
   glDrawArrays(GL_TRIANGLES, 0, 6);

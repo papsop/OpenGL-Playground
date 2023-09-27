@@ -4,6 +4,17 @@
 #include <GLCore/Utils/Shader.h>
 
 namespace GLSandbox {
+enum class E_ParticleType {
+  NONE,
+  SAND,
+  WATER,
+
+  COUNT  // always last
+};
+struct Particle {
+  E_ParticleType Type;
+};
+
 class SandLayer : public GLCore::I_Layer {
  public:
   SandLayer() : I_Layer("Sand layer")
@@ -20,6 +31,7 @@ class SandLayer : public GLCore::I_Layer {
   static constexpr size_t m_pixelsWidth = 400;
   static constexpr size_t m_pixelsHeight = 400;
   unsigned char m_pixelsBuffer[m_pixelsWidth * m_pixelsHeight * 4];
+  Particle m_particles[m_pixelsWidth * m_pixelsHeight];
 
   GLCore::Shader m_textureShader;
 

@@ -23,11 +23,8 @@ void SandLayer::OnAttach()
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // QUAD
-  float quadVertices[] = {// vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-                          // positions   // texCoords
-                          -2.0f, 2.0f, 0.0f, 2.0f, -2.0f, -2.0f, 0.0f, 0.0f, 2.0f, -2.0f, 2.0f, 0.0f,
-
-                          -2.0f, 2.0f, 0.0f, 2.0f, 2.0f,  -2.0f, 2.0f, 0.0f, 2.0f, 2.0f,  2.0f, 2.0f};
+  float quadVertices[] = {-1.0f, 1.0f, 0.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 1.0f, 0.0f,
+                          -1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  -1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f};
 
   glGenVertexArrays(1, &m_quadVAO);
   glGenBuffers(1, &m_quadVBO);
@@ -40,6 +37,18 @@ void SandLayer::OnAttach()
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
+
+  for (int i = 0; i < m_pixelsWidth * m_pixelsHeight; i++) {
+    if (i % 50 == 0) {
+      m_particles[i].Type = E_ParticleType::SAND;
+    }
+    if (i % 70 == 0) {
+      m_particles[i].Type = E_ParticleType::WATER;
+    }
+    else {
+      m_particles[i].Type = E_ParticleType::NONE;
+    }
+  }
 }
 
 void SandLayer::OnDetach()
@@ -49,28 +58,33 @@ void SandLayer::OnDetach()
 
 void SandLayer::OnUpdate(GLCore::Timestep dt)
 {
+  Particle* nextParticle = &m_particles[0];
   unsigned char* nextPixel = &m_pixelsBuffer[0];
   for (int i = 0; i < m_pixelsWidth * m_pixelsHeight; i++) {
-    if (i % 5 == 0) {
-      *nextPixel = 0;
-      ++nextPixel;
-      *nextPixel = 0;
-      ++nextPixel;
-      *nextPixel = 0;
-      ++nextPixel;
-      *nextPixel = 255;
-      ++nextPixel;
+    unsigned char channel;
+    switch (nextParticle->Type) {
+      case (E_ParticleType::NONE):
+        channel = static_cast<unsigned char>(0);
+        break;
+      case (E_ParticleType::SAND):
+        channel = static_cast<unsigned char>(255);
+        break;
+      case (E_ParticleType::WATER):
+        channel = static_cast<unsigned char>(125);
+        break;
+      default:
+        break;
     }
-    else {
-      *nextPixel = 125;
-      ++nextPixel;
-      *nextPixel = 125;
-      ++nextPixel;
-      *nextPixel = 125;
-      ++nextPixel;
-      *nextPixel = 255;
-      ++nextPixel;
-    }
+
+    *nextPixel = channel;
+    ++nextPixel;
+    *nextPixel = channel;
+    ++nextPixel;
+    *nextPixel = channel;
+    ++nextPixel;
+    *nextPixel = 255;
+    ++nextPixel;
+    ++nextParticle;
   }
 
   glBindTexture(GL_TEXTURE_2D, m_textureID);

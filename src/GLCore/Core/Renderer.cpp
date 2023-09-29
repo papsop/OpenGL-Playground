@@ -81,36 +81,110 @@ void LinesRenderer::Vertex(glm::vec2 p, glm::vec4 color)
   m_vertexCount++;
 }
 
-size_t LinesRenderer::Count()
+// =============================================================
+// QUADS
+// =============================================================
+
+void QuadRenderer::Create()
 {
-  // This is going to be 0 when ImGui layer tries to get it. It's because we Flush() at the end of framebuffer frame.
-  // Flush() resets number of vertices for this frame, so it's going to be 0 til next frame.
-  // TODO: Count vertices separately during stat counting for this frame
-  // TODO: Add more stats like: render time
-  return m_vertexCount;
+  m_texShader.LoadShadersFromFiles("../assets/shaders/texShader.vert.glsl", "../assets/shaders/texShader.frag.glsl");
+
+  glGenVertexArrays(1, &m_VAO);
+  glGenBuffers(1, &m_VBO);
+  glBindVertexArray(m_VAO);
+  glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(m_vertices), m_vertices, GL_DYNAMIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
 }
+
+void QuadRenderer::Destroy()
+{
+  if (m_VAO) {
+    glDeleteVertexArrays(1, &m_VAO);
+    glDeleteBuffers(1, &m_VBO);
+    m_VAO = 0;
+  }
+}
+
+void QuadRenderer::Flush()
+{
+  if (m_vertexCount == 0) return;
+
+  m_texShader.Use();
+  m_texShader.SetUniform("vProjectionMatrix", GLCore::Application::Instance().GetMainCamera()->GetProjectionMatrix());
+
+  // Fill buffer for this flush
+  glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(m_vertices), m_vertices, GL_DYNAMIC_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  // Use Vertex array to draw all the buffered vertices
+  glBindVertexArray(m_VAO);
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  for (size_t i = 0; i < m_vertexCount; i++) {
+    auto* quadTexture = m_textures[i];
+    if (quadTexture) quadTexture->Bind();
+    glDrawArrays(GL_TRIANGLES, 0, 6);  // 6 vertices (*4 floats, 2D position + UV) per vertex
+    if (quadTexture) quadTexture->Unbind();
+  }
+
+  glBindVertexArray(0);
+  m_vertexCount = 0;
+}
+
+void QuadRenderer::Quad(glm::vec2 center, glm::vec2 size, Texture* texture)
+{
+  if (m_vertexCount == MAX_QUADS) Flush();
+
+  m_textures[m_vertexCount] = texture;
+  float half_width = size.x / 2;
+  float half_height = size.y / 2;
+  // clang-format off
+  GL_TODO("Should't use absolute vertex positions, use model/world transforms to apply the offset")
+  float quadVertices[] = {
+    // positions   // texCoords
+    -half_width + center.x, half_height + center.y,  0.0f, 1.0f,
+    -half_width + center.x, -half_height + center.y,  0.0f, 0.0f,
+     half_width + center.x, -half_height + center.y,  1.0f, 0.0f,
+
+    -half_width + center.x,  half_height + center.y,  0.0f, 1.0f,
+     half_width + center.x, -half_height + center.y,  1.0f, 0.0f,
+     half_width + center.x,  half_height + center.y,  1.0f, 1.0f
+  };
+  // clang-format on
+  memcpy(&m_vertices[m_vertexCount], quadVertices, sizeof(quadVertices));
+  m_vertexCount++;
+}
+// =============================================================
+// Renderer
+// =============================================================
 
 Renderer2D* Renderer2D::Get()
 {
   return Application::Instance().GetRenderer();
 }
 
-// =============================================================
-// Renderer
-// =============================================================
 void Renderer2D::Create()
 {
   m_lines.Create();
+  m_quads.Create();
 }
 
 void Renderer2D::Destroy()
 {
   m_lines.Destroy();
+  m_quads.Destroy();
 }
 
 void Renderer2D::Flush()
 {
   m_lines.Flush();
+  m_quads.Flush();
 }
 
 void Renderer2D::DrawLine(glm::vec2 a, glm::vec2 b, glm::vec4 color)
@@ -142,9 +216,9 @@ void Renderer2D::DrawCircle(glm::vec2 center, float radius, glm::vec4 color)
   }
 }
 
-size_t Renderer2D::GetLinesCount()
+void Renderer2D::DrawQuad(glm::vec2 center, glm::vec2 size, Texture* texture)
 {
-  return m_lines.Count();
+  m_quads.Quad(center, size, texture);
 }
 
 }  // namespace GLCore

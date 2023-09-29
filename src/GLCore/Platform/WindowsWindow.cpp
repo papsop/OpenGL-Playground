@@ -15,6 +15,11 @@ static void window_close_callback(GLFWwindow* window)
   DISPATCH_EVENT(e);
 }
 
+static void opengl_error_callback(int error_code, const char* description)
+{
+  LOG_ERROR(description);
+}
+
 // =============================================================
 WindowsWindow::~WindowsWindow()
 {
@@ -32,6 +37,7 @@ void WindowsWindow::Init(WindowDef def /*= WindowDef()*/)
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
   m_window = glfwCreateWindow(def.Width, def.Height, def.Title.c_str(), NULL, NULL);
   GL_ASSERT(m_window != nullptr, "Unable to create a GLFW window");
@@ -54,6 +60,7 @@ void WindowsWindow::Init(WindowDef def /*= WindowDef()*/)
   SetVSync(m_vSyncEnabled);
 
   glfwSetWindowCloseCallback(m_window, window_close_callback);
+  glfwSetErrorCallback(opengl_error_callback);
 }
 
 void* WindowsWindow::GetVoidWindow()

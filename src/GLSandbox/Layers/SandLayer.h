@@ -2,6 +2,7 @@
 #include <GLCore/Core/Layer.h>
 #include <GLCore/Core/Events.h>
 #include <GLCore/Utils/Shader.h>
+#include <GLCore/Utils/Texture.h>
 
 namespace GLSandbox {
 enum class E_ParticleType {
@@ -33,10 +34,8 @@ class SandLayer : public GLCore::I_Layer {
   unsigned char m_pixelsBuffer[m_pixelsWidth * m_pixelsHeight * 4];
   Particle m_particles[m_pixelsWidth * m_pixelsHeight];
 
-  GLCore::Shader m_textureShader;
-
-  unsigned int m_textureID;
-  unsigned int m_quadVAO;
-  unsigned int m_quadVBO;
+  glm::vec2 m_center;
+  glm::vec2 m_size;
+  GLCore::Texture m_sandTexture;
 };
 }  // namespace GLSandbox

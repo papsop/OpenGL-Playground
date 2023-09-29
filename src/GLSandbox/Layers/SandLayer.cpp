@@ -9,35 +9,6 @@ void SandLayer::OnAttach()
 {
   REGISTER_EVENT_CALLBACK(GLCore::E_SandboxCanvasMouseEvent, this, &SandLayer::OnSandboxCanvasMouseEvent);
 
-  m_textureShader.LoadShadersFromFiles("../assets/shaders/texShader.vert.glsl", "../assets/shaders/texShader.frag.glsl");
-
-  // TEXTURE
-  glGenTextures(1, &m_textureID);
-  glBindTexture(GL_TEXTURE_2D, m_textureID);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);  // size increase/decrease
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);  // WRAPPING
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_pixelsWidth, m_pixelsHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_pixelsBuffer);
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  // QUAD
-  float quadVertices[] = {-1.0f, 1.0f, 0.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 1.0f, 0.0f,
-                          -1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  -1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f};
-
-  glGenVertexArrays(1, &m_quadVAO);
-  glGenBuffers(1, &m_quadVBO);
-  glBindVertexArray(m_quadVAO);
-  glBindBuffer(GL_ARRAY_BUFFER, m_quadVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
-
   for (int i = 0; i < m_pixelsWidth * m_pixelsHeight; i++) {
     if (i % 50 == 0) {
       m_particles[i].Type = E_ParticleType::SAND;
@@ -49,6 +20,9 @@ void SandLayer::OnAttach()
       m_particles[i].Type = E_ParticleType::NONE;
     }
   }
+
+  m_center = {0.0f, 0.0f};
+  m_size = {8.0f, 8.0f};
 }
 
 void SandLayer::OnDetach()
@@ -87,21 +61,15 @@ void SandLayer::OnUpdate(GLCore::Timestep dt)
     ++nextParticle;
   }
 
-  glBindTexture(GL_TEXTURE_2D, m_textureID);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_pixelsWidth, m_pixelsHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_pixelsBuffer);
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  m_textureShader.Use();
-  m_textureShader.SetUniform("vProjectionMatrix", GLCore::Application::Instance().GetMainCamera()->GetProjectionMatrix());
-
-  glBindVertexArray(m_quadVAO);
-  glBindTexture(GL_TEXTURE_2D, m_textureID);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
-  glBindVertexArray(0);
+  m_sandTexture.SetImageData(m_pixelsWidth, m_pixelsHeight, m_pixelsBuffer);
+  GLCore::Application::Instance().GetRenderer()->DrawQuad(m_center, m_size, &m_sandTexture);
 }
 
 void SandLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEvent& e)
 {
+  //   if (e.Type == GLCore::E_SandboxCanvasMouseEvent::LeftClickPressed) {
+  //     m_center = GLCore::Application::Instance().GetMainCamera()->ScreenToWorld(e.Position);
+  //   }
 }
 
 }  // namespace GLSandbox

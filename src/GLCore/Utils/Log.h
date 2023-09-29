@@ -36,4 +36,7 @@ class Log {
     abort();                  \
   }
 
-// TODO: handle opengl errors: https://docs.gl/gl4/glDebugMessageCallback, doesn't work with class functions tho
+// https://stackoverflow.com/a/5966717/1953344
+#define _STR(x) #x
+#define STR(x) _STR(x)
+#define GL_TODO(x) __pragma(message("TODO: "_STR(x) " :: " __FILE__ "@" STR(__LINE__)))

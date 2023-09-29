@@ -9,20 +9,10 @@ void SandLayer::OnAttach()
 {
   REGISTER_EVENT_CALLBACK(GLCore::E_SandboxCanvasMouseEvent, this, &SandLayer::OnSandboxCanvasMouseEvent);
 
-  for (int i = 0; i < m_pixelsWidth * m_pixelsHeight; i++) {
-    if (i % 50 == 0) {
-      m_particles[i].Type = E_ParticleType::SAND;
-    }
-    if (i % 70 == 0) {
-      m_particles[i].Type = E_ParticleType::WATER;
-    }
-    else {
-      m_particles[i].Type = E_ParticleType::NONE;
-    }
-  }
-
   m_center = {0.0f, 0.0f};
   m_size = {8.0f, 8.0f};
+
+  m_sandGrid = std::make_unique<SandGrid>(100, 100);
 }
 
 void SandLayer::OnDetach()
@@ -32,33 +22,25 @@ void SandLayer::OnDetach()
 
 void SandLayer::OnUpdate(GLCore::Timestep dt)
 {
-  Particle* nextParticle = &m_particles[0];
+  auto& grid = m_sandGrid->GetGrid();
+
+  auto nextCell = grid.begin();
+
   unsigned char* nextPixel = &m_pixelsBuffer[0];
   for (int i = 0; i < m_pixelsWidth * m_pixelsHeight; i++) {
-    unsigned char channel;
-    switch (nextParticle->Type) {
-      case (E_ParticleType::NONE):
-        channel = static_cast<unsigned char>(0);
-        break;
-      case (E_ParticleType::SAND):
-        channel = static_cast<unsigned char>(255);
-        break;
-      case (E_ParticleType::WATER):
-        channel = static_cast<unsigned char>(125);
-        break;
-      default:
-        break;
-    }
+    if (nextCell == grid.end()) break;
 
-    *nextPixel = channel;
+    auto color = GetColor(*nextCell);
+
+    *nextPixel = color.r;
     ++nextPixel;
-    *nextPixel = channel;
+    *nextPixel = color.g;
     ++nextPixel;
-    *nextPixel = channel;
+    *nextPixel = color.b;
     ++nextPixel;
-    *nextPixel = 255;
+    *nextPixel = color.a;
     ++nextPixel;
-    ++nextParticle;
+    ++nextCell;
   }
 
   m_sandTexture.SetImageData(m_pixelsWidth, m_pixelsHeight, m_pixelsBuffer);
@@ -67,9 +49,20 @@ void SandLayer::OnUpdate(GLCore::Timestep dt)
 
 void SandLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEvent& e)
 {
-  //   if (e.Type == GLCore::E_SandboxCanvasMouseEvent::LeftClickPressed) {
-  //     m_center = GLCore::Application::Instance().GetMainCamera()->ScreenToWorld(e.Position);
-  //   }
+}
+
+glm::ivec4 SandLayer::GetColor(Cell cell)
+{
+  switch (cell.Type) {
+    case E_CellType::NONE:
+      return {33, 33, 33, 255};
+    case E_CellType::OBSTACLE:
+      return {0, 0, 0, 255};
+    case E_CellType::SAND:
+      return {205, 170, 109, 255};
+    case E_CellType::WATER:
+      return {14, 135, 204, 255};
+  }
 }
 
 }  // namespace GLSandbox

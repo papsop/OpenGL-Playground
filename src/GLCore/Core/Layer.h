@@ -4,7 +4,7 @@
 namespace GLCore {
 class I_Layer {
  public:
-  I_Layer(const char* name, bool locked = false) : m_layerName(name), m_isLocked(locked){};
+  I_Layer(const char* name, bool enabled = true, bool locked = false) : m_layerName(name), m_enabled(enabled), m_isLocked(locked){};
   virtual void OnAttach(){};
   virtual void OnDetach(){};
 
@@ -13,7 +13,6 @@ class I_Layer {
   virtual void OnImGuiUpdate(Timestep dt){};
   virtual void OnFrameEnd(){};
 
-  // TODO events
   const char* GetName()
   {
     return m_layerName;

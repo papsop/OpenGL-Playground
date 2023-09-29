@@ -21,7 +21,7 @@ void GLSandbox::DrawingLayer::OnUpdate(GLCore::Timestep dt)
 }
 void DrawingLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEvent& e)
 {
-  // LOG_INFO("received leftclick p mouse event");
+  if (!m_enabled) return;
 
   glm::vec2 worldPos = GLCore::Application::Instance().GetMainCamera()->ScreenToWorld(e.Position);
 

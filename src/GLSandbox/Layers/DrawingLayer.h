@@ -5,7 +5,7 @@
 namespace GLSandbox {
 class DrawingLayer : public GLCore::I_Layer {
  public:
-  DrawingLayer() : I_Layer("Drawing layer")
+  DrawingLayer() : I_Layer("Drawing layer", false)
   {
   }
 

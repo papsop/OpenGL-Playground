@@ -4,17 +4,10 @@
 #include <GLCore/Utils/Shader.h>
 #include <GLCore/Utils/Texture.h>
 
-namespace GLSandbox {
-enum class E_ParticleType {
-  NONE,
-  SAND,
-  WATER,
+#include <GLSandbox/Utils/SandGrid.h>
+#include <glm/vec4.hpp>
 
-  COUNT  // always last
-};
-struct Particle {
-  E_ParticleType Type;
-};
+namespace GLSandbox {
 
 class SandLayer : public GLCore::I_Layer {
  public:
@@ -29,13 +22,14 @@ class SandLayer : public GLCore::I_Layer {
   void OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEvent& e);
 
  private:
-  static constexpr size_t m_pixelsWidth = 400;
-  static constexpr size_t m_pixelsHeight = 400;
+  glm::ivec4 GetColor(Cell cell);
+  static constexpr size_t m_pixelsWidth = 100;
+  static constexpr size_t m_pixelsHeight = 100;
   unsigned char m_pixelsBuffer[m_pixelsWidth * m_pixelsHeight * 4];
-  Particle m_particles[m_pixelsWidth * m_pixelsHeight];
 
   glm::vec2 m_center;
   glm::vec2 m_size;
   GLCore::Texture m_sandTexture;
+  std::unique_ptr<SandGrid> m_sandGrid;
 };
 }  // namespace GLSandbox

@@ -85,8 +85,8 @@ void SandboxCanvasLayer::OnImGuiUpdate(Timestep dt)
     const ImVec2 mousePos = ImVec2(io.MousePos.x - canvas_p0.x, io.MousePos.y - canvas_p0.y);
 
     auto pos = ImGui::GetWindowPos();
-    pos.x += 100.0f;
-    pos.y += 100.0f;
+    pos.x += 50.0f;
+    pos.y += 50.0f;
 
     glm::vec2 screenPosition = {mousePos.x, mousePos.y};
     auto* camera = Application::Instance().GetMainCamera();

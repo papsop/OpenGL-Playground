@@ -117,16 +117,6 @@ void SandLayer::UpdateGridStates(std::vector<Cell>& grid)
 
         if (bottomLeft || bottom || bottomRight) m_sandGrid->SetCellType(j, i, E_CellType::EMPTY);
       }
-
-      //       if (currentCell.IsType(E_CellType::SAND)) {
-      //         if (m_sandGrid->GetCellValue(j, i + 1).IsType(E_CellType::NONE)) {
-      //           m_sandGrid->SetCellType(j, i + 1, E_CellType::SAND);
-      //           m_sandGrid->SetCellType(j, i, E_CellType::NONE);
-      //         }
-      //       }
-      //       else if (currentCell.IsType(E_CellType::SAND)) {
-      //         m_sandGrid->SetCellType(j, i, E_CellType::NONE);
-      //       }
     }
   }
 }

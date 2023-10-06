@@ -4,7 +4,7 @@
 #include <GLCore/Utils/Shader.h>
 #include <GLCore/Utils/Texture.h>
 
-#include <GLSandbox/Utils/SandGrid.h>
+#include <GLSandbox/Utils/SandWorld.h>
 #include <glm/vec4.hpp>
 
 namespace GLSandbox {
@@ -32,7 +32,7 @@ class SandLayer : public GLCore::I_Layer {
   glm::vec2 m_center;
   glm::vec2 m_size;
   GLCore::Texture m_sandTexture;
-  std::unique_ptr<SandGrid> m_sandGrid;
+  std::unique_ptr<SandWorld> m_sandGrid;
   float m_currentCooldown = 0.0f;
   const float m_updateCooldown = 0.005f;
 };

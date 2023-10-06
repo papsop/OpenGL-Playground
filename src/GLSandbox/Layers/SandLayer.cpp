@@ -12,7 +12,13 @@ void SandLayer::OnAttach()
   m_center = {0.0f, 0.0f};
   m_size = {8.0f, 8.0f};
 
-  m_sandGrid = std::make_unique<SandGrid>(100, 100);
+  m_sandGrid = std::make_unique<SandWorld>(100, 100);
+  m_sandGrid->SetCellType(48, 50, E_CellType::OBSTACLE);
+  m_sandGrid->SetCellType(52, 50, E_CellType::OBSTACLE);
+  m_sandGrid->SetCellType(49, 51, E_CellType::OBSTACLE);
+  m_sandGrid->SetCellType(48, 51, E_CellType::OBSTACLE);
+  m_sandGrid->SetCellType(51, 51, E_CellType::OBSTACLE);
+  m_sandGrid->SetCellType(52, 51, E_CellType::OBSTACLE);
 }
 
 void SandLayer::OnDetach()
@@ -30,7 +36,7 @@ void SandLayer::OnUpdate(GLCore::Timestep dt)
   else {
     m_currentCooldown = m_updateCooldown;
     UpdateGridStates(grid);
-    m_sandGrid->SwapGrids();
+    m_sandGrid->CommitChanges();
   }
 
   auto nextCell = grid.begin();
@@ -73,7 +79,7 @@ void SandLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEven
       pos.y *= -1;
       pos += glm::vec2{ 0.5, 0.5 };
       
-      glm::vec2 texPos = { pos.x * m_pixelsWidth, pos.y * m_pixelsHeight };
+      glm::ivec2 texPos = { pos.x * m_pixelsWidth, pos.y * m_pixelsHeight };
       m_sandGrid->SetCellType(texPos.x, texPos.y, E_CellType::SAND);
     }
 
@@ -99,6 +105,9 @@ glm::ivec4 SandLayer::GetColor(Cell cell)
 
 void SandLayer::UpdateGridStates(std::vector<Cell>& grid)
 {
+  m_sandGrid->SetCellType(49, 50, E_CellType::SAND);
+  m_sandGrid->SetCellType(51, 50, E_CellType::SAND);
+
   for (size_t i = 0; i < m_pixelsHeight; i++) {
     for (size_t j = 0; j < m_pixelsWidth; j++) {
       auto& currentCell = m_sandGrid->GetCellValue(j, i);
@@ -109,13 +118,11 @@ void SandLayer::UpdateGridStates(std::vector<Cell>& grid)
         bool bottomRight = m_sandGrid->GetCellValue(j + 1, i + 1).IsType(E_CellType::EMPTY);
 
         if (bottom)
-          m_sandGrid->SetCellType(j, i + 1, E_CellType::SAND);
+          m_sandGrid->MoveCell(j, i + 1, j, i);
         else if (bottomLeft)
-          m_sandGrid->SetCellType(j - 1, i + 1, E_CellType::SAND);
+          m_sandGrid->MoveCell(j - 1, i + 1, j, i);
         else if (bottomRight)
-          m_sandGrid->SetCellType(j + 1, i + 1, E_CellType::SAND);
-
-        if (bottomLeft || bottom || bottomRight) m_sandGrid->SetCellType(j, i, E_CellType::EMPTY);
+          m_sandGrid->MoveCell(j + 1, i + 1, j, i);
       }
     }
   }

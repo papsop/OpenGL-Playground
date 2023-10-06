@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <glm/vec2.hpp>
+#include <map>
 
 namespace GLSandbox {
 enum class E_CellType {
@@ -19,10 +20,10 @@ struct Cell {
   }
 };
 
-class SandGrid {
+class SandWorld {
  public:
-  SandGrid(size_t width, size_t height);
-  ~SandGrid();
+  SandWorld(size_t width, size_t height);
+  ~SandWorld();
 
   std::vector<Cell>& GetGrid();
   size_t GetWidth();
@@ -39,7 +40,9 @@ class SandGrid {
     return {index % m_width, index / m_height};
   }
 
-  void SwapGrids();
+  void MoveCell(size_t dest_x, size_t dest_y, size_t source_x, size_t source_y);
+  void CommitChanges();
+
   Cell& GetCellValue(size_t x, size_t y);
   void SetCellType(size_t x, size_t y, E_CellType type);
 
@@ -54,8 +57,9 @@ class SandGrid {
 
   Cell m_obstacleCell;  // bounds
 
-  std::vector<Cell> m_grid_1;
-  std::vector<Cell> m_grid_2;
+  std::vector<Cell> m_grid;
+
+  std::multimap<size_t, size_t> m_changes;  // destination; source in 1D index
 };
 
 }  // namespace GLSandbox

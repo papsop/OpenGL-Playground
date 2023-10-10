@@ -23,17 +23,18 @@ class SandLayer : public GLCore::I_Layer {
 
  private:
   glm::ivec4 GetColor(Cell cell);
-  void UpdateGridStates(std::vector<Cell>& grid);
+  void UpdateSandWorld();
 
-  static constexpr size_t m_pixelsWidth = 100;
-  static constexpr size_t m_pixelsHeight = 100;
+  static constexpr size_t m_pixelsWidth = 200;
+  static constexpr size_t m_pixelsHeight = 200;
   unsigned char m_pixelsBuffer[m_pixelsWidth * m_pixelsHeight * 4];
 
   glm::vec2 m_center;
   glm::vec2 m_size;
   GLCore::Texture m_sandTexture;
   std::unique_ptr<SandWorld> m_sandGrid;
-  float m_currentCooldown = 0.0f;
-  const float m_updateCooldown = 0.005f;
+
+  const float m_fixedUpdate = 0.0005f;
+  float m_updateAccumulator = 0.0f;
 };
 }  // namespace GLSandbox

@@ -1,5 +1,4 @@
 #include <GLCore/Utils/Texture.h>
-#include <GLCore/Core/GLFWGlad.h>
 
 namespace GLCore {
 
@@ -19,7 +18,7 @@ Texture::~Texture()
   glDeleteTextures(1, &m_textureID);
 }
 
-void Texture::SetImageData(float width, float height, const void* pixels)
+void Texture::SetImageData(GLuint width, GLuint height, const void* pixels)
 {
   m_width = width;
   m_height = height;

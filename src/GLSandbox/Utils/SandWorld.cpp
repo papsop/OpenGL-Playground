@@ -3,8 +3,7 @@
 
 namespace GLSandbox {
 
-SandWorld::SandWorld(size_t width, size_t height) : m_width(width), m_height(height)
-
+SandWorld::SandWorld(size_t width, size_t height) : m_width(width), m_height(height), m_gen(m_rd())
 {
   m_obstacleCell.Type = E_CellType::OBSTACLE;
 
@@ -31,7 +30,7 @@ SandWorld::~SandWorld()
   m_grid.clear();
 }
 
-std::vector<GLSandbox::Cell>& SandWorld::GetGrid()
+std::vector<Cell>& SandWorld::GetGrid()
 {
   return m_grid;
 }
@@ -48,17 +47,36 @@ size_t SandWorld::GetHeight()
 
 void SandWorld::CommitChanges()
 {
-  // TODO: just a quick impl, Left cell always wins, because it's change is first
-  // make it more random
-  size_t lastDest = UINT_MAX;
-  for (auto& change : m_changes) {
-    if (!m_grid[change.first].IsType(E_CellType::EMPTY)) continue;  // skip already taken cell, f.e. by mouse clicking
+  std::sort(m_changes.begin(), m_changes.end(), [](auto& a, auto& b) { return a.first > b.first; });
 
-    if (lastDest != change.first) {
-      m_grid[change.first] = m_grid[change.second];
-      m_grid[change.second].Type = E_CellType::EMPTY;
+  size_t lastCollisionI = 0;
+  size_t lastDest = (m_changes.size() > 0) ? m_changes[0].first : UINT_MAX;
+
+  for (size_t i = 0; i < m_changes.size(); i++) {
+    auto& dest_i = m_changes[i].first;
+    auto& source_i = m_changes[i].second;
+
+    if (!GetCellValue(dest_i).IsType(E_CellType::EMPTY)) continue;
+
+    if (lastDest != dest_i || i == m_changes.size() - 1) {
+      // current collision is between (lastCollisionI, i-1)
+      // current destination is lastDest
+
+      GL_TODO("Refactor this");
+      if (i == m_changes.size() - 1) {
+        i++;
+      }
+      std::uniform_int_distribution<size_t> distrib(lastCollisionI, i - 1);
+      size_t randomSource = distrib(m_gen);
+
+      MoveCellImpl(lastDest, m_changes[randomSource].second);
+      lastCollisionI = i;
     }
-    lastDest = change.first;
+
+    lastDest = dest_i;
+
+    //     std::uniform_int_distribution<size_t> distrib(lastCollisionI, i - 1);
+    //     size_t randomSource = distrib(m_gen);
   }
   m_changes.clear();
 }
@@ -67,7 +85,14 @@ Cell& SandWorld::GetCellValue(size_t x, size_t y)
 {
   if (!IsCellWithinBounds(x, y)) return m_obstacleCell;
 
-  return m_grid[GetCellIndex(x, y)];
+  return GetCellValue(GetCellIndex(x, y));
+}
+
+Cell& SandWorld::GetCellValue(size_t index)
+{
+  if (!IsCellWithinBounds(index)) return m_obstacleCell;
+
+  return m_grid[index];
 }
 
 void SandWorld::SetCellType(size_t x, size_t y, E_CellType type)
@@ -79,16 +104,33 @@ void SandWorld::SetCellType(size_t x, size_t y, E_CellType type)
 
 void SandWorld::MoveCell(size_t dest_x, size_t dest_y, size_t source_x, size_t source_y)
 {
-  m_changes.insert({GetCellIndex(dest_x, dest_y), GetCellIndex(source_x, source_y)});
+  m_changes.push_back({GetCellIndex(dest_x, dest_y), GetCellIndex(source_x, source_y)});
+}
+
+void SandWorld::MoveCellImpl(size_t dest_index, size_t source_index)
+{
+  m_grid[dest_index] = m_grid[source_index];
+  m_grid[source_index].Type = E_CellType::EMPTY;
 }
 
 bool SandWorld::IsCellWithinBounds(size_t x, size_t y)
 {
   return x >= 0 && x < m_width && y >= 0 && y < m_height;
 }
+
+bool SandWorld::IsCellWithinBounds(size_t index)
+{
+  return index >= 0 && index < m_width * m_height;
+}
+
 bool SandWorld::IsCellEmpty(size_t x, size_t y)
 {
-  return IsCellWithinBounds(x, y) && GetCellValue(x, y).Type == E_CellType::EMPTY;
+  return IsCellWithinBounds(x, y) && GetCellValue(x, y).IsType(E_CellType::EMPTY);
+}
+
+bool SandWorld::IsCellEmpty(size_t index)
+{
+  return IsCellWithinBounds(index) && GetCellValue(index).IsType(E_CellType::EMPTY);
 }
 
 }  // namespace GLSandbox

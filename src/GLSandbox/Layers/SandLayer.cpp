@@ -2,6 +2,7 @@
 #include <GLCore/Core/Application.h>
 
 #include <GLCore/Core/GLFWGlad.h>
+#include <GLCore/Utils/Log.h>
 
 namespace GLSandbox {
 
@@ -10,9 +11,9 @@ void SandLayer::OnAttach()
   REGISTER_EVENT_CALLBACK(GLCore::E_SandboxCanvasMouseEvent, this, &SandLayer::OnSandboxCanvasMouseEvent);
 
   m_center = {0.0f, 0.0f};
-  m_size = {8.0f, 8.0f};
+  m_size = {10.0f, 10.0f};
 
-  m_sandGrid = std::make_unique<SandWorld>(100, 100);
+  m_sandGrid = std::make_unique<SandWorld>(m_pixelsWidth, m_pixelsHeight);
   m_sandGrid->SetCellType(48, 50, E_CellType::OBSTACLE);
   m_sandGrid->SetCellType(52, 50, E_CellType::OBSTACLE);
   m_sandGrid->SetCellType(49, 51, E_CellType::OBSTACLE);
@@ -28,42 +29,44 @@ void SandLayer::OnDetach()
 
 void SandLayer::OnUpdate(GLCore::Timestep dt)
 {
-  auto& grid = m_sandGrid->GetGrid();
+  // SandWorld update
+  GL_TODO("Implement an actual update accumulator to fix weird update when on low FPS");
+  m_updateAccumulator += dt.GetSeconds();
+  if (m_updateAccumulator >= m_fixedUpdate) {
+    UpdateSandWorld();
+    m_updateAccumulator = 0.0f;
 
-  if (m_currentCooldown > 0.0f) {
-    m_currentCooldown -= dt.GetSeconds();
+    // Rendering SandWorld to texture
+    auto& grid = m_sandGrid->GetGrid();
+    auto nextCell = grid.begin();
+
+    unsigned char* nextPixel = &m_pixelsBuffer[0];
+    for (int i = 0; i < m_pixelsWidth * m_pixelsHeight; i++) {
+      if (nextCell == grid.end()) break;
+
+      auto color = GetColor(*nextCell);
+
+      *nextPixel = color.r;
+      ++nextPixel;
+      *nextPixel = color.g;
+      ++nextPixel;
+      *nextPixel = color.b;
+      ++nextPixel;
+      *nextPixel = color.a;
+      ++nextPixel;
+      ++nextCell;
+    }
+
+    m_sandTexture.SetImageData(m_pixelsWidth, m_pixelsHeight, m_pixelsBuffer);
   }
-  else {
-    m_currentCooldown = m_updateCooldown;
-    UpdateGridStates(grid);
-    m_sandGrid->CommitChanges();
-  }
 
-  auto nextCell = grid.begin();
-
-  unsigned char* nextPixel = &m_pixelsBuffer[0];
-  for (int i = 0; i < m_pixelsWidth * m_pixelsHeight; i++) {
-    if (nextCell == grid.end()) break;
-
-    auto color = GetColor(*nextCell);
-
-    *nextPixel = color.r;
-    ++nextPixel;
-    *nextPixel = color.g;
-    ++nextPixel;
-    *nextPixel = color.b;
-    ++nextPixel;
-    *nextPixel = color.a;
-    ++nextPixel;
-    ++nextCell;
-  }
-
-  m_sandTexture.SetImageData(m_pixelsWidth, m_pixelsHeight, m_pixelsBuffer);
   GLCore::Application::Instance().GetRenderer()->DrawQuad(m_center, m_size, &m_sandTexture);
 }
 
 void SandLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEvent& e)
 {
+  if (!IsEnabled()) return;
+
   if (e.Type == GLCore::E_SandboxCanvasMouseEvent::LeftClickDown) {
     auto worldPos = GLCore::Application::Instance().GetMainCamera()->ScreenToWorld(e.Position);
 
@@ -80,7 +83,15 @@ void SandLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEven
       pos += glm::vec2{ 0.5, 0.5 };
       
       glm::ivec2 texPos = { pos.x * m_pixelsWidth, pos.y * m_pixelsHeight };
-      m_sandGrid->SetCellType(texPos.x, texPos.y, E_CellType::SAND);
+
+      for (int i = -10; i < 10; i++)
+      {
+        for (int j = -10; j < 10; j++)
+        {
+          m_sandGrid->SetCellType(texPos.x + i, texPos.y + j, E_CellType::SAND);
+        }
+      }
+      
     }
 
     // clang-format on
@@ -103,7 +114,7 @@ glm::ivec4 SandLayer::GetColor(Cell cell)
   }
 }
 
-void SandLayer::UpdateGridStates(std::vector<Cell>& grid)
+void SandLayer::UpdateSandWorld()
 {
   m_sandGrid->SetCellType(49, 50, E_CellType::SAND);
   m_sandGrid->SetCellType(51, 50, E_CellType::SAND);
@@ -126,6 +137,8 @@ void SandLayer::UpdateGridStates(std::vector<Cell>& grid)
       }
     }
   }
+
+  m_sandGrid->CommitChanges();
 }
 
 }  // namespace GLSandbox

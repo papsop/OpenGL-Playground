@@ -1,4 +1,5 @@
 #pragma once
+#include <GLCore/Core/GLFWGlad.h>
 
 namespace GLCore {
 class Texture {
@@ -6,15 +7,15 @@ class Texture {
   Texture();
   ~Texture();
 
-  void SetImageData(float width, float height, const void* pixels);
+  void SetImageData(GLuint width, GLuint height, const void* pixels);
   void Bind();
   void Unbind();
 
   unsigned int GetTextureID();
 
  private:
-  float m_width;
-  float m_height;
+  GLuint m_width;
+  GLuint m_height;
 
   unsigned int m_textureID;
 };

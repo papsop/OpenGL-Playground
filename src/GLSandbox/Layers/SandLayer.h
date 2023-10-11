@@ -21,6 +21,8 @@ class SandLayer : public GLCore::I_Layer {
   void OnUpdate(GLCore::Timestep dt) override;
   void OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEvent& e);
 
+  void OnImGuiUpdate(GLCore::Timestep dt) override;
+
  private:
   void UpdateSandWorld();
 
@@ -36,6 +38,7 @@ class SandLayer : public GLCore::I_Layer {
   GLCore::Texture m_sandTexture;
   std::unique_ptr<SandWorld> m_sandWorld;
 
+  int m_selectedState = 0;
   Cell m_sandCell, m_waterCell;
 };
 }  // namespace GLSandbox

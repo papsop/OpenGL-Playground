@@ -122,8 +122,8 @@ void SandWorld::UpdateWorld()
 
       // clang-format off
       if (cell.Movement & E_CellMovement::MOVE_BOTTOM && MoveCellBottomImpl(x, y, cell)) {}
-      else if (cell.Movement & E_CellMovement::MOVE_BOTTOM_LEFT && MoveCellBottomLeftImpl(x, y, cell)) {}
-      else if (cell.Movement & E_CellMovement::MOVE_BOTTOM_RIGHT && MoveCellBottomRightImpl(x, y, cell)) {}
+      else if (cell.Movement & (E_CellMovement::MOVE_BOTTOM_LEFT  | E_CellMovement::MOVE_BOTTOM_LEFT) && MoveCellBottomSideImpl(x, y, cell)) {}
+      else if (cell.Movement & (E_CellMovement::MOVE_LEFT | E_CellMovement::MOVE_RIGHT) && MoveCellSideImpl(x, y, cell)) {}
       // clang-format on
     }
   }
@@ -143,22 +143,46 @@ bool SandWorld::MoveCellBottomImpl(size_t x, size_t y, Cell cell)
   return false;
 }
 
-bool SandWorld::MoveCellBottomLeftImpl(size_t x, size_t y, Cell cell)
+bool SandWorld::MoveCellBottomSideImpl(size_t x, size_t y, Cell cell)
 {
-  if (GetCellValue(x - 1, y + 1).IsType(E_CellType::EMPTY)) {
-    MoveCell(x - 1, y + 1, x, y);
-    return true;
+  std::uniform_int_distribution<size_t> distrib(0, 1);
+  size_t rnd = distrib(m_gen);
+
+  bool bottomLeft = GetCellValue(x - 1, y + 1).IsType(E_CellType::EMPTY);
+  bool bottomRight = GetCellValue(x + 1, y + 1).IsType(E_CellType::EMPTY);
+
+  if (bottomLeft && bottomRight) {
+    bottomLeft = (rnd == 0);
+    bottomRight = (rnd == 1);
   }
-  return false;
+
+  if (bottomLeft)
+    MoveCell(x - 1, y + 1, x, y);
+  else if (bottomRight)
+    MoveCell(x + 1, y + 1, x, y);
+
+  return bottomLeft || bottomRight;
 }
 
-bool SandWorld::MoveCellBottomRightImpl(size_t x, size_t y, Cell cell)
+bool SandWorld::MoveCellSideImpl(size_t x, size_t y, Cell cell)
 {
-  if (GetCellValue(x + 1, y + 1).IsType(E_CellType::EMPTY)) {
-    MoveCell(x + 1, y + 1, x, y);
-    return true;
+  std::uniform_int_distribution<size_t> distrib(0, 1);
+  size_t rnd = distrib(m_gen);
+
+  bool left = GetCellValue(x - 1, y).IsType(E_CellType::EMPTY);
+  bool right = GetCellValue(x + 1, y).IsType(E_CellType::EMPTY);
+
+  if (left && right) {
+    left = (rnd == 0);
+    right = (rnd == 1);
   }
-  return false;
+
+  if (left)
+    MoveCell(x - 1, y, x, y);
+  else if (right)
+    MoveCell(x + 1, y, x, y);
+
+  return left || right;
 }
 
 void SandWorld::MoveCellImpl(size_t dest_index, size_t source_index)

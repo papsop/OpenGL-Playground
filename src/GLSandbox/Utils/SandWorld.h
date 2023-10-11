@@ -13,7 +13,17 @@ enum class E_CellType {
 };
 
 // Add move_left and move_right
-enum class E_CellMovement : unsigned { NONE = 0x0000, MOVE_BOTTOM = 0x0001, MOVE_BOTTOM_LEFT = 0x0010, MOVE_BOTTOM_RIGHT = 0x0100, MOVE_TOP = 0x1000 };
+// clang-format off
+enum class E_CellMovement : unsigned {
+  NONE                = 0x00000000,
+  MOVE_BOTTOM         = 0x00000001,
+  MOVE_BOTTOM_LEFT    = 0x00000010,
+  MOVE_BOTTOM_RIGHT   = 0x00000100,
+  MOVE_LEFT           = 0x00001000,
+  MOVE_RIGHT          = 0x00010000,
+  MOVE_TOP            = 0x00100000
+};
+// clang-format on
 
 inline E_CellMovement operator|(E_CellMovement a, E_CellMovement b)
 {
@@ -70,8 +80,8 @@ class SandWorld {
 
  private:
   bool MoveCellBottomImpl(size_t x, size_t y, Cell cell);
-  bool MoveCellBottomLeftImpl(size_t x, size_t y, Cell cell);
-  bool MoveCellBottomRightImpl(size_t x, size_t y, Cell cell);
+  bool MoveCellSideImpl(size_t x, size_t y, Cell cell);
+  bool MoveCellBottomSideImpl(size_t x, size_t y, Cell cell);
 
   void MoveCellImpl(size_t dest_index, size_t source_index);
   bool IsCellWithinBounds(size_t x, size_t y);

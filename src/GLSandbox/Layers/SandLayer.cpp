@@ -4,6 +4,8 @@
 #include <GLCore/Core/GLFWGlad.h>
 #include <GLCore/Utils/Log.h>
 
+#include <imgui.h>
+
 namespace GLSandbox {
 
 void SandLayer::OnAttach()
@@ -22,7 +24,7 @@ void SandLayer::OnAttach()
 
   m_waterCell.Type = E_CellType::WATER;
   m_waterCell.Color = {14, 135, 204, 255};
-  m_waterCell.Movement = E_CellMovement::MOVE_BOTTOM | E_CellMovement::MOVE_BOTTOM_LEFT | E_CellMovement::MOVE_BOTTOM_RIGHT;
+  m_waterCell.Movement = E_CellMovement::MOVE_BOTTOM | E_CellMovement::MOVE_LEFT | E_CellMovement::MOVE_RIGHT;
 
   // Add static obstacle
   m_sandWorld->SetCell(48, 50, m_sandWorld->GetObstacleCell());
@@ -99,7 +101,11 @@ void SandLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEven
       {
         for (int j = -10; j < 10; j++)
         {
-          m_sandWorld->SetCell(texPos.x + i, texPos.y + j, m_sandCell);
+          Cell newCell;
+          if(m_selectedState == 0) newCell = m_sandCell;
+          else if(m_selectedState == 1) newCell = m_waterCell;
+
+          m_sandWorld->SetCell(texPos.x + i, texPos.y + j, newCell);
         }
       }
     }
@@ -108,29 +114,25 @@ void SandLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEven
   }
 }
 
+void SandLayer::OnImGuiUpdate(GLCore::Timestep dt)
+{
+  if (!IsEnabled()) return;
+
+  ImGui::Begin(GetName());
+  ImGui::Text("Adding:");
+  ImGui::SameLine();
+  ImGui::RadioButton("Sand", &m_selectedState, 0);
+  ImGui::SameLine();
+  ImGui::RadioButton("Water", &m_selectedState, 1);
+
+  ImGui::End();
+}
+
 void SandLayer::UpdateSandWorld()
 {
   m_sandWorld->SetCell(49, 50, m_sandCell);
   m_sandWorld->SetCell(51, 50, m_sandCell);
 
-  //   for (size_t i = 0; i < m_pixelsHeight; i++) {
-  //     for (size_t j = 0; j < m_pixelsWidth; j++) {
-  //       auto& currentCell = m_sandGrid->GetCellValue(j, i);
-  //
-  //       if (currentCell.IsType(E_CellType::SAND)) {
-  //         bool bottom = m_sandGrid->GetCellValue(j, i + 1).IsType(E_CellType::EMPTY);
-  //         bool bottomLeft = m_sandGrid->GetCellValue(j - 1, i + 1).IsType(E_CellType::EMPTY);
-  //         bool bottomRight = m_sandGrid->GetCellValue(j + 1, i + 1).IsType(E_CellType::EMPTY);
-  //
-  //         if (bottom)
-  //           m_sandGrid->MoveCell(j, i + 1, j, i);
-  //         else if (bottomLeft)
-  //           m_sandGrid->MoveCell(j - 1, i + 1, j, i);
-  //         else if (bottomRight)
-  //           m_sandGrid->MoveCell(j + 1, i + 1, j, i);
-  //       }
-  //     }
-  //   }
   m_sandWorld->UpdateWorld();
   m_sandWorld->CommitChanges();
 }

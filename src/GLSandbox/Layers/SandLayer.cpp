@@ -13,13 +13,24 @@ void SandLayer::OnAttach()
   m_center = {0.0f, 0.0f};
   m_size = {10.0f, 10.0f};
 
-  m_sandGrid = std::make_unique<SandWorld>(m_pixelsWidth, m_pixelsHeight);
-  m_sandGrid->SetCellType(48, 50, E_CellType::OBSTACLE);
-  m_sandGrid->SetCellType(52, 50, E_CellType::OBSTACLE);
-  m_sandGrid->SetCellType(49, 51, E_CellType::OBSTACLE);
-  m_sandGrid->SetCellType(48, 51, E_CellType::OBSTACLE);
-  m_sandGrid->SetCellType(51, 51, E_CellType::OBSTACLE);
-  m_sandGrid->SetCellType(52, 51, E_CellType::OBSTACLE);
+  // initialize sand world and local cell types
+  m_sandWorld = std::make_unique<SandWorld>(m_pixelsWidth, m_pixelsHeight);
+
+  m_sandCell.Type = E_CellType::SAND;
+  m_sandCell.Color = {205, 170, 109, 255};
+  m_sandCell.Movement = E_CellMovement::MOVE_BOTTOM | E_CellMovement::MOVE_BOTTOM_LEFT | E_CellMovement::MOVE_BOTTOM_RIGHT;
+
+  m_waterCell.Type = E_CellType::WATER;
+  m_waterCell.Color = {14, 135, 204, 255};
+  m_waterCell.Movement = E_CellMovement::MOVE_BOTTOM | E_CellMovement::MOVE_BOTTOM_LEFT | E_CellMovement::MOVE_BOTTOM_RIGHT;
+
+  // Add static obstacle
+  m_sandWorld->SetCell(48, 50, m_sandWorld->GetObstacleCell());
+  m_sandWorld->SetCell(52, 50, m_sandWorld->GetObstacleCell());
+  m_sandWorld->SetCell(48, 51, m_sandWorld->GetObstacleCell());
+  m_sandWorld->SetCell(51, 51, m_sandWorld->GetObstacleCell());
+  m_sandWorld->SetCell(49, 51, m_sandWorld->GetObstacleCell());
+  m_sandWorld->SetCell(52, 51, m_sandWorld->GetObstacleCell());
 }
 
 void SandLayer::OnDetach()
@@ -37,22 +48,22 @@ void SandLayer::OnUpdate(GLCore::Timestep dt)
     m_updateAccumulator = 0.0f;
 
     // Rendering SandWorld to texture
-    auto& grid = m_sandGrid->GetGrid();
+    auto& grid = m_sandWorld->GetGrid();
     auto nextCell = grid.begin();
 
     unsigned char* nextPixel = &m_pixelsBuffer[0];
     for (int i = 0; i < m_pixelsWidth * m_pixelsHeight; i++) {
       if (nextCell == grid.end()) break;
 
-      auto color = GetColor(*nextCell);
+      Cell cell = *nextCell;
 
-      *nextPixel = color.r;
+      *nextPixel = cell.Color.r;
       ++nextPixel;
-      *nextPixel = color.g;
+      *nextPixel = cell.Color.g;
       ++nextPixel;
-      *nextPixel = color.b;
+      *nextPixel = cell.Color.b;
       ++nextPixel;
-      *nextPixel = color.a;
+      *nextPixel = cell.Color.a;
       ++nextPixel;
       ++nextCell;
     }
@@ -88,57 +99,40 @@ void SandLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEven
       {
         for (int j = -10; j < 10; j++)
         {
-          m_sandGrid->SetCellType(texPos.x + i, texPos.y + j, E_CellType::SAND);
+          m_sandWorld->SetCell(texPos.x + i, texPos.y + j, m_sandCell);
         }
       }
-      
     }
 
     // clang-format on
   }
 }
 
-glm::ivec4 SandLayer::GetColor(Cell cell)
-{
-  switch (cell.Type) {
-    case E_CellType::EMPTY:
-      return {33, 33, 33, 255};
-    case E_CellType::OBSTACLE:
-      return {0, 0, 0, 255};
-    case E_CellType::SAND:
-      return {205, 170, 109, 255};
-    case E_CellType::WATER:
-      return {14, 135, 204, 255};
-    default:
-      return {0, 0, 0, 255};
-  }
-}
-
 void SandLayer::UpdateSandWorld()
 {
-  m_sandGrid->SetCellType(49, 50, E_CellType::SAND);
-  m_sandGrid->SetCellType(51, 50, E_CellType::SAND);
+  m_sandWorld->SetCell(49, 50, m_sandCell);
+  m_sandWorld->SetCell(51, 50, m_sandCell);
 
-  for (size_t i = 0; i < m_pixelsHeight; i++) {
-    for (size_t j = 0; j < m_pixelsWidth; j++) {
-      auto& currentCell = m_sandGrid->GetCellValue(j, i);
-
-      if (currentCell.IsType(E_CellType::SAND)) {
-        bool bottom = m_sandGrid->GetCellValue(j, i + 1).IsType(E_CellType::EMPTY);
-        bool bottomLeft = m_sandGrid->GetCellValue(j - 1, i + 1).IsType(E_CellType::EMPTY);
-        bool bottomRight = m_sandGrid->GetCellValue(j + 1, i + 1).IsType(E_CellType::EMPTY);
-
-        if (bottom)
-          m_sandGrid->MoveCell(j, i + 1, j, i);
-        else if (bottomLeft)
-          m_sandGrid->MoveCell(j - 1, i + 1, j, i);
-        else if (bottomRight)
-          m_sandGrid->MoveCell(j + 1, i + 1, j, i);
-      }
-    }
-  }
-
-  m_sandGrid->CommitChanges();
+  //   for (size_t i = 0; i < m_pixelsHeight; i++) {
+  //     for (size_t j = 0; j < m_pixelsWidth; j++) {
+  //       auto& currentCell = m_sandGrid->GetCellValue(j, i);
+  //
+  //       if (currentCell.IsType(E_CellType::SAND)) {
+  //         bool bottom = m_sandGrid->GetCellValue(j, i + 1).IsType(E_CellType::EMPTY);
+  //         bool bottomLeft = m_sandGrid->GetCellValue(j - 1, i + 1).IsType(E_CellType::EMPTY);
+  //         bool bottomRight = m_sandGrid->GetCellValue(j + 1, i + 1).IsType(E_CellType::EMPTY);
+  //
+  //         if (bottom)
+  //           m_sandGrid->MoveCell(j, i + 1, j, i);
+  //         else if (bottomLeft)
+  //           m_sandGrid->MoveCell(j - 1, i + 1, j, i);
+  //         else if (bottomRight)
+  //           m_sandGrid->MoveCell(j + 1, i + 1, j, i);
+  //       }
+  //     }
+  //   }
+  m_sandWorld->UpdateWorld();
+  m_sandWorld->CommitChanges();
 }
 
 }  // namespace GLSandbox

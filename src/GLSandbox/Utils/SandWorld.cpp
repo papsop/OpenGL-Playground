@@ -6,6 +6,10 @@ namespace GLSandbox {
 SandWorld::SandWorld(size_t width, size_t height) : m_width(width), m_height(height), m_gen(m_rd())
 {
   m_obstacleCell.Type = E_CellType::OBSTACLE;
+  m_obstacleCell.Color = {0, 0, 0, 255};
+  m_obstacleCell.Movement = E_CellMovement::NONE;
+
+  // m_emptyCell is just default values
 
   m_grid = std::vector<Cell>(m_width * m_height);
 
@@ -45,11 +49,21 @@ size_t SandWorld::GetHeight()
   return m_height;
 }
 
+Cell& SandWorld::GetObstacleCell()
+{
+  return m_obstacleCell;
+}
+
+Cell& SandWorld::GetEmptyCell()
+{
+  return m_emptyCell;
+}
+
 void SandWorld::CommitChanges()
 {
   std::sort(m_changes.begin(), m_changes.end(), [](auto& a, auto& b) { return a.first > b.first; });
 
-  size_t lastCollisionI = 0;
+  size_t collisionsStartIndex = 0;
   size_t lastDest = (m_changes.size() > 0) ? m_changes[0].first : UINT_MAX;
 
   for (size_t i = 0; i < m_changes.size(); i++) {
@@ -59,24 +73,22 @@ void SandWorld::CommitChanges()
     if (!GetCellValue(dest_i).IsType(E_CellType::EMPTY)) continue;
 
     if (lastDest != dest_i || i == m_changes.size() - 1) {
-      // current collision is between (lastCollisionI, i-1)
+      size_t collisionsEndIndex = 0;
+      // current collision sub-array is between (collisionsStartIndex, collisionsEndIndex), including endIndex
       // current destination is lastDest
+      if (i == m_changes.size() - 1)
+        collisionsEndIndex = i;  // include 'i', because it's the last element
+      else
+        collisionsEndIndex = i - 1;  // 'i' is already in the next sub-array, don't include
 
-      GL_TODO("Refactor this");
-      if (i == m_changes.size() - 1) {
-        i++;
-      }
-      std::uniform_int_distribution<size_t> distrib(lastCollisionI, i - 1);
+      std::uniform_int_distribution<size_t> distrib(collisionsStartIndex, collisionsEndIndex);
       size_t randomSource = distrib(m_gen);
 
       MoveCellImpl(lastDest, m_changes[randomSource].second);
-      lastCollisionI = i;
+      collisionsStartIndex = i;  // store for next collision sub-array
     }
 
     lastDest = dest_i;
-
-    //     std::uniform_int_distribution<size_t> distrib(lastCollisionI, i - 1);
-    //     size_t randomSource = distrib(m_gen);
   }
   m_changes.clear();
 }
@@ -95,11 +107,26 @@ Cell& SandWorld::GetCellValue(size_t index)
   return m_grid[index];
 }
 
-void SandWorld::SetCellType(size_t x, size_t y, E_CellType type)
+void SandWorld::SetCell(size_t x, size_t y, const Cell& cell)
 {
   if (!IsCellWithinBounds(x, y)) return;
 
-  m_grid[GetCellIndex(x, y)].Type = type;
+  m_grid[GetCellIndex(x, y)] = cell;
+}
+
+void SandWorld::UpdateWorld()
+{
+  for (size_t y = 0; y < m_height; y++) {
+    for (size_t x = 0; x < m_width; x++) {
+      auto& cell = GetCellValue(x, y);
+
+      // clang-format off
+      if (cell.Movement & E_CellMovement::MOVE_BOTTOM && MoveCellBottomImpl(x, y, cell)) {}
+      else if (cell.Movement & E_CellMovement::MOVE_BOTTOM_LEFT && MoveCellBottomLeftImpl(x, y, cell)) {}
+      else if (cell.Movement & E_CellMovement::MOVE_BOTTOM_RIGHT && MoveCellBottomRightImpl(x, y, cell)) {}
+      // clang-format on
+    }
+  }
 }
 
 void SandWorld::MoveCell(size_t dest_x, size_t dest_y, size_t source_x, size_t source_y)
@@ -107,10 +134,37 @@ void SandWorld::MoveCell(size_t dest_x, size_t dest_y, size_t source_x, size_t s
   m_changes.push_back({GetCellIndex(dest_x, dest_y), GetCellIndex(source_x, source_y)});
 }
 
+bool SandWorld::MoveCellBottomImpl(size_t x, size_t y, Cell cell)
+{
+  if (GetCellValue(x, y + 1).IsType(E_CellType::EMPTY)) {
+    MoveCell(x, y + 1, x, y);
+    return true;
+  }
+  return false;
+}
+
+bool SandWorld::MoveCellBottomLeftImpl(size_t x, size_t y, Cell cell)
+{
+  if (GetCellValue(x - 1, y + 1).IsType(E_CellType::EMPTY)) {
+    MoveCell(x - 1, y + 1, x, y);
+    return true;
+  }
+  return false;
+}
+
+bool SandWorld::MoveCellBottomRightImpl(size_t x, size_t y, Cell cell)
+{
+  if (GetCellValue(x + 1, y + 1).IsType(E_CellType::EMPTY)) {
+    MoveCell(x + 1, y + 1, x, y);
+    return true;
+  }
+  return false;
+}
+
 void SandWorld::MoveCellImpl(size_t dest_index, size_t source_index)
 {
   m_grid[dest_index] = m_grid[source_index];
-  m_grid[source_index].Type = E_CellType::EMPTY;
+  m_grid[source_index] = m_emptyCell;
 }
 
 bool SandWorld::IsCellWithinBounds(size_t x, size_t y)

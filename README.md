@@ -7,5 +7,4 @@ Create project by running `.\generateproject-vs2022.bat`, it should get placed i
 
 ## Preview:
 
-![image](https://github.com/papsop/OpenGL-Playground/assets/9076709/bcb81a1b-d7bb-4100-a985-59858a4b2e00)
-
+![image](https://github.com/papsop/OpenGL-Playground/assets/9076709/8edf4537-a5c0-4fe0-98cf-b59c633fb299)

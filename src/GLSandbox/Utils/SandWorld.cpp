@@ -70,7 +70,9 @@ void SandWorld::CommitChanges()
     auto& dest_i = m_changes[i].first;
     auto& source_i = m_changes[i].second;
 
-    if (!GetCellValue(dest_i).IsType(E_CellType::EMPTY)) continue;
+    if (!GetCellValue(dest_i).IsType(E_CellType::WATER) || !GetCellValue(source_i).IsType(E_CellType::SAND)) {
+      if (!GetCellValue(dest_i).IsType(E_CellType::EMPTY)) continue;
+    }
 
     if (lastDest != dest_i || i == m_changes.size() - 1) {
       size_t collisionsEndIndex = 0;
@@ -136,7 +138,8 @@ void SandWorld::MoveCell(size_t dest_x, size_t dest_y, size_t source_x, size_t s
 
 bool SandWorld::MoveCellBottomImpl(size_t x, size_t y, Cell cell)
 {
-  if (GetCellValue(x, y + 1).IsType(E_CellType::EMPTY)) {
+  bool sandIntoWater = cell.IsType(E_CellType::SAND) && GetCellValue(x, y + 1).IsType(E_CellType::WATER);
+  if (sandIntoWater || GetCellValue(x, y + 1).IsType(E_CellType::EMPTY)) {
     MoveCell(x, y + 1, x, y);
     return true;
   }
@@ -148,8 +151,11 @@ bool SandWorld::MoveCellBottomSideImpl(size_t x, size_t y, Cell cell)
   std::uniform_int_distribution<size_t> distrib(0, 1);
   size_t rnd = distrib(m_gen);
 
-  bool bottomLeft = GetCellValue(x - 1, y + 1).IsType(E_CellType::EMPTY);
-  bool bottomRight = GetCellValue(x + 1, y + 1).IsType(E_CellType::EMPTY);
+  bool sandIntoWaterLeft = cell.IsType(E_CellType::SAND) && GetCellValue(x - 1, y + 1).IsType(E_CellType::WATER);
+  bool sandIntoWaterRight = cell.IsType(E_CellType::SAND) && GetCellValue(x + 1, y + 1).IsType(E_CellType::WATER);
+
+  bool bottomLeft = sandIntoWaterLeft || GetCellValue(x - 1, y + 1).IsType(E_CellType::EMPTY);
+  bool bottomRight = sandIntoWaterRight || GetCellValue(x + 1, y + 1).IsType(E_CellType::EMPTY);
 
   if (bottomLeft && bottomRight) {
     bottomLeft = (rnd == 0);
@@ -169,8 +175,11 @@ bool SandWorld::MoveCellSideImpl(size_t x, size_t y, Cell cell)
   std::uniform_int_distribution<size_t> distrib(0, 1);
   size_t rnd = distrib(m_gen);
 
-  bool left = GetCellValue(x - 1, y).IsType(E_CellType::EMPTY);
-  bool right = GetCellValue(x + 1, y).IsType(E_CellType::EMPTY);
+  bool sandIntoWaterLeft = cell.IsType(E_CellType::SAND) && GetCellValue(x - 1, y).IsType(E_CellType::WATER);
+  bool sandIntoWaterRight = cell.IsType(E_CellType::SAND) && GetCellValue(x + 1, y).IsType(E_CellType::WATER);
+
+  bool left = sandIntoWaterLeft || GetCellValue(x - 1, y).IsType(E_CellType::EMPTY);
+  bool right = sandIntoWaterRight || GetCellValue(x + 1, y).IsType(E_CellType::EMPTY);
 
   if (left && right) {
     left = (rnd == 0);
@@ -187,8 +196,9 @@ bool SandWorld::MoveCellSideImpl(size_t x, size_t y, Cell cell)
 
 void SandWorld::MoveCellImpl(size_t dest_index, size_t source_index)
 {
+  Cell temp = m_grid[dest_index];
   m_grid[dest_index] = m_grid[source_index];
-  m_grid[source_index] = m_emptyCell;
+  m_grid[source_index] = temp;
 }
 
 bool SandWorld::IsCellWithinBounds(size_t x, size_t y)

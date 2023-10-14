@@ -60,6 +60,9 @@ void SandboxCanvasLayer::HandleCanvasMouseEvents()
 
 void SandboxCanvasLayer::OnImGuiUpdate(Timestep dt)
 {
+  // ============================================
+  // Canvas
+
   ImGui::Begin(GetName());
 
   // Modify canvas size based on ImGui size
@@ -75,57 +78,32 @@ void SandboxCanvasLayer::OnImGuiUpdate(Timestep dt)
   ImGui::ImageButton(texture, ImVec2(static_cast<float>(m_sandboxCanvas->GetWidth()), static_cast<float>(m_sandboxCanvas->GetHeight())), ImVec2(0, 1),
                      ImVec2(1, 0), 0);
 
-  // ==================================
-  // Debug yellow text of positions
-  //
-  //   ImGuiIO& io = ImGui::GetIO();
-  //   ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();
-  //   canvas_p0.y -= m_sandboxCanvas->GetHeight();
-  //
-  //   const ImVec2 mousePos = ImVec2(io.MousePos.x - canvas_p0.x, io.MousePos.y - canvas_p0.y);
-  //
-  //   auto pos = windowPos;
-  //   pos.x += 50.0f;
-  //   pos.y += 50.0f;
-  //
-  //   glm::vec2 screenPosition = {mousePos.x, mousePos.y};
-  //   auto* camera = Application::Instance().GetMainCamera();
-  //   glm::vec2 worldPosition = camera->ScreenToWorld(screenPosition);
-  //
-  //   auto* drawList = ImGui::GetForegroundDrawList();
-  //   char temp[255];
-  //   sprintf_s(temp, "Screen: [%.2lf, %.2lf]\nWorld: [%.2lf, %.2lf]\nCanvas size [%.2lf, %.2lf]", screenPosition.x, screenPosition.y, worldPosition.x,
-  //             worldPosition.y, camera->GetSize().x, camera->GetSize().y);
-  //   drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), pos, ImColor(255, 255, 0, 255), temp, 0, 0.0f, 0);
-  //
-  //   pos.y += 100.0f;
-  //   sprintf_s(temp, "Camera [%d]", Application::Instance().GetActiveCameraIndex());
-  //   drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), pos, ImColor(255, 255, 0, 255), temp, 0, 0.0f, 0);
-
   if (ImGui::IsItemHovered()) {
     HandleCanvasMouseEvents();
   }
 
-  const auto windowPos = ImGui::GetWindowPos();  // pos of the canvas, so it's before end()
-
-  ImGui::End();
-
-  // ============================================
-  // Overlay
-  auto overlayPos = windowPos;
-  overlayPos.x += 25.0f;
-  overlayPos.y += 50.0f;
-
+  // Needs to be within the canvas scope
   ImGuiIO& io = ImGui::GetIO();
   ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();
   // GetCursorScreenPos points at the end of last element, so delete canvas' height to get to the top
   canvas_p0.y -= m_sandboxCanvas->GetHeight();
   const ImVec2 mousePos = ImVec2(io.MousePos.x - canvas_p0.x, io.MousePos.y - canvas_p0.y);
+  auto canvasViewport = ImGui::GetWindowViewport();
+  ImGui::End();
+
+  // ============================================
+  // Overlay
+  GL_TODO("Overlay should follow canvas even when it's undocked and in its own viewport");
 
   ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize |
                                   ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+
+  auto overlayPos = canvas_p0;
+  overlayPos.x += 15.0f;
+  overlayPos.y += 15.0f;
   ImGui::SetNextWindowPos(overlayPos, ImGuiCond_Always, {0, 0});
-  ImGui::SetNextWindowBgAlpha(0.7f);  // Transparent background
+  ImGui::SetNextWindowBgAlpha(0.7f);                 // Transparent background
+  ImGui::SetNextWindowViewport(canvasViewport->ID);  // always use the same viewport as canvas, doesn't work I guess
 
   if (ImGui::Begin("SandboxCanvasInfo", NULL, window_flags)) {
     auto* camera = Application::Instance().GetMainCamera();

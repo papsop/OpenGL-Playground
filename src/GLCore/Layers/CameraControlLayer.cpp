@@ -36,9 +36,9 @@ void CameraControlLayer::OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEve
   }
 
   if (event.Type == E_SandboxCanvasMouseEvent::RightClickDown) {
-    glm::vec2 offset = mousePos - m_lastMousePos;
-
-    glm::vec3 newPos = glm::vec3(m_camera->GetPosition() - offset, -3);
+    glm::vec3 offset = glm::vec3(mousePos - m_lastMousePos, 0);
+    glm::vec3 newPos = m_camera->GetPosition() - offset;
+    newPos.z = m_camera->GetPosition().z;
     m_camera->SetPosition(newPos);  // subtract, so the position follows mouse instead of reverse
 
     m_lastMousePos = m_camera->ScreenToWorld(event.Position);  // previous lastMousePos is invalid because of setting a new position
@@ -65,12 +65,15 @@ void CameraControlLayer::OnImGuiUpdate(Timestep dt)
   ImGui::Separator();
   ImGui::Text("Zoom:");
   float zoom = m_camera->GetZoom();
-  ImGui::SliderFloat("Zoom", &zoom, 0.0f, 10.0f);
+  ImGui::SliderFloat("Zoom", &zoom, 0.1f, 10.0f);
   m_camera->SetZoom(zoom);
 
   ImGui::Separator();
   ImGui::Text("Debug info: ");
-  ImGui::Text("Position (world): [%.2lf, %.2lf]", m_camera->GetPosition().x, m_camera->GetPosition().y);
+  auto pos = m_camera->GetPosition();
+  ImGui::Text("Position (world): [%.2lf, %.2lf, %.2lf]", pos.x, pos.y, pos.z);
+  auto target = m_camera->GetTarget();
+  ImGui::Text("Target: [%.2lf, %.2lf, %.2lf]", target.x, target.y, target.z);
   ImGui::Text("Zoom: %.2lf", m_camera->GetZoom());
 
   ImGui::End();

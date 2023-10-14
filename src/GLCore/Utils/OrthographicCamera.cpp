@@ -10,12 +10,13 @@ OrthographicCamera::OrthographicCamera(glm::vec2 size, glm::vec2 position)
 {
   m_cameraMainSize = size;
   m_zoom = 1.0f;
-  m_position = glm::vec3(position.x, position.y, -3.0f);
+  m_position = glm::vec3(position.x, position.y, 3.0f);
   RecalculateProjectionMatrix();
 }
 
 glm::vec2 OrthographicCamera::ScreenToWorld(glm::vec2 screenPos)
 {
+  GL_TODO("Should support movable View matrix");
   glm::vec2 result = ((screenPos / m_canvasSize) * glm::vec2(2, 2)) - glm::vec2(1, 1);
   result.y *= -1.0;  // need to flip, so it corresponds to opengl world coords
 
@@ -44,15 +45,27 @@ glm::vec4 OrthographicCamera::GetProjectionParams()
 
 void OrthographicCamera::RecalculateProjectionMatrix()
 {
+  // For this to work, we need a dynamic LookAt target
+  // - Dynamic lookAt target fucks up mouse interactions
+  // m_position.x = sin(glfwGetTime()) * 10.0f;
+  // m_position.z = cos(glfwGetTime()) * 10.0f;
+
+  // View matrix
+  m_target = m_position + glm::vec3(0, 0, -m_position.z - 1);  // target always in front of the camera
+  glm::vec3 dir = glm::normalize(m_position - m_target);
+
+  glm::vec3 worldUp = glm::vec3(0, 1, 0);
+  glm::vec3 right = glm::normalize(glm::cross(worldUp, dir));
+
+  glm::vec3 up = glm::normalize(glm::cross(dir, right));
+
+  glm::mat4 viewMatrix = glm::lookAt(m_position, m_target, up);
+
+  // Projection matrix
   glm::vec4 projectParams = GetProjectionParams();
-
-  glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_position);
-  glm::mat4 viewMatrix = glm::inverse(transform);
-
   float canvasAspect = m_canvasSize.x / m_canvasSize.y;
   float cameraAspect = m_cameraMainSize.x / m_cameraMainSize.y;
 
-  // LOG_INFO("canvas: {0}, camera: {1}", canvasAspect, cameraAspect);
   m_cameraAspectedSize = m_cameraMainSize;
   if (canvasAspect > cameraAspect) {
     float ratio = canvasAspect / cameraAspect;

@@ -1,4 +1,5 @@
 #include <GLCore/Utils/Camera.h>
+#include <algorithm>
 
 namespace GLCore {
 glm::mat4 I_Camera::GetProjection()
@@ -6,9 +7,14 @@ glm::mat4 I_Camera::GetProjection()
   return m_projectionMatrix;
 }
 
-glm::vec2 I_Camera::GetPosition()
+glm::vec3 I_Camera::GetPosition()
 {
   return m_position;
+}
+
+glm::vec3 I_Camera::GetTarget()
+{
+  return m_target;
 }
 
 glm::vec2 I_Camera::GetSize()
@@ -31,6 +37,7 @@ void I_Camera::SetPosition(glm::vec3 pos)
 
 void I_Camera::SetZoom(float val)
 {
+  val = std::max(0.1f, val);
   if (m_zoom == val) return;
 
   m_zoom = val;

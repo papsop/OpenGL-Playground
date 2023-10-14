@@ -1,6 +1,6 @@
 #pragma once
 #include <GLCore/Core/Layer.h>
-#include <GLCore/Utils/OrtographicCamera.h>
+#include <GLCore/Utils/OrthographicCamera.h>
 
 #include <GLCore/Core/Events.h>
 
@@ -20,6 +20,9 @@ class CameraControlLayer : public I_Layer {
 
  private:
   OrthographicCamera* m_camera;
+
+  int m_selectedCamera = 0;  // 0- ortographic, 1- perspective
+
   glm::vec2 m_lastMousePos;
   float m_mouseWheelSensitivity = 0.3f;
 };

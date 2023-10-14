@@ -1,4 +1,4 @@
-#include <GLCore/Utils/OrtographicCamera.h>
+#include <GLCore/Utils/OrthographicCamera.h>
 #include <GLCore/Core/Application.h>
 
 #include <glm/gtc/matrix_transform.hpp>

@@ -4,7 +4,7 @@
 #include <GLCore/Core/Renderer.h>
 #include <GLCore/Core/SandboxCanvas.h>
 #include <GLCore/Core/Events.h>
-#include <GLCore/Utils/OrtographicCamera.h>
+#include <GLCore/Utils/OrthographicCamera.h>
 
 #include <memory>
 #include <iostream>

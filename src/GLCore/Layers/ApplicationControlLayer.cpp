@@ -43,9 +43,10 @@ void ApplicationControlLayer::OnImGuiUpdate(Timestep dt)
 
   // FPS GRAPH
   {
+    static float average = 0.0f;
     m_fpsValues[m_fpsValueOffset] = dt.GetMilliseconds();
     m_fpsValueOffset = (m_fpsValueOffset + 1) % IM_ARRAYSIZE(m_fpsValues);
-    float average = 0.0f;
+    average = 0.0f;
     for (int n = 0; n < IM_ARRAYSIZE(m_fpsValues); n++) {
       average += m_fpsValues[n];
     }
@@ -58,10 +59,11 @@ void ApplicationControlLayer::OnImGuiUpdate(Timestep dt)
   // ================================================
   ImGui::Separator();
   ImGui::Text("LAYERS:");
+  static bool temp;
   for (auto& layer : *m_layerStack) {
     ImGui::BeginDisabled(layer->IsLocked());
     {
-      bool temp = layer->IsEnabled();
+      temp = layer->IsEnabled();
       ImGui::Checkbox(layer->GetName(), &temp);
       layer->SetEnabled(temp);
     }

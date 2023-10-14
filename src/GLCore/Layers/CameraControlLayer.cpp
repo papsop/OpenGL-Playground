@@ -51,6 +51,10 @@ void CameraControlLayer::OnImGuiUpdate(Timestep dt)
 {
   ImGui::Begin(GetName());
 
+  ImGui::Text("Camera type:");
+  ImGui::RadioButton("Orthographic", &m_selectedCamera, 0);
+  ImGui::RadioButton("Perspective", &m_selectedCamera, 0);
+
   {
     ImGui::Text("Zoom:");
     float val = m_camera->GetZoom();
@@ -58,6 +62,7 @@ void CameraControlLayer::OnImGuiUpdate(Timestep dt)
     m_camera->SetZoom(val);
   }
 
+  ImGui::Separator();
   {
     ImGui::Text("Position:");
     ImGui::Text("[%.2lf, %.2lf]", m_camera->GetPosition().x, m_camera->GetPosition().y);

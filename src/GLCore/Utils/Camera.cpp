@@ -18,12 +18,15 @@ float I_Camera::GetZoom()
 
 void I_Camera::SetPosition(glm::vec3 pos)
 {
+  if (m_position == pos) return;
+
   m_position = pos;
   RecalculateProjectionMatrix();
 }
 
 void I_Camera::SetZoom(float val)
 {
+  if (m_zoom == val) return;
   m_zoom = val;
   RecalculateProjectionMatrix();
 }

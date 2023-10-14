@@ -11,6 +11,7 @@
 
 #include <GLCore/Utils/Camera.h>
 #include <GLCore/Utils/OrthographicCamera.h>
+#include <GLCore/Utils/PerspectiveCamera.h>
 #include <GLCore/Utils/Log.h>
 #include <GLCore/Utils/IDGenerator.h>
 
@@ -79,7 +80,8 @@ void Application::Run()
   m_renderer->Create();
   m_sandboxCanvas->Create();
   // Create camera AFTER canvas, so we can recalculate projection properly
-  m_mainCamera = std::unique_ptr<I_Camera>(new OrthographicCamera({10.0f, 10.0f}, {0.0f, 0.0f}));
+  m_cameras[0] = std::unique_ptr<I_Camera>(new OrthographicCamera({10.0f, 10.0f}, {0.0f, 0.0f, 3.0f}));
+  m_cameras[1] = std::unique_ptr<I_Camera>(new PerspectiveCamera({0.0f, 0.0f, 15.0f}));
 
   PushOverlay(new ImGuiOverlay());
   PushLayer(new SandboxCanvasLayer());
@@ -169,8 +171,8 @@ SandboxCanvas* Application::GetSandboxCanvas()
 
 I_Camera* Application::GetMainCamera()
 {
-  GL_ASSERT(m_mainCamera != nullptr, "MainCamera doesn't exist");
-  return m_mainCamera.get();
+  GL_ASSERT(m_cameras[m_activeCameraIndex] != nullptr, "MainCamera doesn't exist");
+  return m_cameras[m_activeCameraIndex].get();
 }
 
 EventDispatcher* Application::GetEventDispatcher()
@@ -181,7 +183,9 @@ EventDispatcher* Application::GetEventDispatcher()
 
 void Application::SetActiveCameraIndex(int val)
 {
+  if (m_activeCameraIndex == val) return;  // imgui updated it every frame
   GL_TODO("Should Application really hold both cameras? Maybe let CameraControlLayer decide and just update application.");
+  LOG_INFO("Switching cameras: {0} -> {1}", m_activeCameraIndex, val);
   m_activeCameraIndex = val;
 }
 

@@ -77,30 +77,64 @@ void SandboxCanvasLayer::OnImGuiUpdate(Timestep dt)
 
   // ==================================
   // Debug yellow text of positions
-  {
-    ImGuiIO& io = ImGui::GetIO();
-    ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();
-    canvas_p0.y -= m_sandboxCanvas->GetHeight();
-
-    const ImVec2 mousePos = ImVec2(io.MousePos.x - canvas_p0.x, io.MousePos.y - canvas_p0.y);
-
-    auto pos = ImGui::GetWindowPos();
-    pos.x += 50.0f;
-    pos.y += 50.0f;
-
-    glm::vec2 screenPosition = {mousePos.x, mousePos.y};
-    auto* camera = Application::Instance().GetMainCamera();
-    glm::vec2 worldPosition = camera->ScreenToWorld(screenPosition);
-
-    auto* drawList = ImGui::GetForegroundDrawList();
-    char temp[255];
-    sprintf_s(temp, "Screen: [%.2lf, %.2lf]\nWorld: [%.2lf, %.2lf]\nCanvas size [%.2lf, %.2lf]", screenPosition.x, screenPosition.y, worldPosition.x,
-              worldPosition.y, camera->GetSize().x, camera->GetSize().y);
-    drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), pos, ImColor(255, 255, 0, 255), temp, 0, 0.0f, 0);
-  }
+  //
+  //   ImGuiIO& io = ImGui::GetIO();
+  //   ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();
+  //   canvas_p0.y -= m_sandboxCanvas->GetHeight();
+  //
+  //   const ImVec2 mousePos = ImVec2(io.MousePos.x - canvas_p0.x, io.MousePos.y - canvas_p0.y);
+  //
+  //   auto pos = windowPos;
+  //   pos.x += 50.0f;
+  //   pos.y += 50.0f;
+  //
+  //   glm::vec2 screenPosition = {mousePos.x, mousePos.y};
+  //   auto* camera = Application::Instance().GetMainCamera();
+  //   glm::vec2 worldPosition = camera->ScreenToWorld(screenPosition);
+  //
+  //   auto* drawList = ImGui::GetForegroundDrawList();
+  //   char temp[255];
+  //   sprintf_s(temp, "Screen: [%.2lf, %.2lf]\nWorld: [%.2lf, %.2lf]\nCanvas size [%.2lf, %.2lf]", screenPosition.x, screenPosition.y, worldPosition.x,
+  //             worldPosition.y, camera->GetSize().x, camera->GetSize().y);
+  //   drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), pos, ImColor(255, 255, 0, 255), temp, 0, 0.0f, 0);
+  //
+  //   pos.y += 100.0f;
+  //   sprintf_s(temp, "Camera [%d]", Application::Instance().GetActiveCameraIndex());
+  //   drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), pos, ImColor(255, 255, 0, 255), temp, 0, 0.0f, 0);
 
   if (ImGui::IsItemHovered()) {
     HandleCanvasMouseEvents();
+  }
+
+  const auto windowPos = ImGui::GetWindowPos();  // pos of the canvas, so it's before end()
+
+  ImGui::End();
+
+  // ============================================
+  // Overlay
+  auto overlayPos = windowPos;
+  overlayPos.x += 25.0f;
+  overlayPos.y += 50.0f;
+
+  ImGuiIO& io = ImGui::GetIO();
+  ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();
+  // GetCursorScreenPos points at the end of last element, so delete canvas' height to get to the top
+  canvas_p0.y -= m_sandboxCanvas->GetHeight();
+  const ImVec2 mousePos = ImVec2(io.MousePos.x - canvas_p0.x, io.MousePos.y - canvas_p0.y);
+
+  ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize |
+                                  ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+  ImGui::SetNextWindowPos(overlayPos, ImGuiCond_Always, {0, 0});
+  ImGui::SetNextWindowBgAlpha(0.7f);  // Transparent background
+
+  if (ImGui::Begin("SandboxCanvasInfo", NULL, window_flags)) {
+    auto* camera = Application::Instance().GetMainCamera();
+    glm::vec2 screenPosition = {mousePos.x, mousePos.y};
+    glm::vec2 worldPosition = camera->ScreenToWorld(screenPosition);
+    ImGui::Text("Sandbox canvas info:");
+    ImGui::Text("Camera index %d", Application::Instance().GetActiveCameraIndex());
+    ImGui::Text("Screen cursor: [%.2lf, %.2lf]", screenPosition.x, screenPosition.y);
+    ImGui::Text("World cursor: [%.2lf, %.2lf]", worldPosition.x, worldPosition.y);
   }
 
   ImGui::End();

@@ -19,8 +19,6 @@ class CameraControlLayer : public I_Layer {
   void OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEvent& event);
 
  private:
-  I_Camera* m_camera;
-
   glm::vec2 m_lastMousePos;
   float m_mouseWheelSensitivity = 0.3f;
 };

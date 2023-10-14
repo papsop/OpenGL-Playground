@@ -8,7 +8,7 @@ namespace GLCore {
 
 class OrthographicCamera : public I_Camera {
  public:
-  OrthographicCamera(glm::vec2 size, glm::vec2 position);
+  OrthographicCamera(glm::vec2 size, glm::vec3 position);
   ~OrthographicCamera() = default;
 
   virtual glm::vec2 ScreenToWorld(glm::vec2) override;

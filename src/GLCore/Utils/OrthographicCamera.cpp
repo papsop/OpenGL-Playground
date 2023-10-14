@@ -6,11 +6,11 @@
 
 namespace GLCore {
 
-OrthographicCamera::OrthographicCamera(glm::vec2 size, glm::vec2 position)
+OrthographicCamera::OrthographicCamera(glm::vec2 size, glm::vec3 position)
 {
   m_cameraMainSize = size;
   m_zoom = 1.0f;
-  m_position = glm::vec3(position.x, position.y, 3.0f);
+  m_position = position;
   RecalculateProjectionMatrix();
 }
 

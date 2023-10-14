@@ -7,8 +7,6 @@ namespace GLCore {
 
 void CameraControlLayer::OnAttach()
 {
-  m_camera = Application::Instance().GetMainCamera();
-
   REGISTER_EVENT_CALLBACK(E_SandboxCanvasEvent, this, &CameraControlLayer::OnSandboxCanvasResize);
   REGISTER_EVENT_CALLBACK(E_SandboxCanvasMouseEvent, this, &CameraControlLayer::OnSandboxCanvasMouseEvent);
 }
@@ -22,14 +20,14 @@ void CameraControlLayer::OnDetach()
 void CameraControlLayer::OnSandboxCanvasResize(const E_SandboxCanvasEvent& event)
 {
   if (event.Type == E_SandboxCanvasEvent::Resize) {
-    LOG_INFO("Updating to [{0}, {1}]", event.Width, event.Height);
-    m_camera->SetCanvasSize({event.Width, event.Height});
+    Application::Instance().GetMainCamera()->SetCanvasSize({event.Width, event.Height});
   }
 }
 
 void CameraControlLayer::OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEvent& event)
 {
-  glm::vec2 mousePos = m_camera->ScreenToWorld(event.Position);
+  auto camera = Application::Instance().GetMainCamera();
+  glm::vec2 mousePos = camera->ScreenToWorld(event.Position);
 
   if (event.Type == E_SandboxCanvasMouseEvent::RightClickPressed) {
     m_lastMousePos = mousePos;
@@ -37,20 +35,21 @@ void CameraControlLayer::OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEve
 
   if (event.Type == E_SandboxCanvasMouseEvent::RightClickDown) {
     glm::vec3 offset = glm::vec3(mousePos - m_lastMousePos, 0);
-    glm::vec3 newPos = m_camera->GetPosition() - offset;
-    newPos.z = m_camera->GetPosition().z;
-    m_camera->SetPosition(newPos);  // subtract, so the position follows mouse instead of reverse
+    glm::vec3 newPos = camera->GetPosition() - offset;
+    newPos.z = camera->GetPosition().z;
+    camera->SetPosition(newPos);  // subtract, so the position follows mouse instead of reverse
 
-    m_lastMousePos = m_camera->ScreenToWorld(event.Position);  // previous lastMousePos is invalid because of setting a new position
+    m_lastMousePos = camera->ScreenToWorld(event.Position);  // previous lastMousePos is invalid because of setting a new position
   }
 
   if (event.Type == E_SandboxCanvasMouseEvent::WheelUsed) {
-    m_camera->SetZoom(m_camera->GetZoom() + (event.Wheel * m_mouseWheelSensitivity));
+    camera->SetZoom(camera->GetZoom() + (event.Wheel * m_mouseWheelSensitivity));
   }
 }
 
 void CameraControlLayer::OnImGuiUpdate(Timestep dt)
 {
+  auto camera = Application::Instance().GetMainCamera();
   ImGui::Begin(GetName());
 
   ImGui::Text("Camera type:");
@@ -64,17 +63,17 @@ void CameraControlLayer::OnImGuiUpdate(Timestep dt)
 
   ImGui::Separator();
   ImGui::Text("Zoom:");
-  float zoom = m_camera->GetZoom();
+  float zoom = camera->GetZoom();
   ImGui::SliderFloat("Zoom", &zoom, 0.1f, 10.0f);
-  m_camera->SetZoom(zoom);
+  camera->SetZoom(zoom);
 
   ImGui::Separator();
   ImGui::Text("Debug info: ");
-  auto pos = m_camera->GetPosition();
+  auto pos = camera->GetPosition();
   ImGui::Text("Position (world): [%.2lf, %.2lf, %.2lf]", pos.x, pos.y, pos.z);
-  auto target = m_camera->GetTarget();
+  auto target = camera->GetTarget();
   ImGui::Text("Target: [%.2lf, %.2lf, %.2lf]", target.x, target.y, target.z);
-  ImGui::Text("Zoom: %.2lf", m_camera->GetZoom());
+  ImGui::Text("Zoom: %.2lf", camera->GetZoom());
 
   ImGui::End();
 }

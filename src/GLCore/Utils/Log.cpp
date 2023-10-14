@@ -4,6 +4,7 @@ namespace GLCore {
 
 void Log::Init()
 {
+  GL_TODO("Hide logger when compiling relase? Or implement an imgui console panel instead of using console application.");
   if (m_logger != nullptr) return;  // assert?
 
   m_logger = spdlog::stdout_color_mt("GLCore");

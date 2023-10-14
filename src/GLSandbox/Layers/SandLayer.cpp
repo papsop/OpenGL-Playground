@@ -105,7 +105,7 @@ void SandLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEven
           if(m_selectedState == 0) newCell = m_sandCell;
           else if(m_selectedState == 1) newCell = m_waterCell;
 
-          m_sandWorld->SetCell(texPos.x + i, texPos.y + j, newCell);
+          if(i % 2 == 0 && j % 2 == 0) m_sandWorld->SetCell(texPos.x + i, texPos.y + j, newCell);
         }
       }
     }

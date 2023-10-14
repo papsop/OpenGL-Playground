@@ -95,7 +95,7 @@ void SandboxCanvasLayer::OnImGuiUpdate(Timestep dt)
     auto* drawList = ImGui::GetForegroundDrawList();
     char temp[255];
     sprintf_s(temp, "Screen: [%.2lf, %.2lf]\nWorld: [%.2lf, %.2lf]\nCanvas size [%.2lf, %.2lf]", screenPosition.x, screenPosition.y, worldPosition.x,
-              worldPosition.y, camera->GetWidth(), camera->GetHeight());
+              worldPosition.y, camera->GetSize().x, camera->GetSize().y);
     drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), pos, ImColor(255, 255, 0, 255), temp, 0, 0.0f, 0);
   }
 

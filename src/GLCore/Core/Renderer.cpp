@@ -61,7 +61,7 @@ void LinesRenderer::Flush()
   glBindBuffer(GL_ARRAY_BUFFER, m_VBOs[1]);
   glBufferSubData(GL_ARRAY_BUFFER, 0, m_vertexCount * sizeof(glm::vec4), m_colors);
 
-  m_basicShader.SetUniform("vProjectionMatrix", Application::Instance().GetMainCamera()->GetProjectionMatrix());
+  m_basicShader.SetUniform("vProjectionMatrix", Application::Instance().GetMainCamera()->GetProjection());
 
   glDrawArrays(GL_LINES, 0, m_vertexCount);
 
@@ -116,7 +116,7 @@ void QuadRenderer::Flush()
   if (m_vertexCount == 0) return;
 
   m_texShader.Use();
-  m_texShader.SetUniform("vProjectionMatrix", GLCore::Application::Instance().GetMainCamera()->GetProjectionMatrix());
+  m_texShader.SetUniform("vProjectionMatrix", GLCore::Application::Instance().GetMainCamera()->GetProjection());
 
   // Fill buffer for this flush
   glBindBuffer(GL_ARRAY_BUFFER, m_VBO);

@@ -22,6 +22,7 @@ void CameraControlLayer::OnDetach()
 void CameraControlLayer::OnSandboxCanvasResize(const E_SandboxCanvasEvent& event)
 {
   if (event.Type == E_SandboxCanvasEvent::Resize) {
+    LOG_INFO("Updating to [{0}, {1}]", event.Width, event.Height);
     m_camera->SetCanvasSize({event.Width, event.Height});
   }
 }
@@ -37,9 +38,10 @@ void CameraControlLayer::OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEve
   if (event.Type == E_SandboxCanvasMouseEvent::RightClickDown) {
     glm::vec2 offset = mousePos - m_lastMousePos;
 
-    m_camera->SetPosition(m_camera->GetPosition() - offset);  // subtract so the position follows mouse instead of reverse
+    glm::vec3 newPos = glm::vec3(m_camera->GetPosition() - offset, -3);
+    m_camera->SetPosition(newPos);  // subtract, so the position follows mouse instead of reverse
 
-    m_lastMousePos = m_camera->ScreenToWorld(event.Position);  // recalculate, because Camera changed projection
+    m_lastMousePos = m_camera->ScreenToWorld(event.Position);  // previous lastMousePos is invalid because of setting a new position
   }
 
   if (event.Type == E_SandboxCanvasMouseEvent::WheelUsed) {
@@ -52,21 +54,24 @@ void CameraControlLayer::OnImGuiUpdate(Timestep dt)
   ImGui::Begin(GetName());
 
   ImGui::Text("Camera type:");
-  ImGui::RadioButton("Orthographic", &m_selectedCamera, 0);
-  ImGui::RadioButton("Perspective", &m_selectedCamera, 0);
-
-  {
-    ImGui::Text("Zoom:");
-    float val = m_camera->GetZoom();
-    ImGui::SliderFloat("Zoom", &val, 0.0f, 10.0f);
-    m_camera->SetZoom(val);
-  }
+  int selectedCamera = Application::Instance().GetActiveCameraIndex();
+  ImGui::RadioButton("Orthographic", &selectedCamera, 0);
+  ImGui::RadioButton("Perspective", &selectedCamera, 1);
+  Application::Instance().SetActiveCameraIndex(selectedCamera);
 
   ImGui::Separator();
-  {
-    ImGui::Text("Position:");
-    ImGui::Text("[%.2lf, %.2lf]", m_camera->GetPosition().x, m_camera->GetPosition().y);
-  }
+  ImGui::Text("Settings:");
+
+  ImGui::Separator();
+  ImGui::Text("Zoom:");
+  float zoom = m_camera->GetZoom();
+  ImGui::SliderFloat("Zoom", &zoom, 0.0f, 10.0f);
+  m_camera->SetZoom(zoom);
+
+  ImGui::Separator();
+  ImGui::Text("Debug info: ");
+  ImGui::Text("Position (world): [%.2lf, %.2lf]", m_camera->GetPosition().x, m_camera->GetPosition().y);
+  ImGui::Text("Zoom: %.2lf", m_camera->GetZoom());
 
   ImGui::End();
 }

@@ -20,8 +20,6 @@ class Log {
 };
 }  // namespace GLCore
 
-// TODO hide these when using Release build or nah?
-
 #define LOG_DEBUG(...) SPDLOG_LOGGER_DEBUG(GLCore::Log::GetLogger(), ##__VA_ARGS__)
 #define LOG_INFO(...) SPDLOG_LOGGER_INFO(GLCore::Log::GetLogger(), ##__VA_ARGS__)
 #define LOG_WARN(...) SPDLOG_LOGGER_WARN(GLCore::Log::GetLogger(), ##__VA_ARGS__)

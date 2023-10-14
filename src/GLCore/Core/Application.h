@@ -4,7 +4,7 @@
 #include <GLCore/Core/Renderer.h>
 #include <GLCore/Core/SandboxCanvas.h>
 #include <GLCore/Core/Events.h>
-#include <GLCore/Utils/OrthographicCamera.h>
+#include <GLCore/Utils/Camera.h>
 
 #include <memory>
 #include <iostream>
@@ -30,7 +30,7 @@ class Application {
   I_Window* GetWindow();
   Renderer2D* GetRenderer();
   SandboxCanvas* GetSandboxCanvas();
-  OrthographicCamera* GetMainCamera();
+  I_Camera* GetMainCamera();
   EventDispatcher* GetEventDispatcher();
 
   void OnWindowEvent(const E_WindowEvent& event)
@@ -40,17 +40,20 @@ class Application {
     }
   }
 
+  void SetActiveCameraIndex(int val);
+  int GetActiveCameraIndex();
+
  private:
   void Initialize();
-  void InitGL();
   LayerStack* GetLayerStack();  // for AppControlOverlay
 
   inline static Application* m_instance = nullptr;
   bool m_isRunning = true;
+  int m_activeCameraIndex = 0;
   std::unique_ptr<LayerStack> m_layerStack;
   std::unique_ptr<Renderer2D> m_renderer;
   std::unique_ptr<SandboxCanvas> m_sandboxCanvas;
-  std::unique_ptr<OrthographicCamera> m_orthoCamera;
+  std::unique_ptr<I_Camera> m_mainCamera;
 
   std::unique_ptr<I_Window> m_window = nullptr;
 

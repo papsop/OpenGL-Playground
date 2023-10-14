@@ -9,6 +9,8 @@
 #include <GLCore/Layers/CameraControlLayer.h>
 #include <GLCore/Layers/RendererControlLayer.h>
 
+#include <GLCore/Utils/Camera.h>
+#include <GLCore/Utils/OrthographicCamera.h>
 #include <GLCore/Utils/Log.h>
 #include <GLCore/Utils/IDGenerator.h>
 
@@ -56,11 +58,9 @@ void Application::Initialize()
 {
   Log::Init();
   LOG_INFO("Initializing Application");
-  InitGL();
   m_layerStack = std::make_unique<LayerStack>();
   m_renderer = std::make_unique<Renderer2D>();
   m_sandboxCanvas = std::make_unique<SandboxCanvas>();
-  m_orthoCamera = std::make_unique<OrthographicCamera>();
   m_eventDispatcher = std::make_unique<EventDispatcher>();
 
 #ifdef _WINDOWS
@@ -74,15 +74,12 @@ void Application::Initialize()
   LOG_INFO("Application initialized");
 }
 
-void Application::InitGL()
-{
-}
-
 void Application::Run()
 {
   m_renderer->Create();
   m_sandboxCanvas->Create();
-  m_orthoCamera->Create({10.0f, 10.0f}, {0.0f, 0.0f});
+  // Create camera AFTER canvas, so we can recalculate projection properly
+  m_mainCamera = std::unique_ptr<I_Camera>(new OrthographicCamera({10.0f, 10.0f}, {0.0f, 0.0f}));
 
   PushOverlay(new ImGuiOverlay());
   PushLayer(new SandboxCanvasLayer());
@@ -170,16 +167,27 @@ SandboxCanvas* Application::GetSandboxCanvas()
   return m_sandboxCanvas.get();
 }
 
-OrthographicCamera* Application::GetMainCamera()
+I_Camera* Application::GetMainCamera()
 {
-  GL_ASSERT(m_orthoCamera != nullptr, "MainCamera doesn't exist");
-  return m_orthoCamera.get();
+  GL_ASSERT(m_mainCamera != nullptr, "MainCamera doesn't exist");
+  return m_mainCamera.get();
 }
 
 EventDispatcher* Application::GetEventDispatcher()
 {
   GL_ASSERT(m_eventDispatcher != nullptr, "EventDispatcher doesn't exist");
   return m_eventDispatcher.get();
+}
+
+void Application::SetActiveCameraIndex(int val)
+{
+  GL_TODO("Should Application really hold both cameras? Maybe let CameraControlLayer decide and just update application.");
+  m_activeCameraIndex = val;
+}
+
+int Application::GetActiveCameraIndex()
+{
+  return m_activeCameraIndex;
 }
 
 LayerStack* Application::GetLayerStack()

@@ -158,8 +158,8 @@ bool SandWorld::MoveCellBottomSideImpl(size_t x, size_t y, Cell cell)
   bool bottomRight = sandIntoWaterRight || GetCellValue(x + 1, y + 1).IsType(E_CellType::EMPTY);
 
   if (bottomLeft && bottomRight) {
-    bottomLeft = (rnd == 0);
-    bottomRight = (rnd == 1);
+    bottomLeft = (rnd == 0) && bottomLeft;
+    bottomRight = !bottomLeft && bottomRight;
   }
 
   if (bottomLeft)
@@ -182,8 +182,8 @@ bool SandWorld::MoveCellSideImpl(size_t x, size_t y, Cell cell)
   bool right = sandIntoWaterRight || GetCellValue(x + 1, y).IsType(E_CellType::EMPTY);
 
   if (left && right) {
-    left = (rnd == 0);
-    right = (rnd == 1);
+    left = (rnd == 0) && left;
+    right = !left && right;
   }
 
   if (left)

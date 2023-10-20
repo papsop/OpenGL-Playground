@@ -78,7 +78,7 @@ project "GLSandbox"
         ["Sources/"] = { "**.c", "**.cpp"},
     }
 
-    files { "src/GLSandbox/**.cpp", "src/GLSandbox/**.h", "src/GLSandbox/**.inl"}
+    files { "src/GLSandbox/**.cpp", "src/GLSandbox/**.h", "src/GLSandbox/**.inl", "src/GLSandBox/**.cc"}
 
     links { "GLCore", } --"Physics" }
     ignoredefaultlibraries { "libcmtd.lib" } -- causes LNK4098 if included

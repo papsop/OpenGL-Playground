@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <memory>
+
 int main(void)
 {
   auto app = std::make_unique<GLCore::Application>();

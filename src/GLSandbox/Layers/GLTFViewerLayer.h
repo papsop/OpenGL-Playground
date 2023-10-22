@@ -9,7 +9,7 @@
 namespace GLSandbox {
 class GLTFViewerLayer : public GLCore::I_Layer {
  public:
-  GLTFViewerLayer() : I_Layer("GLTF Viewer", false)
+  GLTFViewerLayer() : I_Layer("GLTF Viewer", true)
   {
   }
 
@@ -25,6 +25,10 @@ class GLTFViewerLayer : public GLCore::I_Layer {
 
   unsigned int m_VAO;
   unsigned int m_VBO;
+
+  float m_vertex_buffer_data[9] = {
+      -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+  };
 
   GLCore::Shader m_basicShader;
 };

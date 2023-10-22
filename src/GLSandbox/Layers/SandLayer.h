@@ -11,7 +11,7 @@ namespace GLSandbox {
 
 class SandLayer : public GLCore::I_Layer {
  public:
-  SandLayer() : I_Layer("Sand layer")
+  SandLayer() : I_Layer("Sand layer", false)
   {
   }
 

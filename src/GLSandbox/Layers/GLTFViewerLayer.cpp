@@ -1,4 +1,5 @@
 #include <GLSandbox/Layers/GLTFViewerLayer.h>
+#include <GLCore/Core/Application.h>
 #include <GLCore/Core/GLFWGlad.h>
 
 #include <iostream>
@@ -26,39 +27,54 @@ void GLTFViewerLayer::OnAttach()
   LOG_INFO("\tMeshes: {0}", m_model.meshes.size());
   LOG_INFO("\tPrimitives: {0}", mesh.primitives.size());
 
-  for (auto& primitive : mesh.primitives) {
-    auto accessor = m_model.accessors[primitive.attributes["POSITION"]];
-    auto bufferView = m_model.bufferViews[accessor.bufferView];
-
-    auto buffer = m_model.buffers[bufferView.buffer];
-
-    const float* positions = reinterpret_cast<const float*>(&buffer.data[bufferView.byteOffset + bufferView.byteLength]);
-
-    // LOG_INFO("Loaded GLTF model, vertices:");
-    for (size_t i = 0; i < accessor.count; ++i) {
-      // LOG_INFO("[{0},{1},{2}]", positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2]);
-    }
-    // LOG_INFO("GLTF vertices end;");
-  }
+  auto primitive = mesh.primitives[0];
+  auto accessor = m_model.accessors[primitive.attributes["POSITION"]];
+  auto bufferView = m_model.bufferViews[accessor.bufferView];
+  auto buffer = m_model.buffers[bufferView.buffer];
 
   // Rendering buffers
-  m_basicShader.LoadShadersFromFiles("../assets/shaders/shader.vert.glsl", "../assets/shaders/shader.frag.glsl");
+  m_basicShader.LoadShadersFromFiles("../assets/shaders/basic.vert.glsl", "../assets/shaders/basic.frag.glsl");
   glGenVertexArrays(1, &m_VAO);
-  glGenBuffers(1, &m_VBO);
   glBindVertexArray(m_VAO);
+  glGenBuffers(1, &m_VBO);
   glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-  //
+
+  glBufferData(GL_ARRAY_BUFFER, bufferView.byteLength, &buffer.data.at(0) + bufferView.byteOffset + accessor.byteOffset, GL_STATIC_DRAW);
+
+  // glBufferData(GL_ARRAY_BUFFER, sizeof(m_vertex_buffer_data), &m_vertex_buffer_data, GL_STATIC_DRAW);
+
+  // location 0 - vertex pos
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 }
 
 void GLTFViewerLayer::OnDetach()
 {
+  if (m_VAO) {
+    glDeleteBuffers(1, &m_VBO);
+    glDeleteVertexArrays(1, &m_VAO);
+    m_VAO = 0;
+  }
 }
 
 void GLTFViewerLayer::OnUpdate(GLCore::Timestep dt)
 {
-  if (!m_modelLoaded) return;
+  // if (!m_modelLoaded) return;
+  auto& mesh = m_model.meshes[0];
+  auto primitive = mesh.primitives[0];
+  auto accessor = m_model.accessors[primitive.attributes["POSITION"]];
+  auto bufferView = m_model.bufferViews[accessor.bufferView];
+  auto buffer = m_model.buffers[bufferView.buffer];
+
+  glBindVertexArray(m_VAO);
+  // Draw the triangle !
+  m_basicShader.Use();
+  m_basicShader.SetUniform("vProjectionMatrix", GLCore::Application::Instance().GetMainCamera()->GetProjection());
+  glDrawArrays(GL_TRIANGLES, 0, accessor.count);  // Starting from vertex 0; 3 vertices total -> 1 triangle
+  glBindVertexArray(0);
 }
 
 }  // namespace GLSandbox

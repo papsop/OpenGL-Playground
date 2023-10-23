@@ -21,7 +21,8 @@ glm::vec2 PerspectiveCamera::ScreenToWorld(glm::vec2 pos)
 void PerspectiveCamera::RecalculateProjectionMatrix()
 {
   // View matrix
-  m_target = m_position + glm::vec3(0, 0, -m_position.z - 1);  // target always in front of the camera
+  // m_target = m_position + glm::vec3(0, 0, -m_position.z - 1);  // target always in front of the camera
+  m_target = glm::vec3(0, 0, 0);
   glm::vec3 dir = glm::normalize(m_position - m_target);
 
   glm::vec3 worldUp = glm::vec3(0, 1, 0);

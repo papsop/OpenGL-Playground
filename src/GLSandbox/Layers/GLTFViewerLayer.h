@@ -18,6 +18,8 @@ class GLTFViewerLayer : public GLCore::I_Layer {
 
   void OnUpdate(GLCore::Timestep dt) override;
 
+  void OnImGuiUpdate(GLCore::Timestep dt) override;
+
  private:
   bool m_modelLoaded;
   tinygltf::Model m_model;
@@ -26,10 +28,11 @@ class GLTFViewerLayer : public GLCore::I_Layer {
   unsigned int m_VAO;
   unsigned int m_VBO;
 
-  float m_vertex_buffer_data[9] = {
-      -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-  };
-
   GLCore::Shader m_basicShader;
+
+  // render settings
+  bool m_wireFrame = true;
+  bool m_rotateCamera = true;
+  float m_totalTime = 0.0f;
 };
 }  // namespace GLSandbox

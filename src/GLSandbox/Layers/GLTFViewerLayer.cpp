@@ -3,6 +3,7 @@
 #include <GLCore/Core/GLFWGlad.h>
 
 #include <iostream>
+#include <imgui.h>
 
 namespace GLSandbox {
 
@@ -69,12 +70,35 @@ void GLTFViewerLayer::OnUpdate(GLCore::Timestep dt)
   auto bufferView = m_model.bufferViews[accessor.bufferView];
   auto buffer = m_model.buffers[bufferView.buffer];
 
+  // rotate camera
+  if (m_rotateCamera) {
+    m_totalTime += dt.GetSeconds();
+    auto* camera = GLCore::Application::Instance().GetMainCamera();
+    auto position = camera->GetPosition();
+    position.x = sin(m_totalTime) * 3.0f;
+    position.z = cos(m_totalTime) * 3.0f;
+    camera->SetPosition(position);
+  }
+
+  if (m_wireFrame) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
   glBindVertexArray(m_VAO);
   // Draw the triangle !
   m_basicShader.Use();
   m_basicShader.SetUniform("vProjectionMatrix", GLCore::Application::Instance().GetMainCamera()->GetProjection());
-  glDrawArrays(GL_TRIANGLES, 0, accessor.count);  // Starting from vertex 0; 3 vertices total -> 1 triangle
+  glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(accessor.count));  // Starting from vertex 0; 3 vertices total -> 1 triangle
   glBindVertexArray(0);
+
+  if (m_wireFrame) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+void GLTFViewerLayer::OnImGuiUpdate(GLCore::Timestep dt)
+{
+  ImGui::Begin(GetName());
+  ImGui::Text("Settings:");
+  ImGui::Checkbox("Wireframe", &m_wireFrame);
+  ImGui::Checkbox("Rotate camera", &m_rotateCamera);
+  ImGui::End();
 }
 
 }  // namespace GLSandbox

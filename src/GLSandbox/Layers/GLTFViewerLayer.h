@@ -27,6 +27,7 @@ class GLTFViewerLayer : public GLCore::I_Layer {
 
   unsigned int m_VAO;
   unsigned int m_VBO;
+  unsigned int m_EBO;
 
   GLCore::Shader m_basicShader;
 

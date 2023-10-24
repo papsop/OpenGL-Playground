@@ -185,6 +185,7 @@ EventDispatcher* Application::GetEventDispatcher()
 
 void Application::SetActiveCameraIndex(int val)
 {
+  GL_TODO("Changing cameras should force canvas size update (inactive camera can get behind)");
   if (m_activeCameraIndex == val) return;  // imgui updated it every frame
   GL_TODO("Should Application really hold both cameras? Maybe let CameraControlLayer decide and just update application.");
   LOG_INFO("Switching cameras: {0} -> {1}", m_activeCameraIndex, val);

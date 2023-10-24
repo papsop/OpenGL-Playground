@@ -9,6 +9,12 @@ namespace GLSandbox {
 
 void GLTFViewerLayer::OnAttach()
 {
+  GL_TODO("Parse tinygltf types into native OPENGL types, implement an adapter");
+  GL_TODO("Support multiple meshes and multiple primitives");
+  GL_TODO("Support textures");
+  GL_TODO("Support lighting");
+  GL_TODO("Add model transformations");
+
   // GLTF Loading
   std::string err;
   std::string warn;
@@ -97,7 +103,7 @@ void GLTFViewerLayer::OnUpdate(GLCore::Timestep dt)
   m_basicShader.Use();
   m_basicShader.SetUniform("vProjectionMatrix", GLCore::Application::Instance().GetMainCamera()->GetProjection());
   //glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(accessor.count));  // Starting from vertex 0; 3 vertices total -> 1 triangle
-  glDrawElements(GL_TRIANGLES, indexAccessor.count, indexAccessor.componentType, (void*)0);
+  glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexAccessor.count), indexAccessor.componentType, (void*)0);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

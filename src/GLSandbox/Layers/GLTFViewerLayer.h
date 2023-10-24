@@ -33,7 +33,7 @@ class GLTFViewerLayer : public GLCore::I_Layer {
 
   // render settings
   bool m_wireFrame = true;
-  bool m_rotateCamera = true;
+  bool m_rotateCamera = false;
   float m_totalTime = 0.0f;
 };
 }  // namespace GLSandbox

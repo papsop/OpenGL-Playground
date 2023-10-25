@@ -1,10 +1,12 @@
 #include <GLSandbox/Utils/Model.h>
 #include <GLCore/Utils/Log.h>
+#include <glm/ext/matrix_transform.hpp>
 
 namespace GLSandbox {
 
 Model::Model()
 {
+  m_IsTransformDirty = true;
 }
 
 void Model::SetPosition(glm::vec3 position)
@@ -28,6 +30,16 @@ void Model::SetScale(glm::vec3 scale)
   m_IsTransformDirty = true;
 }
 
+glm::vec3 Model::GetPosition()
+{
+  return m_Position;
+}
+
+glm::vec3 Model::GetScale()
+{
+  return m_Scale;
+}
+
 void Model::Draw()
 {
 }
@@ -36,15 +48,9 @@ glm::mat4 Model::GetModelTransformMatrix()
 {
   if (m_IsTransformDirty) {
     // clang-format off
-    glm::mat4 scale = glm::mat4({m_Scale.x, 0, 0, 0},
-                                {0, m_Scale.y, 0, 0},
-                                {0, 0, m_Scale.z, 0},
-                                {0, 0, 0, 1});
+    glm::mat4 scale = glm::scale(glm::mat4{1.0f}, m_Scale);
+    glm::mat4 translate = glm::translate(glm::mat4{1.0f}, m_Position);
 
-    glm::mat4 translate = glm::mat4({1, 0, 0, m_Position.x},
-                                    {0, 1, 0, m_Position.y},
-                                    {0, 0, 1, m_Position.z},
-                                    {0, 0, 0, 1});
     // clang-format on
     GL_TODO("Add rotation");
 

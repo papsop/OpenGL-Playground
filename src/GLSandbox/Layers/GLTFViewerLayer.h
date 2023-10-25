@@ -3,6 +3,8 @@
 #include <GLCore/Core/Events.h>
 #include <GLCore/Utils/Shader.h>
 
+#include <GLSandbox/Utils/Model.h>
+
 #include <GLSandbox/gltf/tiny_gltf.h>
 #include <string>
 
@@ -21,19 +23,20 @@ class GLTFViewerLayer : public GLCore::I_Layer {
   void OnImGuiUpdate(GLCore::Timestep dt) override;
 
  private:
-  bool m_modelLoaded;
-  tinygltf::Model m_model;
-  tinygltf::TinyGLTF m_loader;
+  bool m_ModelLoaded;
+  tinygltf::Model m_Model;
+  tinygltf::TinyGLTF m_Loader;
 
+  Model m_ModelTest;
   unsigned int m_VAO;
   unsigned int m_VBO;
   unsigned int m_EBO;
 
-  GLCore::Shader m_basicShader;
+  GLCore::Shader m_BasicShader;
 
   // render settings
-  bool m_wireFrame = true;
-  bool m_rotateCamera = false;
-  float m_totalTime = 0.0f;
+  bool m_WireFrame = true;
+  bool m_RotateCamera = false;
+  float m_TotalTime = 0.0f;
 };
 }  // namespace GLSandbox

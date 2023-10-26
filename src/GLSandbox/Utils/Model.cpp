@@ -1,6 +1,8 @@
 #include <GLSandbox/Utils/Model.h>
 #include <GLCore/Utils/Log.h>
+
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 namespace GLSandbox {
 
@@ -40,6 +42,11 @@ glm::vec3 Model::GetScale()
   return m_Scale;
 }
 
+glm::vec3 Model::GetRotation()
+{
+  return m_Rotation;
+}
+
 void Model::Draw()
 {
 }
@@ -47,14 +54,11 @@ void Model::Draw()
 glm::mat4 Model::GetModelTransformMatrix()
 {
   if (m_IsTransformDirty) {
-    // clang-format off
+    glm::mat4 rotation = glm::toMat4(glm::quat(m_Rotation));
     glm::mat4 scale = glm::scale(glm::mat4{1.0f}, m_Scale);
     glm::mat4 translate = glm::translate(glm::mat4{1.0f}, m_Position);
 
-    // clang-format on
-    GL_TODO("Add rotation");
-
-    m_Transform = translate * scale;
+    m_Transform = translate * scale * rotation;
     m_IsTransformDirty = false;
   }
 

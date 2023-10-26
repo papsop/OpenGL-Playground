@@ -145,8 +145,16 @@ void GLTFViewerLayer::OnImGuiUpdate(GLCore::Timestep dt)
     }
     ImGui::DragFloat3("Scale", &scale[0], 0.5f);
 
+    auto rotation = m_ModelTest.GetRotation();
+
+    if (ImGui::SmallButton("Reset rotation")) {
+      rotation = {0, 0, 0};
+    }
+    ImGui::DragFloat3("Rotation", &rotation[0], 0.5f);
+
     m_ModelTest.SetPosition(position);
     m_ModelTest.SetScale(scale);
+    m_ModelTest.SetRotation(rotation);
   }
 
   ImGui::Separator();

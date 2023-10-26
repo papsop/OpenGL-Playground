@@ -20,6 +20,7 @@ class Model {
 
   glm::vec3 GetPosition();
   glm::vec3 GetScale();
+  glm::vec3 GetRotation();
 
   void Draw();
 

@@ -2,6 +2,16 @@
 #include <algorithm>
 
 namespace GLCore {
+
+I_Camera::I_Camera(E_CameraType type) : m_Type(type)
+{
+}
+
+GLCore::E_CameraType I_Camera::GetCameraType()
+{
+  return m_Type;
+}
+
 glm::mat4 I_Camera::GetProjection()
 {
   return m_projectionMatrix;

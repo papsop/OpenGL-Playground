@@ -6,7 +6,7 @@
 
 namespace GLCore {
 
-OrthographicCamera::OrthographicCamera(glm::vec2 size, glm::vec3 position)
+OrthographicCamera::OrthographicCamera(glm::vec2 size, glm::vec3 position) : I_Camera(E_CameraType::ORTHOGRAPHIC)
 {
   m_cameraMainSize = size;
   m_zoom = 1.0f;

@@ -6,13 +6,16 @@
 namespace GLCore {
 class CameraControlLayer;
 
+enum class E_CameraType { NONE, ORTHOGRAPHIC, PERSPECTIVE };
+
 class I_Camera {
  public:
-  I_Camera() = default;
+  I_Camera(E_CameraType type);
   virtual ~I_Camera() = default;
 
   virtual glm::vec2 ScreenToWorld(glm::vec2 pos) = 0;
 
+  E_CameraType GetCameraType();
   glm::mat4 GetProjection();
   glm::vec3 GetPosition();
   glm::vec3 GetTarget();
@@ -29,6 +32,7 @@ class I_Camera {
 
  protected:
   virtual void RecalculateProjectionMatrix() = 0;
+  E_CameraType m_Type;
   glm::mat4 m_projectionMatrix;
   glm::vec3 m_position;
 

@@ -1,14 +1,97 @@
 #include <GLSandbox/Utils/Model.h>
+
+#include <GLCore/Core/GLFWGlad.h>
 #include <GLCore/Utils/Log.h>
 
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
 namespace GLSandbox {
-
 Model::Model()
 {
   m_IsTransformDirty = true;
+  m_IsModelLoaded = false;
+  m_Shader.LoadShadersFromFiles("../assets/shaders/basic.vert.glsl", "../assets/shaders/basic.frag.glsl");
+}
+
+Model::Model(std::string modelPath)
+{
+  m_IsTransformDirty = true;
+  m_IsModelLoaded = LoadGLTFBinaryModel(modelPath);
+  m_Shader.LoadShadersFromFiles("../assets/shaders/basic.vert.glsl", "../assets/shaders/basic.frag.glsl");
+}
+
+Model::~Model()
+{
+  if (m_IsModelLoaded) {
+    glDeleteVertexArrays(1, &m_VAO);
+    glDeleteBuffers(1, &m_VBO);
+    glDeleteBuffers(1, &m_EBO);
+    m_IsModelLoaded = false;
+  }
+}
+
+bool Model::LoadGLTFBinaryModel(std::string modelPath)
+{
+  std::string err;
+  std::string warn;
+  tinygltf::TinyGLTF m_Loader;
+
+  // GLTF model
+  m_IsModelLoaded = m_Loader.LoadBinaryFromFile(&m_Model, &err, &warn, modelPath);
+
+  if (!err.empty()) LOG_ERROR(err);
+  if (!warn.empty()) LOG_WARN(warn);
+
+  if (!m_IsModelLoaded) {
+    return false;
+  }
+
+  // OpenGL buffers
+  m_IsModelLoaded = true;  // Cleanup switches it to false
+  GL_TODO("Support multiple meshes");
+  GL_TODO("Support multiple primitives");  // Buffer and draw call per primitive?
+
+  auto& mesh = m_Model.meshes[0];
+  auto& primitive = mesh.primitives[0];
+
+  auto& positionAccessor = m_Model.accessors[primitive.attributes["POSITION"]];
+  auto& indexAccessor = m_Model.accessors[primitive.indices];
+  auto& positionBufferView = m_Model.bufferViews[positionAccessor.bufferView];
+  auto& indexBufferView = m_Model.bufferViews[indexAccessor.bufferView];
+  auto& positionBuffer = m_Model.buffers[positionBufferView.buffer];
+  auto& indexBuffer = m_Model.buffers[indexBufferView.buffer];
+
+  // Vertex array object
+  glGenVertexArrays(1, &m_VAO);
+  glBindVertexArray(m_VAO);
+
+  // Vertex buffer object
+  glGenBuffers(1, &m_VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+  glBufferData(GL_ARRAY_BUFFER, positionBufferView.byteLength, &positionBuffer.data.at(0) + positionAccessor.byteOffset + positionBufferView.byteOffset,
+               GL_STATIC_DRAW);
+
+  // Element buffer object - for indices
+  glGenBuffers(1, &m_EBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBufferView.byteLength, &indexBuffer.data.at(0) + indexAccessor.byteOffset + indexBufferView.byteOffset,
+               GL_STATIC_DRAW);
+
+  // Location 0 - position
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, positionAccessor.componentType, GL_FALSE, positionBufferView.byteStride, (void*)0);
+
+  UnbindBuffers();
+
+  // Information log
+
+  return true;
+}
+
+bool Model::IsLoaded()
+{
+  return m_IsModelLoaded;
 }
 
 void Model::SetPosition(glm::vec3 position)
@@ -47,14 +130,37 @@ glm::vec3 Model::GetRotation()
   return m_Rotation;
 }
 
+GLCore::Shader& Model::GetShader()
+{
+  return m_Shader;
+}
+
 void Model::Draw()
 {
+  if (!m_IsModelLoaded) {
+    // LOG_WARN("Trying to draw an empty Model");
+    return;
+  }
+
+  auto& mesh = m_Model.meshes[0];
+  auto& primitive = mesh.primitives[0];
+
+  auto& positionAccessor = m_Model.accessors[primitive.attributes["POSITION"]];
+  auto& indexAccessor = m_Model.accessors[primitive.indices];
+
+  // An owner of this model sets projection uniform
+  m_Shader.Use();
+  m_Shader.SetUniform("vModelMatrix", GetModelTransformMatrix());
+  BindBuffers();
+  glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexAccessor.count), indexAccessor.componentType, (void*)0);
+  UnbindBuffers();
 }
 
 glm::mat4 Model::GetModelTransformMatrix()
 {
   if (m_IsTransformDirty) {
-    glm::mat4 rotation = glm::toMat4(glm::quat(m_Rotation));
+    glm::vec3 radRotation = glm::radians(m_Rotation);
+    glm::mat4 rotation = glm::toMat4(glm::quat(radRotation));
     glm::mat4 scale = glm::scale(glm::mat4{1.0f}, m_Scale);
     glm::mat4 translate = glm::translate(glm::mat4{1.0f}, m_Position);
 
@@ -65,4 +171,17 @@ glm::mat4 Model::GetModelTransformMatrix()
   return m_Transform;
 }
 
+void Model::BindBuffers()
+{
+  glBindVertexArray(m_VAO);
+  glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+}
+
+void Model::UnbindBuffers()
+{
+  glBindVertexArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
 }  // namespace GLSandbox

@@ -81,7 +81,7 @@ void Application::Run()
   m_sandboxCanvas->Create();
   // Create camera AFTER canvas, so we can recalculate projection properly
   m_cameras[0] = std::unique_ptr<I_Camera>(new OrthographicCamera({10.0f, 10.0f}, {0.0f, 0.0f, 3.0f}));
-  m_cameras[1] = std::unique_ptr<I_Camera>(new PerspectiveCamera({0.0f, 0.0f, 15.0f}));
+  m_cameras[1] = std::unique_ptr<I_Camera>(new PerspectiveCamera({0.0f, 0.0f, 3.0f}));
 
   PushOverlay(new ImGuiOverlay());
   PushLayer(new SandboxCanvasLayer());

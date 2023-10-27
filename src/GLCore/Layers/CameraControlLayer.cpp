@@ -27,23 +27,29 @@ void CameraControlLayer::OnSandboxCanvasResize(const E_SandboxCanvasEvent& event
 void CameraControlLayer::OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEvent& event)
 {
   auto camera = Application::Instance().GetMainCamera();
-  glm::vec2 mousePos = camera->ScreenToWorld(event.Position);
 
-  if (event.Type == E_SandboxCanvasMouseEvent::RightClickPressed) {
-    m_lastMousePos = mousePos;
+  if (camera->GetCameraType() == E_CameraType::ORTHOGRAPHIC) {
+    glm::vec2 mousePos = camera->ScreenToWorld(event.Position);
+    if (event.Type == E_SandboxCanvasMouseEvent::RightClickPressed) {
+      m_lastMousePos = mousePos;
+    }
+
+    if (event.Type == E_SandboxCanvasMouseEvent::RightClickDown) {
+      glm::vec3 offset = glm::vec3(mousePos - m_lastMousePos, 0);
+      glm::vec3 newPos = camera->GetPosition() - offset;
+      newPos.z = camera->GetPosition().z;
+      camera->SetPosition(newPos);  // subtract, so the position follows mouse instead of reverse
+
+      m_lastMousePos = camera->ScreenToWorld(event.Position);  // previous lastMousePos is invalid because of setting a new position
+    }
+
+    if (event.Type == E_SandboxCanvasMouseEvent::WheelUsed) {
+      camera->SetZoom(camera->GetZoom() + (event.Wheel * m_mouseWheelSensitivity));
+    }
   }
-
-  if (event.Type == E_SandboxCanvasMouseEvent::RightClickDown) {
-    glm::vec3 offset = glm::vec3(mousePos - m_lastMousePos, 0);
-    glm::vec3 newPos = camera->GetPosition() - offset;
-    newPos.z = camera->GetPosition().z;
-    camera->SetPosition(newPos);  // subtract, so the position follows mouse instead of reverse
-
-    m_lastMousePos = camera->ScreenToWorld(event.Position);  // previous lastMousePos is invalid because of setting a new position
-  }
-
-  if (event.Type == E_SandboxCanvasMouseEvent::WheelUsed) {
-    camera->SetZoom(camera->GetZoom() + (event.Wheel * m_mouseWheelSensitivity));
+  else if (camera->GetCameraType() == E_CameraType::PERSPECTIVE) {
+    if (event.Type == E_SandboxCanvasMouseEvent::RightClickDown) {
+    }
   }
 }
 

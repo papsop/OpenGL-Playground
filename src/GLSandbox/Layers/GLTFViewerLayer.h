@@ -16,23 +16,13 @@ class GLTFViewerLayer : public GLCore::I_Layer {
   }
 
   void OnAttach() override;
-  void OnDetach() override;
 
   void OnUpdate(GLCore::Timestep dt) override;
 
   void OnImGuiUpdate(GLCore::Timestep dt) override;
 
  private:
-  bool m_ModelLoaded;
-  tinygltf::Model m_Model;
-  tinygltf::TinyGLTF m_Loader;
-
-  Model m_ModelTest;
-  unsigned int m_VAO;
-  unsigned int m_VBO;
-  unsigned int m_EBO;
-
-  GLCore::Shader m_BasicShader;
+  Model m_Model;
 
   // render settings
   bool m_WireFrame = true;

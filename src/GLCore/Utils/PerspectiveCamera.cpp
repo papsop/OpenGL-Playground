@@ -4,7 +4,7 @@
 
 namespace GLCore {
 
-PerspectiveCamera::PerspectiveCamera(glm::vec3 pos)
+PerspectiveCamera::PerspectiveCamera(glm::vec3 pos) : I_Camera(E_CameraType::PERSPECTIVE)
 {
   m_position = pos;
   m_canvasSize = {800, 600};

@@ -1,5 +1,7 @@
 #pragma once
 #include <GLSandbox/gltf/tiny_gltf.h>
+#include <GLCore/Utils/Shader.h>
+
 #include <glm/glm.hpp>
 
 #include <string>
@@ -9,10 +11,14 @@ namespace GLSandbox {
 class Model {
  public:
   Model();
+  Model(std::string modelPath);
   Model(const Model&) = delete;
   Model& operator=(const Model&) = delete;
 
-  ~Model() = default;
+  ~Model();
+
+  bool LoadGLTFBinaryModel(std::string path);
+  bool IsLoaded();
 
   void SetPosition(glm::vec3 position);
   void SetRotation(glm::vec3 rotation);
@@ -22,12 +28,18 @@ class Model {
   glm::vec3 GetScale();
   glm::vec3 GetRotation();
 
+  GLCore::Shader& GetShader();
   void Draw();
 
   glm::mat4 GetModelTransformMatrix();
 
  private:
+  void BindBuffers();
+  void UnbindBuffers();
+
   tinygltf::Model m_Model;
+  GLCore::Shader m_Shader;
+  bool m_IsModelLoaded;
 
   // model transformations
   bool m_IsTransformDirty;
@@ -38,8 +50,8 @@ class Model {
 
   // buffers for opengl
   // number of buffers depends on the model data (meshes, primitives)
-  std::vector<unsigned int> m_VAO;
-  std::vector<unsigned int> m_VBO;
-  std::vector<unsigned int> m_EBO;
+  unsigned int m_VBO = 0;
+  unsigned int m_VAO = 0;
+  unsigned int m_EBO = 0;
 };
 }  // namespace GLSandbox

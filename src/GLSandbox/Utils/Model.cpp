@@ -4,6 +4,9 @@
 #include <GLCore/Utils/Log.h>
 
 #include <glm/ext/matrix_transform.hpp>
+
+// Get rid of quaternion minmax C4003 warning
+#pragma warning(disable : 4003)
 #include <glm/gtx/quaternion.hpp>
 
 namespace GLSandbox {
@@ -37,16 +40,37 @@ bool Model::LoadGLTFBinaryModel(std::string modelPath)
   std::string warn;
   tinygltf::TinyGLTF m_Loader;
 
-  // GLTF model
-  m_IsModelLoaded = m_Loader.LoadBinaryFromFile(&m_Model, &err, &warn, modelPath);
+  m_Model = tinygltf::Model();
+  bool binLoaded = m_Loader.LoadBinaryFromFile(&m_Model, &err, &warn, modelPath);
 
   if (!err.empty()) LOG_ERROR(err);
   if (!warn.empty()) LOG_WARN(warn);
+  if (!binLoaded) return false;
 
-  if (!m_IsModelLoaded) {
-    return false;
-  }
+  m_IsModelLoaded = LoadModelImpl();
+  return m_IsModelLoaded;
+}
 
+bool Model::LoadGLTFModel(std::string modelPath)
+{
+  GL_TODO("Doesn't work right now, some 'invalid magic.' error when loading a JSON");
+  std::string err;
+  std::string warn;
+  tinygltf::TinyGLTF m_Loader;
+
+  m_Model = tinygltf::Model();
+  bool gltfLoaded = m_Loader.LoadASCIIFromFile(&m_Model, &err, &warn, modelPath);
+
+  if (!err.empty()) LOG_ERROR(err);
+  if (!warn.empty()) LOG_WARN(warn);
+  if (!gltfLoaded) return false;
+
+  m_IsModelLoaded = LoadModelImpl();
+  return m_IsModelLoaded;
+}
+
+bool Model::LoadModelImpl()
+{
   // OpenGL buffers
   m_IsModelLoaded = true;  // Cleanup switches it to false
   GL_TODO("Support multiple meshes");
@@ -80,11 +104,14 @@ bool Model::LoadGLTFBinaryModel(std::string modelPath)
 
   // Location 0 - position
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, positionAccessor.componentType, GL_FALSE, positionBufferView.byteStride, (void*)0);
+  glVertexAttribPointer(0, 3, positionAccessor.componentType, GL_FALSE, static_cast<GLsizei>(positionBufferView.byteStride), (void*)0);
 
   UnbindBuffers();
 
   // Information log
+  LOG_INFO("Model loaded:");
+  LOG_INFO("\tMeshes: {0}", m_Model.meshes.size());
+  LOG_INFO("\tPrimitives: {0}", mesh.primitives.size());
 
   return true;
 }

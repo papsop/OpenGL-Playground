@@ -18,6 +18,8 @@ class Model {
   ~Model();
 
   bool LoadGLTFBinaryModel(std::string path);
+  bool LoadGLTFModel(std::string path);
+
   bool IsLoaded();
 
   void SetPosition(glm::vec3 position);
@@ -34,6 +36,7 @@ class Model {
   glm::mat4 GetModelTransformMatrix();
 
  private:
+  bool LoadModelImpl();
   void BindBuffers();
   void UnbindBuffers();
 

@@ -9,12 +9,14 @@ void CameraControlLayer::OnAttach()
 {
   REGISTER_EVENT_CALLBACK(E_SandboxCanvasEvent, this, &CameraControlLayer::OnSandboxCanvasResize);
   REGISTER_EVENT_CALLBACK(E_SandboxCanvasMouseEvent, this, &CameraControlLayer::OnSandboxCanvasMouseEvent);
+  REGISTER_EVENT_CALLBACK(E_KeyInputEvent, this, &CameraControlLayer::OnKeyInputEvent);
 }
 
 void CameraControlLayer::OnDetach()
 {
   UNREGISTER_EVENT_CALLBACK(E_SandboxCanvasEvent, this);
   UNREGISTER_EVENT_CALLBACK(E_SandboxCanvasMouseEvent, this);
+  UNREGISTER_EVENT_CALLBACK(E_KeyInputEvent, this);
 }
 
 void CameraControlLayer::OnSandboxCanvasResize(const E_SandboxCanvasEvent& event)
@@ -48,9 +50,17 @@ void CameraControlLayer::OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEve
     }
   }
   else if (camera->GetCameraType() == E_CameraType::PERSPECTIVE) {
-    if (event.Type == E_SandboxCanvasMouseEvent::RightClickDown) {
+    if (event.Type == E_SandboxCanvasMouseEvent::LeftClickDown) {
+    }
+
+    if (event.Type == E_SandboxCanvasMouseEvent::WheelUsed) {
+      camera->SetZoom(camera->GetZoom() + (event.Wheel * m_mouseWheelSensitivity));
     }
   }
+}
+
+void CameraControlLayer::OnKeyInputEvent(const E_KeyInputEvent& event)
+{
 }
 
 void CameraControlLayer::OnImGuiUpdate(Timestep dt)

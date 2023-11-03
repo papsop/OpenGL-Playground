@@ -152,6 +152,7 @@ struct E_ApplicationEvent : public GLCoreEventBase {
   EventType Type;
 };
 
+// ============================
 struct E_WindowEvent : public GLCoreEventBase {
   enum EventType {
     Close,
@@ -160,6 +161,7 @@ struct E_WindowEvent : public GLCoreEventBase {
   EventType Type;
 };
 
+// ============================
 struct E_SandboxCanvasMouseEvent : public GLCoreEventBase {
   enum EventType {
     Hover,
@@ -185,6 +187,17 @@ struct E_SandboxCanvasMouseEvent : public GLCoreEventBase {
   float Wheel;
 };
 
+// ============================
+struct E_KeyInputEvent : public GLCoreEventBase {
+  int KeyCode;    // GLFW_KEY_XX
+  int KeyAction;  // GLFW_RELEASE, _PRESS, _REPEAT
+
+  E_KeyInputEvent(int keyCode, int keyAction, bool immediate) : GLCoreEventBase(immediate), KeyCode(keyCode), KeyAction(keyAction)
+  {
+  }
+};
+
+// ============================
 struct E_SandboxCanvasEvent : public GLCoreEventBase {
   enum EventType {
     Resize,

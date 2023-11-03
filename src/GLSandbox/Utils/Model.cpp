@@ -72,7 +72,6 @@ bool Model::LoadGLTFModel(std::string modelPath)
 bool Model::LoadModelImpl()
 {
   // OpenGL buffers
-  m_IsModelLoaded = true;  // Cleanup switches it to false
   GL_TODO("Support multiple meshes");
   GL_TODO("Support multiple primitives");  // Buffer and draw call per primitive?
 

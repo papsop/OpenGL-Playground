@@ -183,6 +183,13 @@ EventDispatcher* Application::GetEventDispatcher()
   return m_eventDispatcher.get();
 }
 
+void Application::OnWindowEvent(const E_WindowEvent& event)
+{
+  if (event.Type == E_WindowEvent::Close) {
+    m_isRunning = false;
+  }
+}
+
 void Application::SetActiveCameraIndex(int val)
 {
   GL_TODO("Changing cameras should force canvas size update (inactive camera can get behind)");

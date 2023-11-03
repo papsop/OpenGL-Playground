@@ -27,9 +27,6 @@ class I_Camera {
   void SetCanvasSize(glm::vec2 size);
   void SetCameraMainSize(glm::vec2 size);
 
-  // - should force recalculate
-  // void SetCameraTarget(glm::vec3 target);
-
  protected:
   virtual void RecalculateProjectionMatrix() = 0;
   E_CameraType m_Type;

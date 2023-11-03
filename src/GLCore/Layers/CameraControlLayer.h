@@ -17,6 +17,7 @@ class CameraControlLayer : public I_Layer {
 
   void OnSandboxCanvasResize(const E_SandboxCanvasEvent& event);
   void OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEvent& event);
+  void OnKeyInputEvent(const E_KeyInputEvent& event);
 
  private:
   glm::vec2 m_lastMousePos;

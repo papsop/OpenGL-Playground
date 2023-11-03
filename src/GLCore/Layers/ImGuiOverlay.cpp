@@ -79,6 +79,7 @@ void ImGuiOverlay::OnFrameBegin()
   ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
   ImGui::End();
 
+  GL_TODO("Create a default dockspace layout");
   //   if (!m_dockspaceInit) {
   //     // ImGui::DockBuilderRemoveNode(dockspace_id);
   //     ImGuiID dock1 = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f, nullptr, &dockspace_id);
@@ -97,7 +98,6 @@ void ImGuiOverlay::OnFrameEnd()
   ImGuiIO& io = ImGui::GetIO();
   io.DisplaySize = ImVec2(1280, 720);
 
-  // Rendering
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

@@ -33,12 +33,7 @@ class Application {
   I_Camera* GetMainCamera();
   EventDispatcher* GetEventDispatcher();
 
-  void OnWindowEvent(const E_WindowEvent& event)
-  {
-    if (event.Type == E_WindowEvent::Close) {
-      m_isRunning = false;
-    }
-  }
+  void OnWindowEvent(const E_WindowEvent& event);
 
   void SetActiveCameraIndex(int val);
   int GetActiveCameraIndex();

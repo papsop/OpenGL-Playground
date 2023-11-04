@@ -17,6 +17,7 @@ class Shader {
   void SetUniform(std::string name, int value);
   void SetUniform(std::string name, float value);
   void SetUniform(std::string name, bool value);
+  void SetUniform(std::string name, glm::vec4 value);
   // add more when needed
   void SetUniform(std::string name, glm::mat4 value);
 

@@ -38,9 +38,9 @@ void CameraControlLayer::OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEve
 
     if (event.Type == E_SandboxCanvasMouseEvent::RightClickDown) {
       glm::vec3 offset = glm::vec3(mousePos - m_lastMousePos, 0);
-      glm::vec3 newPos = camera->GetPosition() - offset;
+      glm::vec3 newPos = camera->GetPosition() - offset;  // subtract, so the position follows mouse instead of reverse
       newPos.z = camera->GetPosition().z;
-      camera->SetPosition(newPos);  // subtract, so the position follows mouse instead of reverse
+      camera->SetPosition(newPos);
 
       m_lastMousePos = camera->ScreenToWorld(event.Position);  // previous lastMousePos is invalid because of setting a new position
     }
@@ -50,9 +50,6 @@ void CameraControlLayer::OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEve
     }
   }
   else if (camera->GetCameraType() == E_CameraType::PERSPECTIVE) {
-    if (event.Type == E_SandboxCanvasMouseEvent::LeftClickDown) {
-    }
-
     if (event.Type == E_SandboxCanvasMouseEvent::WheelUsed) {
       camera->SetZoom(camera->GetZoom() + (event.Wheel * m_mouseWheelSensitivity));
     }
@@ -61,11 +58,12 @@ void CameraControlLayer::OnSandboxCanvasMouseEvent(const E_SandboxCanvasMouseEve
 
 void CameraControlLayer::OnKeyInputEvent(const E_KeyInputEvent& event)
 {
+  GL_TODO("Camera movement");
 }
 
 void CameraControlLayer::OnImGuiUpdate(Timestep dt)
 {
-  auto camera = Application::Instance().GetMainCamera();
+  auto* camera = Application::Instance().GetMainCamera();
   ImGui::Begin(GetName());
 
   ImGui::Text("Camera type:");

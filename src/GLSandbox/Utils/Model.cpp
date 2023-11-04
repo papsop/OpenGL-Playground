@@ -170,6 +170,9 @@ void Model::Draw()
 
   auto& mesh = m_Model.meshes[0];
   auto& primitive = mesh.primitives[0];
+  auto& material = m_Model.materials[primitive.material];
+  auto& bcf = material.pbrMetallicRoughness.baseColorFactor;
+  glm::vec4 baseColorFactor = glm::vec4(bcf[0], bcf[1], bcf[2], bcf[3]);
 
   auto& positionAccessor = m_Model.accessors[primitive.attributes["POSITION"]];
   auto& indexAccessor = m_Model.accessors[primitive.indices];
@@ -177,6 +180,8 @@ void Model::Draw()
   // An owner of this model sets projection uniform
   m_Shader.Use();
   m_Shader.SetUniform("vModelMatrix", GetModelTransformMatrix());
+  m_Shader.SetUniform("vColor", baseColorFactor);
+
   BindBuffers();
   glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexAccessor.count), indexAccessor.componentType, (void*)0);
   UnbindBuffers();

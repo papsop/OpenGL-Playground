@@ -195,6 +195,10 @@ struct E_KeyInputEvent : public GLCoreEventBase {
   E_KeyInputEvent(int keyCode, int keyAction, bool immediate) : GLCoreEventBase(immediate), KeyCode(keyCode), KeyAction(keyAction)
   {
   }
+
+  E_KeyInputEvent(bool Immediate) : GLCoreEventBase(Immediate)
+  {
+  }
 };
 
 // ============================

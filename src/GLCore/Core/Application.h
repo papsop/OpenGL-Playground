@@ -48,6 +48,7 @@ class Application {
   std::unique_ptr<LayerStack> m_layerStack;
   std::unique_ptr<Renderer2D> m_renderer;
   std::unique_ptr<SandboxCanvas> m_sandboxCanvas;
+  GL_TODO("Refactor cameras")
   std::array<std::unique_ptr<I_Camera>, 2> m_cameras;
 
   std::unique_ptr<I_Window> m_window = nullptr;

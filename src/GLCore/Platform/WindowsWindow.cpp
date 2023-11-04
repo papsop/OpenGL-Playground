@@ -20,6 +20,14 @@ static void opengl_error_callback(int error_code, const char* description)
   LOG_ERROR(description);
 }
 
+static void window_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+  E_KeyInputEvent e(true);
+  e.KeyAction = action;
+  e.KeyCode = key;
+  DISPATCH_EVENT(e);
+}
+
 // =============================================================
 WindowsWindow::~WindowsWindow()
 {
@@ -61,6 +69,7 @@ void WindowsWindow::Init(WindowDef def /*= WindowDef()*/)
 
   glfwSetWindowCloseCallback(m_window, window_close_callback);
   glfwSetErrorCallback(opengl_error_callback);
+  glfwSetKeyCallback(m_window, window_key_callback);
 }
 
 void* WindowsWindow::GetVoidWindow()

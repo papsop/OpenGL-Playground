@@ -37,7 +37,7 @@ project "GLCore"
     defines { "_WINDOWS", "GLFW_INCLUDE_NONE", "SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE" }
 
 -- ===========================================================================
-project "Physics"
+project "FluxPhysics"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
@@ -46,14 +46,16 @@ project "Physics"
     targetdir "build/bin/%{cfg.buildcfg}"
     objdir "build/obj/%{cfg.buildcfg}"
 
-    links { "GLM" } -- maybe make our own vector lib later, for now just use glm
-
+    includedirs
+    {
+        "src/"
+    }
     vpaths { 
         ["Headers/"] = { "**.h", "**.inl" },
         ["Sources/"] = { "**.c", "**.cpp"},
     }
 
-    files { "src/Physics/**.cpp", "src/Physics/**.h", "src/Physics/**.inl"}
+    files { "src/FluxPhysics/**.cpp", "src/FluxPhysics/**.h", "src/FluxPhysics/**.inl"}
 -- ===========================================================================
 project "GLSandbox"
     kind "ConsoleApp"
@@ -80,7 +82,7 @@ project "GLSandbox"
 
     files { "src/GLSandbox/**.cpp", "src/GLSandbox/**.h", "src/GLSandbox/**.inl", "src/GLSandBox/**.cc"}
 
-    links { "GLCore", } --"Physics" }
+    links { "GLCore", "FluxPhysics" }
     ignoredefaultlibraries { "libcmtd.lib" } -- causes LNK4098 if included
 
     filter "system:windows"

@@ -91,7 +91,7 @@ void Application::Run()
 
   REGISTER_EVENT_CALLBACK(E_WindowEvent, this, &Application::OnWindowEvent);
 
-  SetActiveCameraIndex(1);  // perspective default for now
+  SetActiveCameraIndex(0);  // perspective default for now
 
   float lastFrameTime = 0.0f;
   size_t frameCount = 0;

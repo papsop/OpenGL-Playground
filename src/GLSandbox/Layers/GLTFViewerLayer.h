@@ -11,7 +11,7 @@
 namespace GLSandbox {
 class GLTFViewerLayer : public GLCore::I_Layer {
  public:
-  GLTFViewerLayer() : I_Layer("GLTF Viewer", true)
+  GLTFViewerLayer() : I_Layer("GLTF Viewer", false)
   {
   }
 

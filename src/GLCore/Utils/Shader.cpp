@@ -116,4 +116,9 @@ void Shader::SetUniform(std::string name, glm::vec4 value)
   glUniform4f(glGetUniformLocation(m_programID, name.c_str()), value.r, value.g, value.b, value.a);
 }
 
+void Shader::SetUniform(std::string name, glm::vec3 value)
+{
+  glUniform3f(glGetUniformLocation(m_programID, name.c_str()), value.x, value.y, value.z);
+}
+
 }  // namespace GLCore

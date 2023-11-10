@@ -1,5 +1,5 @@
 #pragma once
 
-namespace Flux {
+namespace flux {
 
 }

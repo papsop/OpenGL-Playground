@@ -22,6 +22,9 @@ class Vec3 {
   {
   }
   Vec3(VecType x, VecType y, VecType z) : x(x), y(y), z(z), pad(0){};
+  Vec3(VecType n) : x(n), y(n), z(n), pad(0)
+  {
+  }
 
   // Operators
   Vec3 operator-() const

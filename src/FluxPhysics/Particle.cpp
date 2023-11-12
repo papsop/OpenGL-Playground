@@ -17,6 +17,11 @@ void Particle::SetAcceleration(Vec3f acceleration)
   m_Acceleration = acceleration;
 }
 
+void Particle::SetVelocity(Vec3f velocity)
+{
+  m_Velocity = velocity;
+}
+
 flux::Vec3f Particle::GetPosition() const
 {
   return m_Position;

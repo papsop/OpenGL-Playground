@@ -7,6 +7,7 @@ class Particle {
   void SetMass(float mass);
   void SetDamping(float damp);
   void SetAcceleration(Vec3f acceleration);
+  void SetVelocity(Vec3f velocity);
 
   Vec3f GetPosition() const;
   Vec3f GetVelocity() const;

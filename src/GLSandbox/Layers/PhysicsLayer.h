@@ -1,7 +1,10 @@
 #pragma once
 #include <GLCore/Core/Layer.h>
 
+#include <FluxPhysics/World.h>
 #include <FluxPhysics/Particle.h>
+
+#include <memory>
 
 namespace GLSandbox {
 class PhysicsLayer : public GLCore::I_Layer {
@@ -15,6 +18,7 @@ class PhysicsLayer : public GLCore::I_Layer {
   void OnUpdate(GLCore::Timestep dt) override;
 
  private:
-  flux::Particle m_Particle;
+  std::unique_ptr<flux::World> m_World;
+  flux::Particle* m_Particle;
 };
 }  // namespace GLSandbox

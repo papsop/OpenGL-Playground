@@ -1,6 +1,11 @@
 #include <FluxPhysics/Particle.h>
 
 namespace flux {
+
+Particle::Particle(World* world) : m_World(world)
+{
+}
+
 void Particle::SetMass(float mass)
 {
   m_Mass = mass;
@@ -49,4 +54,5 @@ void Particle::Integrate(float dt)
   m_Velocity += resultAcceleration * dt;
   m_Velocity *= powf(m_Damping, dt);
 }
+
 }  // namespace flux

@@ -2,6 +2,8 @@
 #include <FluxPhysics/Utils/Vec.h>
 
 namespace flux {
+class World;
+
 class Particle {
  public:
   void SetMass(float mass);
@@ -13,9 +15,14 @@ class Particle {
   Vec3f GetVelocity() const;
   Vec3f GetAcceleration() const;
 
+ protected:
+  Particle(World* world);
   void Integrate(float dt);
+  friend class World;  // only world can create new particles
 
  private:
+  World* m_World;
+
   Vec3f m_Position;
   Vec3f m_Velocity;
   Vec3f m_Acceleration;

@@ -26,8 +26,8 @@ void PhysicsLayer::OnUpdate(GLCore::Timestep dt)
   auto particlePos = m_Particle->GetPosition();
   GLCore::Renderer2D::Get()->DrawCircle({particlePos.x, particlePos.y}, .5f, {1.0f, 1.0f, 1.0f, 1.0f});
 
-  auto v = m_Particle->GetVelocity();
-  LOG_INFO("velocity: {0}, {1}, {2}", v.x, v.y, v.z);
+  // auto v = m_Particle->GetVelocity();
+  // LOG_INFO("velocity: {0}, {1}, {2}", v.x, v.y, v.z);
 }
 
 }  // namespace GLSandbox

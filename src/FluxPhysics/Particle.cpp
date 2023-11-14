@@ -42,6 +42,16 @@ flux::Vec3f Particle::GetAcceleration() const
   return m_Acceleration;
 }
 
+float Particle::GetMass() const
+{
+  return m_Mass;
+}
+
+void Particle::AddForce(Vec3f force)
+{
+  m_ForceAccumulator += force;
+}
+
 void Particle::Integrate(float dt)
 {
   // position update
@@ -53,6 +63,8 @@ void Particle::Integrate(float dt)
   // velocity update
   m_Velocity += resultAcceleration * dt;
   m_Velocity *= powf(m_Damping, dt);
+
+  m_ForceAccumulator.clear();
 }
 
 }  // namespace flux

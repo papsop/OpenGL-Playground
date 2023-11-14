@@ -113,6 +113,13 @@ class Vec3 {
     z /= vlength;
   }
 
+  void clear()
+  {
+    x = 0;
+    y = 0;
+    z = 0;
+  }
+
   VecType length()
   {
     return sqrt(lengthSquared());

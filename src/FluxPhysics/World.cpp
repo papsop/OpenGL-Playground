@@ -10,8 +10,20 @@ flux::Particle* World::CreateParticle()
   return result;
 }
 
+void World::RegisterForceGenerator(ForceGenerator* fg, Particle* particle)
+{
+  ForceGeneratorEntry entry;
+  entry.forceGenerator = fg;
+  entry.particle = particle;
+  m_ForceGeneratorEntries.push_back(entry);
+}
+
 void World::Step(float dt)
 {
+  for (auto& entry : m_ForceGeneratorEntries) {
+    entry.forceGenerator->UpdateForce(entry.particle, dt);
+  }
+
   for (auto& particle : m_Particles) {
     particle->Integrate(dt);
   }

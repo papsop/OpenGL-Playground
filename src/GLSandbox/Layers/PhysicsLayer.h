@@ -3,6 +3,7 @@
 
 #include <FluxPhysics/World.h>
 #include <FluxPhysics/Particle.h>
+#include <FluxPhysics/ForceGenerator.h>
 
 #include <memory>
 
@@ -19,6 +20,7 @@ class PhysicsLayer : public GLCore::I_Layer {
 
  private:
   std::unique_ptr<flux::World> m_World;
+  flux::GravityForceGenerator m_GravityForceGenerator;
   flux::Particle* m_Particle;
 };
 }  // namespace GLSandbox

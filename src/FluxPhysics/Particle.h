@@ -14,6 +14,9 @@ class Particle {
   Vec3f GetPosition() const;
   Vec3f GetVelocity() const;
   Vec3f GetAcceleration() const;
+  float GetMass() const;
+
+  void AddForce(Vec3f force);
 
  protected:
   Particle(World* world);

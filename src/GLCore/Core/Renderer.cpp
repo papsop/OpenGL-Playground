@@ -195,7 +195,6 @@ void Renderer2D::DrawLine(glm::vec2 a, glm::vec2 b, glm::vec4 color)
 
 void Renderer2D::DrawCircle(glm::vec2 center, float radius, glm::vec4 color)
 {
-  // for an actual nice circle, canvas has to be square, otherwise it get stretched
   float increments = 20.0f;
   float relativeIncrement = glm::pi<float>() * 2.0f / increments;
   float sinInc = sin(relativeIncrement);

@@ -1,20 +1,27 @@
 #pragma once
 #include <FluxPhysics/Utils/Vec.h>
 
-namespace flux {
+namespace flux
+{
 class World;
 
-class Particle {
+// TODO: add particle ID?
+class Particle
+{
  public:
+  void Destroy();
+
   void SetMass(float mass);
   void SetDamping(float damp);
   void SetAcceleration(Vec3f acceleration);
   void SetVelocity(Vec3f velocity);
+  void AddVelocity(Vec3f velocity);
 
   Vec3f GetPosition() const;
   Vec3f GetVelocity() const;
   Vec3f GetAcceleration() const;
   float GetMass() const;
+  float GetInverseMass() const;
 
   void AddForce(Vec3f force);
 

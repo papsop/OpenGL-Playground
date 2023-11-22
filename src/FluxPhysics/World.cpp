@@ -1,6 +1,9 @@
 #include <FluxPhysics/World.h>
+#include <FluxPhysics/Particle.h>
 
-namespace flux {
+#include <algorithm>
+namespace flux
+{
 
 flux::Particle* World::CreateParticle()
 {
@@ -10,9 +13,17 @@ flux::Particle* World::CreateParticle()
   return result;
 }
 
+void World::DestroyParticle(Particle* particle)
+{
+  auto predicate = [&](std::unique_ptr<Particle>& uqParticle) { return uqParticle.get() == particle; };
+
+  m_Particles.erase(std::remove_if(m_Particles.begin(), m_Particles.end(), predicate), m_Particles.end());
+}
+
 void World::Step(float dt)
 {
-  for (auto& particle : m_Particles) {
+  for (auto& particle : m_Particles)
+  {
     particle->Integrate(dt);
   }
 }

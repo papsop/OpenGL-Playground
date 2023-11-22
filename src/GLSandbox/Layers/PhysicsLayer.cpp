@@ -3,7 +3,8 @@
 #include <GlCore/Utils/Log.h>
 #include <GLCore/Core/Renderer.h>
 
-namespace GLSandbox {
+namespace GLSandbox
+{
 
 void PhysicsLayer::OnAttach()
 {
@@ -14,6 +15,8 @@ void PhysicsLayer::OnAttach()
   m_Particle->SetMass(10.0f);
   m_Particle->SetDamping(0.95f);
   // m_Particle->SetVelocity({10.0f, 0, 0});
+
+  m_Particle->Destroy();
 }
 
 void PhysicsLayer::OnUpdate(GLCore::Timestep dt)

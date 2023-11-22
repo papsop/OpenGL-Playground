@@ -1,9 +1,19 @@
 #include <FluxPhysics/Particle.h>
+#include <FluxPhysics/World.h>
 
-namespace flux {
+namespace flux
+{
 
 Particle::Particle(World* world) : m_World(world)
 {
+}
+
+void Particle::Destroy()
+{
+  if (m_World)
+  {
+    m_World->DestroyParticle(this);
+  }
 }
 
 void Particle::SetMass(float mass)
@@ -27,6 +37,11 @@ void Particle::SetVelocity(Vec3f velocity)
   m_Velocity = velocity;
 }
 
+void Particle::AddVelocity(Vec3f velocity)
+{
+  m_Velocity += velocity;
+}
+
 flux::Vec3f Particle::GetPosition() const
 {
   return m_Position;
@@ -45,6 +60,11 @@ flux::Vec3f Particle::GetAcceleration() const
 float Particle::GetMass() const
 {
   return m_Mass;
+}
+
+float Particle::GetInverseMass() const
+{
+  return m_InverseMass;
 }
 
 void Particle::AddForce(Vec3f force)

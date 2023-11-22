@@ -3,5 +3,5 @@ BasedOnStyle: Google
 ColumnLimit: 160
 IncludeBlocks: Preserve
 SortIncludes: Never
-BreakBeforeBraces: Stroustrup
+BreakBeforeBraces: Allman
 AllowShortFunctionsOnASingleLine: false

@@ -2,7 +2,8 @@
 #include <GLCore/Core/Application.h>
 #include <GLCore/Core/Events.h>
 
-namespace GLCore {
+namespace GLCore
+{
 
 void SandboxCanvas::Create()
 {

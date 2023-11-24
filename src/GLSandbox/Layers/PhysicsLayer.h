@@ -6,8 +6,10 @@
 
 #include <memory>
 
-namespace GLSandbox {
-class PhysicsLayer : public GLCore::I_Layer {
+namespace GLSandbox
+{
+class PhysicsLayer : public GLCore::I_Layer
+{
  public:
   PhysicsLayer() : I_Layer("Physics layer", true)
   {
@@ -21,6 +23,7 @@ class PhysicsLayer : public GLCore::I_Layer {
   void DebugDraw();
 
   std::unique_ptr<flux::World> m_World;
-  flux::Particle* m_Particle;
+  flux::Particle* m_ParticleA;
+  flux::Particle* m_ParticleB;
 };
 }  // namespace GLSandbox

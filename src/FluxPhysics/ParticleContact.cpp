@@ -1,4 +1,5 @@
 #include <FluxPhysics/ParticleContact.h>
+#include <FluxPhysics/Particle.h>
 
 namespace flux
 {

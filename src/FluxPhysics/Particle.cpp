@@ -16,6 +16,11 @@ void Particle::Destroy()
   }
 }
 
+void Particle::SetPosition(Vec3f position)
+{
+  m_Position = position;
+}
+
 void Particle::SetMass(float mass)
 {
   m_Mass = mass;
@@ -65,6 +70,16 @@ float Particle::GetMass() const
 float Particle::GetInverseMass() const
 {
   return m_InverseMass;
+}
+
+void Particle::SetRadius(float radius)
+{
+  m_Radius = radius;
+}
+
+float Particle::GetRadius() const
+{
+  return m_Radius;
 }
 
 void Particle::AddForce(Vec3f force)

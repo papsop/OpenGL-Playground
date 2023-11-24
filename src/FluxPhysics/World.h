@@ -1,4 +1,6 @@
 #pragma once
+#include <FluxPhysics/ParticleContactGenerator.h>
+#include <FluxPhysics/ParticleContactResolver.h>
 
 #include <vector>
 #include <memory>
@@ -18,5 +20,8 @@ class World
 
  private:
   std::vector<std::unique_ptr<Particle>> m_Particles;
+
+  ParticleContactGenerator m_ContactGenerator;
+  ParticleContactResolver m_ContactResolver;
 };
 }  // namespace flux

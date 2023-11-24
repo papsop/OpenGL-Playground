@@ -1,9 +1,11 @@
 #pragma once
-#include <FluxPhysics/Particle.h>
 #include <FluxPhysics/Utils/Vec.h>
 
-namespace flux {
-class ParticleContact {
+namespace flux
+{
+class Particle;
+class ParticleContact
+{
  public:
   ParticleContact(Particle* particleA, Particle* particleB, float restitution, Vec3f normal);
   Particle* m_ParticleA;

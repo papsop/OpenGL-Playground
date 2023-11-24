@@ -10,13 +10,22 @@ void PhysicsLayer::OnAttach()
 {
   m_World = std::make_unique<flux::World>();
 
-  m_Particle = m_World->CreateParticle();
+  m_ParticleA = m_World->CreateParticle();
+  m_ParticleB = m_World->CreateParticle();
 
-  m_Particle->SetMass(10.0f);
-  m_Particle->SetDamping(0.95f);
-  // m_Particle->SetVelocity({10.0f, 0, 0});
+  m_ParticleA->SetPosition({0.0f, 0.0f, 0.0f});
+  m_ParticleA->SetMass(10.0f);
+  m_ParticleA->SetDamping(0.95f);
+  m_ParticleA->SetRadius(0.2f);
 
-  m_Particle->Destroy();
+  m_ParticleB->SetPosition({0.0f, 1.0f, 0.0f});
+  m_ParticleB->SetMass(10.0f);
+  m_ParticleB->SetDamping(0.95f);
+  m_ParticleB->SetRadius(0.2f);
+
+  m_ParticleB->SetVelocity({0.0f, -2.0f, 0.0f});
+
+  // m_Particle->Destroy();
 }
 
 void PhysicsLayer::OnUpdate(GLCore::Timestep dt)
@@ -28,8 +37,8 @@ void PhysicsLayer::OnUpdate(GLCore::Timestep dt)
 
 void PhysicsLayer::DebugDraw()
 {
-  auto particlePos = m_Particle->GetPosition();
-  GLCore::Renderer2D::Get()->DrawCircle({particlePos.x, particlePos.y}, .2f, {1.0f, 1.0f, 1.0f, 1.0f});
+  GLCore::Renderer2D::Get()->DrawCircle({m_ParticleA->GetPosition().x, m_ParticleA->GetPosition().y}, m_ParticleA->GetRadius(), {1.0f, 1.0f, 1.0f, 1.0f});
+  GLCore::Renderer2D::Get()->DrawCircle({m_ParticleB->GetPosition().x, m_ParticleB->GetPosition().y}, m_ParticleB->GetRadius(), {1.0f, 0.0f, 1.0f, 1.0f});
 }
 
 }  // namespace GLSandbox

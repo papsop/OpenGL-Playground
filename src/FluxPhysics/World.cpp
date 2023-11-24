@@ -1,5 +1,6 @@
 #include <FluxPhysics/World.h>
 #include <FluxPhysics/Particle.h>
+#include <FluxPhysics/ParticleContact.h>
 
 #include <algorithm>
 namespace flux
@@ -22,9 +23,17 @@ void World::DestroyParticle(Particle* particle)
 
 void World::Step(float dt)
 {
+  // 1. Update particle positions/velocities
   for (auto& particle : m_Particles)
   {
     particle->Integrate(dt);
   }
+
+  // 2. Generate contacts between new particle positions
+  std::vector<ParticleContact> contacts;
+  m_ContactGenerator.GenerateContacts(m_Particles, contacts);
+
+  // 3. Solve these contacts and apply corresponding impulses to the particles
+  m_ContactResolver;  // TODO
 }
 }  // namespace flux

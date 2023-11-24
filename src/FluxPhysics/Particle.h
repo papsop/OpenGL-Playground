@@ -11,6 +11,7 @@ class Particle
  public:
   void Destroy();
 
+  void SetPosition(Vec3f position);
   void SetMass(float mass);
   void SetDamping(float damp);
   void SetAcceleration(Vec3f acceleration);
@@ -22,6 +23,10 @@ class Particle
   Vec3f GetAcceleration() const;
   float GetMass() const;
   float GetInverseMass() const;
+
+  // PLACEHOLDER CIRCLE COLLISION DETECTION
+  void SetRadius(float radius);
+  float GetRadius() const;
 
   void AddForce(Vec3f force);
 
@@ -42,5 +47,8 @@ class Particle
   float m_Damping;  // damps velocity every update, fixes floating point inaccuracies
   float m_Mass;
   float m_InverseMass;  // pre-calculated for equations
+
+  // PLACEHOLDER CIRCLE COLLISION DETECTION
+  float m_Radius;
 };
 }  // namespace flux

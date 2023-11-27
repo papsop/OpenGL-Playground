@@ -44,8 +44,6 @@ void PhysicsLayer::OnUpdate(GLCore::Timestep dt)
 void PhysicsLayer::DebugDraw()
 {
   m_World->DebugDraw();
-  // GLCore::Renderer2D::Get()->DrawCircle({m_ParticleA->GetPosition().x, m_ParticleA->GetPosition().y}, m_ParticleA->GetRadius(), {1.0f, 1.0f, 1.0f, 1.0f});
-  // GLCore::Renderer2D::Get()->DrawCircle({m_ParticleB->GetPosition().x, m_ParticleB->GetPosition().y}, m_ParticleB->GetRadius(), {1.0f, 0.0f, 1.0f, 1.0f});
 }
 
 }  // namespace GLSandbox

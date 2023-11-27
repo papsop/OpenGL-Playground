@@ -2,10 +2,12 @@
 #include <type_traits>
 #include <iostream>
 
-namespace flux {
-
+namespace flux
+{
+// ======================================================
 template <typename VecType>
-class Vec3 {
+class Vec3
+{
   // Vector data
  public:
   VecType x;
@@ -131,5 +133,29 @@ class Vec3 {
   }
 };
 
+// ======================================================
+template <typename VecType>
+class Vec4
+{
+  // Vector data
+ public:
+  VecType r;
+  VecType g;
+  VecType b;
+  VecType a;
+
+  // Operations
+ public:
+  Vec4() : Vec4(0, 0, 0, 0)
+  {
+  }
+  Vec4(VecType r, VecType g, VecType b, VecType a) : r(r), g(g), b(b), a(a){};
+  Vec4(VecType n) : r(n), g(n), b(n), a(n)
+  {
+  }
+};
+
+// ======================================================
 typedef Vec3<float> Vec3f;
+typedef Vec4<float> Vec4f;
 }  // namespace flux

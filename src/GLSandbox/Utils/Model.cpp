@@ -9,7 +9,8 @@
 #pragma warning(disable : 4003)
 #include <glm/gtx/quaternion.hpp>
 
-namespace GLSandbox {
+namespace GLSandbox
+{
 Model::Model()
 {
   m_IsTransformDirty = true;
@@ -26,7 +27,8 @@ Model::Model(std::string modelPath)
 
 Model::~Model()
 {
-  if (m_IsModelLoaded) {
+  if (m_IsModelLoaded)
+  {
     glDeleteVertexArrays(1, &m_VAO);
     glDeleteBuffers(1, &m_VBO);
     glDeleteBuffers(1, &m_EBO);
@@ -163,7 +165,8 @@ GLCore::Shader& Model::GetShader()
 
 void Model::Draw()
 {
-  if (!m_IsModelLoaded) {
+  if (!m_IsModelLoaded)
+  {
     // LOG_WARN("Trying to draw an empty Model");
     return;
   }
@@ -189,7 +192,8 @@ void Model::Draw()
 
 glm::mat4 Model::GetModelTransformMatrix()
 {
-  if (m_IsTransformDirty) {
+  if (m_IsTransformDirty)
+  {
     glm::vec3 radRotation = glm::radians(m_Rotation);
     glm::mat4 rotation = glm::toMat4(glm::quat(radRotation));
     glm::mat4 scale = glm::scale(glm::mat4{1.0f}, m_Scale);

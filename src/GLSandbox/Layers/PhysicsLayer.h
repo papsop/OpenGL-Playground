@@ -1,6 +1,8 @@
 #pragma once
 #include <GLCore/Core/Layer.h>
 
+#include <GLSandbox/Utils/SandboxDebuggerAdapter.h>
+
 #include <FluxPhysics/World.h>
 #include <FluxPhysics/Particle.h>
 
@@ -16,6 +18,7 @@ class PhysicsLayer : public GLCore::I_Layer
   }
 
   void OnAttach() override;
+  void OnDetach() override;
 
   void OnUpdate(GLCore::Timestep dt) override;
 
@@ -23,6 +26,8 @@ class PhysicsLayer : public GLCore::I_Layer
   void DebugDraw();
 
   std::unique_ptr<flux::World> m_World;
+  SandboxDebuggerAdapter m_SandboxDebuggerAdapter;
+
   flux::Particle* m_ParticleA;
   flux::Particle* m_ParticleB;
 };

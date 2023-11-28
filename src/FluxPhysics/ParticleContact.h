@@ -4,6 +4,7 @@
 namespace flux
 {
 class Particle;
+class ParticleContactResolver;
 class ParticleContact
 {
  public:
@@ -18,5 +19,7 @@ class ParticleContact
 
  protected:
   void Resolve(float dt);
+
+  friend class ParticleContactResolver;
 };
 }  // namespace flux

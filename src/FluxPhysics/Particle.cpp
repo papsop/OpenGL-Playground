@@ -24,7 +24,7 @@ void Particle::SetPosition(Vec3f position)
 void Particle::SetMass(float mass)
 {
   m_Mass = mass;
-  m_InverseMass = 1.0f / m_Mass;
+  m_InverseMass = (mass > 0.0f) ? 1.0f / m_Mass : 0.0f;
 }
 
 void Particle::SetDamping(float damp)
@@ -40,6 +40,11 @@ void Particle::SetAcceleration(Vec3f acceleration)
 void Particle::SetVelocity(Vec3f velocity)
 {
   m_Velocity = velocity;
+}
+
+void Particle::SetGravityEnabled(bool val)
+{
+  m_GravityEnabled = val;
 }
 
 void Particle::AddVelocity(Vec3f velocity)
@@ -72,6 +77,11 @@ float Particle::GetInverseMass() const
   return m_InverseMass;
 }
 
+bool Particle::IsGravityEnabled() const
+{
+  return m_GravityEnabled;
+}
+
 void Particle::SetRadius(float radius)
 {
   m_Radius = radius;
@@ -93,7 +103,7 @@ void Particle::Integrate(float dt)
   m_Position += m_Velocity * dt;
 
   // acceleration update
-  Vec3f resultAcceleration = m_Acceleration + m_ForceAccumulator * dt;
+  Vec3f resultAcceleration = m_Acceleration + m_ForceAccumulator * m_InverseMass;
 
   // velocity update
   m_Velocity += resultAcceleration * dt;

@@ -107,12 +107,13 @@ class Vec3
     *this = -(*this);
   }
 
-  void normalize()
+  Vec3 normalize()
   {
     VecType vlength = length();
     x /= vlength;
     y /= vlength;
     z /= vlength;
+    return *this;
   }
 
   void clear()

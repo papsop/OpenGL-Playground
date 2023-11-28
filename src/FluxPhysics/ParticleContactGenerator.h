@@ -10,9 +10,9 @@ class ParticleContactGenerator
 {
  public:
   using T_Particles = std::vector<std::unique_ptr<Particle>>;
-  using T_Contact = std::vector<ParticleContact>;
+  using T_Contacts = std::vector<ParticleContact>;
 
-  void GenerateContacts(const T_Particles& particles, T_Contact& contactsOutput);
+  void GenerateContacts(T_Particles& particles, T_Contacts& contactsOutput);
 
  private:
 };

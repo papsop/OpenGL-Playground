@@ -23,11 +23,16 @@ class World
   void ConnectDebugger(I_DebuggerAdapter* debugger);
   void DisconnectDebugger();
 
+  void SetGravity(Vec3f gravity);
+
  private:
   std::vector<std::unique_ptr<Particle>> m_Particles;
 
   ParticleContactGenerator m_ContactGenerator;
   ParticleContactResolver m_ContactResolver;
   I_DebuggerAdapter* m_Debugger;
+
+  // World properties
+  Vec3f m_Gravity;  // gets added to every particle's velocity
 };
 }  // namespace flux

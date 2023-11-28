@@ -38,22 +38,39 @@ void World::DisconnectDebugger()
 }
 
 // =======================================================================
+void World::SetGravity(Vec3f gravity)
+{
+  m_Gravity = gravity;
+}
+
+// =======================================================================
 void World::Step(float dt)
 {
-  // 1. Update particle positions/velocities
+  // 1. Apply gravity to particles
+  for (auto& particle : m_Particles)
+  {
+    if (particle->IsGravityEnabled())
+    {
+      particle->AddForce(m_Gravity * particle->GetMass());
+    }
+  }
+
+  // 2. Update particle positions/velocities
   for (auto& particle : m_Particles)
   {
     particle->Integrate(dt);
   }
 
-  // 2. Generate contacts between new particle positions
+  // 3. Generate contacts between new particle positions
   std::vector<ParticleContact> contacts;
   m_ContactGenerator.GenerateContacts(m_Particles, contacts);
 
-  // 3. Solve these contacts and apply corresponding impulses to the particles
-  m_ContactResolver;  // TODO
+  // 4. Solve these contacts and apply corresponding impulses to the particles
+  if (contacts.size() > 0)
+  {
+    m_ContactResolver.ResolveContacts(contacts, dt);
+  }
 }
-
 // =======================================================================
 void World::DebugDraw()
 {
@@ -61,7 +78,12 @@ void World::DebugDraw()
 
   for (const auto& particle : m_Particles)
   {
+    // collider
     m_Debugger->DrawCircle(particle->GetPosition(), particle->GetRadius(), {1.0f});
+
+    // Velocity direction
+    Vec3f velocityDirection = particle->GetPosition() + particle->GetVelocity().normalize();
+    m_Debugger->DrawLine(particle->GetPosition(), velocityDirection, {1.0f, 0.0f, 0.0f, 1.0f});
   }
 }
 

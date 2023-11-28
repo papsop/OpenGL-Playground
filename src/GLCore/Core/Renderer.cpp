@@ -3,7 +3,8 @@
 
 #include <glm/ext/scalar_constants.hpp>
 
-namespace GLCore {
+namespace GLCore
+{
 
 // =============================================================
 // LINES
@@ -40,7 +41,8 @@ void LinesRenderer::Create()
 
 void LinesRenderer::Destroy()
 {
-  if (m_VAO) {
+  if (m_VAO)
+  {
     glDeleteVertexArrays(1, &m_VAO);
     glDeleteBuffers(2, m_VBOs);
     m_VAO = 0;
@@ -104,7 +106,8 @@ void QuadRenderer::Create()
 
 void QuadRenderer::Destroy()
 {
-  if (m_VAO) {
+  if (m_VAO)
+  {
     glDeleteVertexArrays(1, &m_VAO);
     glDeleteBuffers(1, &m_VBO);
     m_VAO = 0;
@@ -126,7 +129,8 @@ void QuadRenderer::Flush()
   // Use Vertex array to draw all the buffered vertices
   glBindVertexArray(m_VAO);
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  for (size_t i = 0; i < m_vertexCount; i++) {
+  for (size_t i = 0; i < m_vertexCount; i++)
+  {
     auto* quadTexture = m_textures[i];
     if (quadTexture) quadTexture->Bind();
     glDrawArrays(GL_TRIANGLES, 0, 6);  // 6 vertices (*4 floats, 2D position + UV) per vertex
@@ -195,13 +199,14 @@ void Renderer2D::DrawLine(glm::vec2 a, glm::vec2 b, glm::vec4 color)
 
 void Renderer2D::DrawCircle(glm::vec2 center, float radius, glm::vec4 color)
 {
-  float increments = 20.0f;
+  float increments = 100.0f;
   float relativeIncrement = glm::pi<float>() * 2.0f / increments;
   float sinInc = sin(relativeIncrement);
   float cosInc = cos(relativeIncrement);
   glm::vec2 p1{1.0f, 0.0f};
   glm::vec2 w1 = center + radius * p1;
-  for (size_t i = 0; i < increments; i++) {
+  for (size_t i = 0; i < increments; i++)
+  {
     // https://math.stackexchange.com/a/814981
     glm::vec2 p2;
     p2.x = cosInc * p1.x - sinInc * p1.y;

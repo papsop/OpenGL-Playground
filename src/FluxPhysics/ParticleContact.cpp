@@ -45,7 +45,7 @@ void ParticleContact::Resolve(float dt)
   m_ParticleA->AddVelocity(impulsePerInverseMass * m_ParticleA->GetInverseMass());
   if (m_ParticleB)
   {
-    m_ParticleB->AddVelocity(impulsePerInverseMass * m_ParticleB->GetInverseMass());
+    m_ParticleB->AddVelocity(impulsePerInverseMass * -m_ParticleB->GetInverseMass());
   }
 }
 }  // namespace flux

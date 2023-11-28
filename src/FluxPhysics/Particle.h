@@ -16,19 +16,22 @@ class Particle
   void SetDamping(float damp);
   void SetAcceleration(Vec3f acceleration);
   void SetVelocity(Vec3f velocity);
-  void AddVelocity(Vec3f velocity);
+  void SetGravityEnabled(bool val);
 
   Vec3f GetPosition() const;
   Vec3f GetVelocity() const;
   Vec3f GetAcceleration() const;
   float GetMass() const;
   float GetInverseMass() const;
+  bool IsGravityEnabled() const;
+
+  void AddForce(Vec3f force);
+  void AddVelocity(Vec3f velocity);
 
   // PLACEHOLDER CIRCLE COLLISION DETECTION
   void SetRadius(float radius);
   float GetRadius() const;
-
-  void AddForce(Vec3f force);
+  // ==========================================
 
  protected:
   Particle(World* world);
@@ -47,6 +50,7 @@ class Particle
   float m_Damping;  // damps velocity every update, fixes floating point inaccuracies
   float m_Mass;
   float m_InverseMass;  // pre-calculated for equations
+  bool m_GravityEnabled;
 
   // PLACEHOLDER CIRCLE COLLISION DETECTION
   float m_Radius;

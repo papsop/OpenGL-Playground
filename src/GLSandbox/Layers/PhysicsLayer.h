@@ -30,5 +30,6 @@ class PhysicsLayer : public GLCore::I_Layer
 
   flux::Particle* m_ParticleA;
   flux::Particle* m_ParticleB;
+  flux::Particle* m_ParticleC;
 };
 }  // namespace GLSandbox

@@ -47,7 +47,7 @@ class Particle
 
   Vec3f m_ForceAccumulator;
 
-  float m_Damping;  // damps velocity every update, fixes floating point inaccuracies
+  float m_Damping = 0.95f;  // damps velocity every update, fixes floating point inaccuracies
   float m_Mass;
   float m_InverseMass;  // pre-calculated for equations
   bool m_GravityEnabled;

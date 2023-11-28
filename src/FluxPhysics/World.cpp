@@ -83,7 +83,7 @@ void World::DebugDraw()
 
     // Velocity direction
     Vec3f velocityDirection = particle->GetPosition() + particle->GetVelocity().normalize();
-    m_Debugger->DrawLine(particle->GetPosition(), velocityDirection, {1.0f, 0.0f, 0.0f, 1.0f});
+    // m_Debugger->DrawLine(particle->GetPosition(), velocityDirection, {1.0f, 0.0f, 0.0f, 1.0f});
   }
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <GLCore/Core/Layer.h>
+#include <GLCore/Core/Events.h>
 
 #include <GLSandbox/Utils/SandboxDebuggerAdapter.h>
 
@@ -22,14 +23,18 @@ class PhysicsLayer : public GLCore::I_Layer
 
   void OnUpdate(GLCore::Timestep dt) override;
 
+  void OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEvent& e);
+
  private:
   void DebugDraw();
 
   std::unique_ptr<flux::World> m_World;
   SandboxDebuggerAdapter m_SandboxDebuggerAdapter;
 
-  flux::Particle* m_ParticleA;
-  flux::Particle* m_ParticleB;
-  flux::Particle* m_ParticleC;
+  flux::Particle* m_ParticleWallA;
+  flux::Particle* m_ParticleWallB;
+  flux::Particle* m_ParticleWallC;
+
+  std::vector<flux::Particle*> m_Balls;
 };
 }  // namespace GLSandbox

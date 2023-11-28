@@ -4,12 +4,17 @@
 #include <GLCore/Core/Application.h>
 #include <GLCore/Core/Renderer.h>
 
+#include <imgui.h>
+
 namespace GLSandbox
 {
 
 void PhysicsLayer::OnAttach()
 {
   REGISTER_EVENT_CALLBACK(GLCore::E_SandboxCanvasMouseEvent, this, &PhysicsLayer::OnSandboxCanvasMouseEvent);
+
+  m_SandboxDebuggerAdapter.SetDrawBody(true);
+  m_SandboxDebuggerAdapter.SetDrawDirection(false);
 
   m_World = std::make_unique<flux::World>();
   m_World->ConnectDebugger(&m_SandboxDebuggerAdapter);
@@ -69,6 +74,29 @@ void PhysicsLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseE
     ball->SetMass(10.0f);
     ball->SetGravityEnabled(true);
   }
+}
+
+void PhysicsLayer::OnImGuiUpdate(GLCore::Timestep dt)
+{
+  if (!IsEnabled()) return;
+
+  ImGui::Begin(GetName());
+
+  ImGui::Text("Particle debug:");
+  {
+    bool valBody = m_SandboxDebuggerAdapter.ShouldDrawBody();
+    ImGui::Checkbox("Body", &valBody);
+    m_SandboxDebuggerAdapter.SetDrawBody(valBody);
+  }
+  {
+    bool valDirection = m_SandboxDebuggerAdapter.ShouldDrawDirection();
+    ImGui::Checkbox("Direction", &valDirection);
+    m_SandboxDebuggerAdapter.SetDrawDirection(valDirection);
+  }
+  ImGui::Separator();
+  ImGui::Text("Number of balls: %d", m_Balls.size());
+
+  ImGui::End();
 }
 
 void PhysicsLayer::DebugDraw()

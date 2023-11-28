@@ -25,6 +25,8 @@ class PhysicsLayer : public GLCore::I_Layer
 
   void OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseEvent& e);
 
+  void OnImGuiUpdate(GLCore::Timestep dt) override;
+
  private:
   void DebugDraw();
 

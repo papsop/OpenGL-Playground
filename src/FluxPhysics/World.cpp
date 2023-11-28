@@ -78,12 +78,18 @@ void World::DebugDraw()
 
   for (const auto& particle : m_Particles)
   {
-    // collider
-    m_Debugger->DrawCircle(particle->GetPosition(), particle->GetRadius(), {1.0f});
+    // Collider
+    if (m_Debugger->ShouldDrawBody())
+    {
+      m_Debugger->DrawCircle(particle->GetPosition(), particle->GetRadius(), {1.0f});
+    }
 
     // Velocity direction
-    Vec3f velocityDirection = particle->GetPosition() + particle->GetVelocity().normalize();
-    // m_Debugger->DrawLine(particle->GetPosition(), velocityDirection, {1.0f, 0.0f, 0.0f, 1.0f});
+    if (m_Debugger->ShouldDrawDirection())
+    {
+      Vec3f velocityDirection = particle->GetPosition() + (particle->GetVelocity().normalize() / 2.0f);
+      m_Debugger->DrawLine(particle->GetPosition(), velocityDirection, {1.0f, 0.0f, 0.0f, 1.0f});
+    }
   }
 }
 

@@ -4,8 +4,8 @@
 namespace flux
 {
 
-ParticleContact::ParticleContact(Particle* particleA, Particle* particleB, float restitution, Vec3f normal)
-    : m_ParticleA(particleA), m_ParticleB(particleB), m_RestitutionCoefficient(restitution), m_ContactNormal(normal)
+ParticleContact::ParticleContact(Particle* particleA, Particle* particleB, float restitution, Vec3f normal, float penetration)
+    : m_ParticleA(particleA), m_ParticleB(particleB), m_RestitutionCoefficient(restitution), m_ContactNormal(normal), m_Penetration(penetration)
 {
 }
 

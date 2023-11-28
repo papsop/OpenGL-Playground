@@ -2,6 +2,7 @@
 #include <FluxPhysics/Particle.h>
 
 #include <iostream>
+#include <cmath>
 namespace flux
 {
 void ParticleContactGenerator::GenerateContacts(T_Particles& particles, T_Contacts& contactsOutput)
@@ -13,14 +14,17 @@ void ParticleContactGenerator::GenerateContacts(T_Particles& particles, T_Contac
       Particle* particleA = particles[i].get();
       Particle* particleB = particles[j].get();
 
-      float distance = (particleB->GetPosition() - particleA->GetPosition()).lengthSquared();
-      distance -= particleA->GetRadius() * particleA->GetRadius();
-      distance -= particleB->GetRadius() * particleB->GetRadius();
+      if (particleA->GetInverseMass() == 0 && particleB->GetInverseMass() == 0) continue;  // 2 immovable objects
+
+      // use length squared and ignore sqrt? not relevant right now
+      float distance = (particleB->GetPosition() - particleA->GetPosition()).length();
+      distance -= particleA->GetRadius();
+      distance -= particleB->GetRadius();
       if (distance <= 0)
       {
-        Vec3f dir = particleA->GetPosition() - particleB->GetPosition();
-        dir.normalize();
-        contactsOutput.push_back({particleA, particleB, 1.0f, dir});
+        Vec3f contactNormal = (particleA->GetPosition() - particleB->GetPosition()).normalize();
+        float penetration = std::abs(distance);
+        contactsOutput.push_back({particleA, particleB, 1.0f, contactNormal, penetration});
       }
     }
   }

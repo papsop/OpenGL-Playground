@@ -24,7 +24,7 @@ void ParticleContactGenerator::GenerateContacts(T_Particles& particles, T_Contac
       {
         Vec3f contactNormal = (particleA->GetPosition() - particleB->GetPosition()).normalize();
         float penetration = std::abs(distance);
-        contactsOutput.push_back({particleA, particleB, 1.0f, contactNormal, penetration});
+        contactsOutput.push_back({particleA, particleB, .95f, contactNormal, penetration});
       }
     }
   }

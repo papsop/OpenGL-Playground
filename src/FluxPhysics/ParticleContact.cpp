@@ -18,6 +18,12 @@ float ParticleContact::GetSeparatingVelocity() const
 
 void ParticleContact::Resolve(float dt)
 {
+  ResolveVelocity(dt);
+  ResolveInterpenetration(dt);
+}
+
+void ParticleContact::ResolveVelocity(float dt)
+{
   float separatingVelocity = GetSeparatingVelocity();
 
   if (separatingVelocity > 0)
@@ -46,6 +52,22 @@ void ParticleContact::Resolve(float dt)
   if (m_ParticleB)
   {
     m_ParticleB->AddVelocity(impulsePerInverseMass * -m_ParticleB->GetInverseMass());
+  }
+}
+
+void ParticleContact::ResolveInterpenetration(float dt)
+{
+  float totalInverseMass = m_ParticleA->GetInverseMass();
+  if (m_ParticleB) totalInverseMass += m_ParticleB->GetInverseMass();
+
+  if (totalInverseMass <= 0) return;
+
+  Vec3f movePerInverseMass = (m_ContactNormal * m_Penetration) / totalInverseMass;
+
+  m_ParticleA->SetPosition(m_ParticleA->GetPosition() + movePerInverseMass * m_ParticleA->GetInverseMass());
+  if (m_ParticleB)
+  {
+    m_ParticleB->SetPosition(m_ParticleB->GetPosition() - movePerInverseMass * m_ParticleB->GetInverseMass());
   }
 }
 }  // namespace flux

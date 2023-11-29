@@ -21,6 +21,9 @@ class ParticleContact
  protected:
   void Resolve(float dt);
 
+  void ResolveVelocity(float dt);
+  void ResolveInterpenetration(float dt);
+
   friend class ParticleContactResolver;
 };
 }  // namespace flux

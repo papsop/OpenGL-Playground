@@ -27,14 +27,17 @@ void PhysicsLayer::OnAttach()
   m_ParticleWallA->SetPosition({0.0f, -1004.0f, 0.0f});
   m_ParticleWallA->SetRadius(1000.0f);
   m_ParticleWallA->SetMass(0.0f);
+  m_ParticleWallA->SetGravityEnabled(false);
 
   m_ParticleWallB->SetPosition({-1004.0f, 0.0f, 0.0f});
   m_ParticleWallB->SetRadius(1000.0f);
   m_ParticleWallB->SetMass(0.0f);
+  m_ParticleWallB->SetGravityEnabled(false);
 
   m_ParticleWallC->SetPosition({1004.0f, 0.0f, 0.0f});
   m_ParticleWallC->SetRadius(1000.0f);
   m_ParticleWallC->SetMass(0.0f);
+  m_ParticleWallC->SetGravityEnabled(false);
 
   // example ball
   auto* ball = m_World->CreateParticle();

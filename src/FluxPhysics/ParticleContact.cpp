@@ -32,6 +32,19 @@ void ParticleContact::ResolveVelocity(float dt)
   }
 
   float newVelocity = -separatingVelocity * m_RestitutionCoefficient;
+
+  // Velocity build-up due to acceleration only
+  Vec3f velocityBuildup = m_ParticleA->GetAcceleration();
+  if (m_ParticleB) velocityBuildup -= m_ParticleB->GetAcceleration();
+  // Velocity in the direction of contact normal
+  float accelerationSeparationVelocity = velocityBuildup.dot(m_ContactNormal) * dt;
+
+  if (accelerationSeparationVelocity < 0)
+  {  // if there is such velocity, remove it from new separating velocity
+    newVelocity += m_RestitutionCoefficient * accelerationSeparationVelocity;
+    newVelocity = std::max(newVelocity, 0.0f);
+  }
+
   float deltaVelocity = newVelocity - separatingVelocity;
 
   // apply change in velocity based on particle's inverse mass
@@ -57,6 +70,8 @@ void ParticleContact::ResolveVelocity(float dt)
 
 void ParticleContact::ResolveInterpenetration(float dt)
 {
+  if (m_Penetration <= 0) return;
+
   float totalInverseMass = m_ParticleA->GetInverseMass();
   if (m_ParticleB) totalInverseMass += m_ParticleB->GetInverseMass();
 

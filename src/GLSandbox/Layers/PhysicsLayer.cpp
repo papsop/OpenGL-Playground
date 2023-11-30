@@ -57,6 +57,7 @@ void PhysicsLayer::OnDetach()
 
 void PhysicsLayer::OnUpdate(GLCore::Timestep dt)
 {
+  // TODO: fixed update instead of updating every render frame
   m_World->Step(dt);
 
   DebugDraw();

@@ -4,11 +4,13 @@
 namespace flux
 {
 
+// =======================================================================
 ParticleContact::ParticleContact(Particle* particleA, Particle* particleB, float restitution, Vec3f normal, float penetration)
     : m_ParticleA(particleA), m_ParticleB(particleB), m_RestitutionCoefficient(restitution), m_ContactNormal(normal), m_Penetration(penetration)
 {
 }
 
+// =======================================================================
 float ParticleContact::GetSeparatingVelocity() const
 {
   Vec3f relativeVelocity = m_ParticleA->GetVelocity();
@@ -16,12 +18,14 @@ float ParticleContact::GetSeparatingVelocity() const
   return relativeVelocity.dot(m_ContactNormal);
 }
 
+// =======================================================================
 void ParticleContact::Resolve(float dt)
 {
   ResolveVelocity(dt);
   ResolveInterpenetration(dt);
 }
 
+// =======================================================================
 void ParticleContact::ResolveVelocity(float dt)
 {
   float separatingVelocity = GetSeparatingVelocity();
@@ -68,6 +72,7 @@ void ParticleContact::ResolveVelocity(float dt)
   }
 }
 
+// =======================================================================
 void ParticleContact::ResolveInterpenetration(float dt)
 {
   if (m_Penetration <= 0) return;
@@ -85,4 +90,5 @@ void ParticleContact::ResolveInterpenetration(float dt)
     m_ParticleB->SetPosition(m_ParticleB->GetPosition() - movePerInverseMass * m_ParticleB->GetInverseMass());
   }
 }
+
 }  // namespace flux

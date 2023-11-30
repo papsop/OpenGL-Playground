@@ -5,6 +5,8 @@
 #include <cmath>
 namespace flux
 {
+
+// =======================================================================
 void ParticleContactGenerator::GenerateContacts(T_Particles& particles, T_Contacts& contactsOutput)
 {
   for (size_t i = 0; i < particles.size(); i++)

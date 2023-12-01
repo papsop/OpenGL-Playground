@@ -38,5 +38,8 @@ class PhysicsLayer : public GLCore::I_Layer
   flux::Particle* m_ParticleWallC;
 
   std::vector<flux::Particle*> m_Balls;
+
+  float m_UpdateAccumulator;
+  float m_FixedUpdate = 1.0f / 60.0f;
 };
 }  // namespace GLSandbox

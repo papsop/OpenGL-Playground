@@ -9,6 +9,7 @@ namespace flux
 // =======================================================================
 void ParticleContactGenerator::GenerateContacts(T_Particles& particles, T_Contacts& contactsOutput)
 {
+  // Particle collisions
   for (size_t i = 0; i < particles.size(); i++)
   {
     for (size_t j = i + 1; j < particles.size(); j++)
@@ -30,5 +31,24 @@ void ParticleContactGenerator::GenerateContacts(T_Particles& particles, T_Contac
       }
     }
   }
+
+  // Particle links
+  for (auto& particleLink : m_ParticleLinks)
+  {
+    particleLink->GenerateContactForLink(contactsOutput);
+  }
 }
+
+// =======================================================================
+void ParticleContactGenerator::AddParticleLink(ParticleLink* particleLink)
+{
+  m_ParticleLinks.push_back(std::unique_ptr<ParticleLink>(particleLink));
+}
+
+// =======================================================================
+ParticleContactGenerator::T_ParticleLinks& ParticleContactGenerator::GetParticleLinks()
+{
+  return m_ParticleLinks;
+}
+
 }  // namespace flux

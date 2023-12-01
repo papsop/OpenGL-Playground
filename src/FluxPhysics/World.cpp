@@ -17,6 +17,12 @@ flux::Particle* World::CreateParticle()
 }
 
 // =======================================================================
+void World::AddParticleLink(ParticleLink* particleLink)
+{
+  m_ContactGenerator.AddParticleLink(particleLink);
+}
+
+// =======================================================================
 void World::DestroyParticle(Particle* particle)
 {
   auto predicate = [&](std::unique_ptr<Particle>& uqParticle) { return uqParticle.get() == particle; };
@@ -90,6 +96,11 @@ void World::DebugDraw()
       Vec3f velocityDirection = particle->GetPosition() + (particle->GetVelocity().normalize() / 2.0f);
       m_Debugger->DrawLine(particle->GetPosition(), velocityDirection, {1.0f, 0.0f, 0.0f, 1.0f});
     }
+  }
+
+  for (auto& particleLink : m_ContactGenerator.GetParticleLinks())
+  {
+    m_Debugger->DrawLine(particleLink->m_ParticleA->GetPosition(), particleLink->m_ParticleB->GetPosition(), particleLink->m_Color);
   }
 }
 

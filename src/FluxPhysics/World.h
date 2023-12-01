@@ -14,6 +14,8 @@ class World
 {
  public:
   Particle* CreateParticle();
+  void AddParticleLink(ParticleLink* particleLink);  // TODO: delete particle link
+
   // TODO: support deletion by ID?
   void DestroyParticle(Particle* particle);
 

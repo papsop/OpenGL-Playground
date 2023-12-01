@@ -4,6 +4,8 @@
 #include <GLCore/Core/Application.h>
 #include <GLCore/Core/Renderer.h>
 
+#include <FluxPhysics/ParticleLink.h>
+
 #include <imgui.h>
 
 namespace GLSandbox
@@ -39,14 +41,22 @@ void PhysicsLayer::OnAttach()
   m_ParticleWallC->SetMass(0.0f);
   m_ParticleWallC->SetGravityEnabled(false);
 
-  // example ball
-  auto* ball = m_World->CreateParticle();
-  m_Balls.push_back(ball);
+  // example balls with particleLink
+  auto* ballA = m_World->CreateParticle();
+  ballA->SetPosition({0.0f, 0.0f, 0.0f});
+  ballA->SetRadius(0.2f);
+  ballA->SetMass(10.0f);
+  ballA->SetGravityEnabled(true);
+  m_Balls.push_back(ballA);
 
-  ball->SetPosition({0.0f, 0.0f, 0.0f});
-  ball->SetRadius(0.2f);
-  ball->SetMass(10.0f);
-  ball->SetGravityEnabled(true);
+  auto* ballB = m_World->CreateParticle();
+  ballB->SetPosition({4.0f, 0.0f, 0.0f});
+  ballB->SetRadius(0.2f);
+  ballB->SetMass(10.0f);
+  ballB->SetGravityEnabled(true);
+  m_Balls.push_back(ballB);
+
+  m_World->AddParticleLink(new flux::ParticleCable(ballA, ballB, 4.0f, 0.9f));  // world will take care of the pointer
 }
 
 void PhysicsLayer::OnDetach()
@@ -58,7 +68,14 @@ void PhysicsLayer::OnDetach()
 void PhysicsLayer::OnUpdate(GLCore::Timestep dt)
 {
   // TODO: fixed update instead of updating every render frame
-  m_World->Step(dt);
+
+  m_UpdateAccumulator += dt.GetSeconds();
+
+  while (m_UpdateAccumulator >= m_FixedUpdate)
+  {
+    m_World->Step(m_FixedUpdate);
+    m_UpdateAccumulator -= m_FixedUpdate;
+  }
 
   DebugDraw();
 }

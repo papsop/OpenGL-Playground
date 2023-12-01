@@ -5,3 +5,5 @@ IncludeBlocks: Preserve
 SortIncludes: Never
 BreakBeforeBraces: Allman
 AllowShortFunctionsOnASingleLine: false
+BreakConstructorInitializers: BeforeComma
+ConstructorInitializerAllOnOneLineOrOnePerLine: true

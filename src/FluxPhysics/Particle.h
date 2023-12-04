@@ -17,14 +17,14 @@ class Particle : public I_Debuggable
   void SetDamping(float damp);
   void SetAcceleration(Vec3f acceleration);
   void SetVelocity(Vec3f velocity);
-  void SetGravityEnabled(bool val);
+  void SetGravityScale(float scale);
 
   Vec3f GetPosition() const;
   Vec3f GetVelocity() const;
   Vec3f GetAcceleration() const;
   float GetMass() const;
   float GetInverseMass() const;
-  bool IsGravityEnabled() const;
+  float GetGravityScale() const;
 
   void AddForce(Vec3f force);
   void AddVelocity(Vec3f velocity);
@@ -53,7 +53,7 @@ class Particle : public I_Debuggable
   float m_Damping = 0.95f;  // damps velocity every update, fixes floating point inaccuracies
   float m_Mass;
   float m_InverseMass;  // pre-calculated for equations
-  bool m_GravityEnabled;
+  float m_GravityScale;
 
   // PLACEHOLDER CIRCLE COLLISION DETECTION
   float m_Radius;

@@ -29,34 +29,34 @@ void PhysicsLayer::OnAttach()
   m_ParticleWallA->SetPosition({0.0f, -1004.0f, 0.0f});
   m_ParticleWallA->SetRadius(1000.0f);
   m_ParticleWallA->SetMass(0.0f);
-  m_ParticleWallA->SetGravityEnabled(false);
+  m_ParticleWallA->SetGravityScale(0.0f);
 
   m_ParticleWallB->SetPosition({-1004.0f, 0.0f, 0.0f});
   m_ParticleWallB->SetRadius(1000.0f);
   m_ParticleWallB->SetMass(0.0f);
-  m_ParticleWallB->SetGravityEnabled(false);
+  m_ParticleWallB->SetGravityScale(0.0f);
 
   m_ParticleWallC->SetPosition({1004.0f, 0.0f, 0.0f});
   m_ParticleWallC->SetRadius(1000.0f);
   m_ParticleWallC->SetMass(0.0f);
-  m_ParticleWallC->SetGravityEnabled(false);
+  m_ParticleWallC->SetGravityScale(0.0f);
 
   // example balls with particleLink
   auto* ballA = m_World->CreateParticle();
   ballA->SetPosition({0.0f, 0.0f, 0.0f});
   ballA->SetRadius(0.2f);
   ballA->SetMass(10.0f);
-  ballA->SetGravityEnabled(true);
+  ballA->SetGravityScale(1.0f);
   m_Balls.push_back(ballA);
 
   auto* ballB = m_World->CreateParticle();
   ballB->SetPosition({4.0f, 0.0f, 0.0f});
   ballB->SetRadius(0.2f);
   ballB->SetMass(10.0f);
-  ballB->SetGravityEnabled(true);
+  ballB->SetGravityScale(1.0f);
   m_Balls.push_back(ballB);
 
-  m_World->AddParticleLink(new flux::ParticleCable(ballA, ballB, 4.0f, 0.9f));  // world will take care of the pointer
+  m_World->AddParticleLink(new flux::ParticleCable(ballA, ballB, 4.0f, 0.85f));  // world will take care of the pointer
 }
 
 void PhysicsLayer::OnDetach()
@@ -93,7 +93,7 @@ void PhysicsLayer::OnSandboxCanvasMouseEvent(const GLCore::E_SandboxCanvasMouseE
     ball->SetPosition({worldPos.x, worldPos.y, 0.0f});
     ball->SetRadius(0.2f);
     ball->SetMass(10.0f);
-    ball->SetGravityEnabled(true);
+    ball->SetGravityScale(1.0f);
   }
 }
 

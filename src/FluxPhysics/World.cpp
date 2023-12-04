@@ -55,10 +55,7 @@ void World::Step(float dt)
   // 1. Apply gravity to particles
   for (auto& particle : m_Particles)
   {
-    if (particle->IsGravityEnabled())
-    {
-      particle->SetAcceleration({0.0f, -10.0f, 0.0f});
-    }
+    particle->SetAcceleration(m_Gravity * particle->GetGravityScale());
   }
 
   // 2. Update particle positions/velocities

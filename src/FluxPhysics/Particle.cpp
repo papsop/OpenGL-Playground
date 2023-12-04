@@ -50,9 +50,9 @@ void Particle::SetVelocity(Vec3f velocity)
 }
 
 // =======================================================================
-void Particle::SetGravityEnabled(bool val)
+void Particle::SetGravityScale(float scale)
 {
-  m_GravityEnabled = val;
+  m_GravityScale = scale;
 }
 
 // =======================================================================
@@ -92,9 +92,9 @@ float Particle::GetInverseMass() const
 }
 
 // =======================================================================
-bool Particle::IsGravityEnabled() const
+float Particle::GetGravityScale() const
 {
-  return m_GravityEnabled;
+  return m_GravityScale;
 }
 
 // =======================================================================

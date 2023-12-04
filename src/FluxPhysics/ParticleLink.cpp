@@ -65,7 +65,7 @@ void ParticleRod::GenerateContactForLink(T_Contacts& contacts)
     return;
   }
 
-  Vec3f contactNormal = m_ParticleA->GetPosition() - m_ParticleB->GetPosition();
+  Vec3f contactNormal = m_ParticleB->GetPosition() - m_ParticleA->GetPosition();
   contactNormal.normalize();
 
   float penetration = 0.0f;
@@ -81,6 +81,7 @@ void ParticleRod::GenerateContactForLink(T_Contacts& contacts)
   }
 
   contacts.push_back({m_ParticleA, m_ParticleB, 0.0f, contactNormal, penetration});
+  // contacts.push_back({m_ParticleB, m_ParticleA, 0.0f, contactNormal, penetration});
 }
 
 }  // namespace flux

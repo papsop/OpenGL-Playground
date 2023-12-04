@@ -56,7 +56,7 @@ void PhysicsLayer::OnAttach()
   ballB->SetGravityScale(1.0f);
   m_Balls.push_back(ballB);
 
-  m_World->AddParticleLink(new flux::ParticleCable(ballA, ballB, 4.0f, 0.85f));  // world will take care of the pointer
+  m_World->AddParticleLink(new flux::ParticleRod(ballA, ballB, 4.0f));  // world will take care of the pointer
 }
 
 void PhysicsLayer::OnDetach()

@@ -6,6 +6,8 @@ namespace flux
 // =======================================================================
 void ParticleContactResolver::ResolveContacts(T_Contact& contacts, float dt)
 {
+  if (contacts.size() == 0) return;
+
   // for (auto& contact : contacts)
   //{
   //   contact.Resolve(dt);

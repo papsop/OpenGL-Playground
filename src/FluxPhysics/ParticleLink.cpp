@@ -10,6 +10,14 @@ ParticleLink::ParticleLink(Particle* particleA, Particle* particleB, Vec4f color
 }
 
 // =======================================================================
+void ParticleLink::DebugDraw(I_DebuggerAdapter* debugger)
+{
+  if (!debugger) return;
+
+  debugger->DrawLine(m_ParticleA->GetPosition(), m_ParticleB->GetPosition(), m_Color);
+}
+
+// =======================================================================
 float ParticleLink::GetLength() const
 {
   Vec3f dir = m_ParticleA->GetPosition() - m_ParticleB->GetPosition();

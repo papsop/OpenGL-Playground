@@ -1,5 +1,6 @@
 #pragma once
 #include <FluxPhysics/Utils/Vec.h>
+#include <FluxPhysics/Utils/DebuggerAdapter.h>
 
 #include <vector>
 namespace flux
@@ -8,7 +9,7 @@ namespace flux
 class Particle;
 class ParticleContact;
 
-class ParticleLink
+class ParticleLink : public I_Debuggable
 {
  public:
   using T_Contacts = std::vector<ParticleContact>;
@@ -16,6 +17,7 @@ class ParticleLink
   ParticleLink(Particle* particleA, Particle* particleB, Vec4f color);
 
   virtual void GenerateContactForLink(T_Contacts& contacts) = 0;
+  virtual void DebugDraw(I_DebuggerAdapter* debugger) override;
 
   float GetLength() const;
 

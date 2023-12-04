@@ -29,6 +29,7 @@ class World
 
  private:
   std::vector<std::unique_ptr<Particle>> m_Particles;
+  std::vector<std::unique_ptr<ParticleLink>> m_ParticleLinks;
 
   ParticleContactGenerator m_ContactGenerator;
   ParticleContactResolver m_ContactResolver;

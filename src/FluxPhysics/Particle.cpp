@@ -131,4 +131,23 @@ void Particle::Integrate(float dt)
   m_ForceAccumulator.clear();
 }
 
+// =======================================================================
+void Particle::DebugDraw(I_DebuggerAdapter* debugger)
+{
+  if (!debugger) return;
+
+  // Collider
+  if (debugger->ShouldDrawBody())
+  {
+    debugger->DrawCircle(GetPosition(), GetRadius(), {1.0f});
+  }
+
+  // Velocity direction
+  if (debugger->ShouldDrawDirection())
+  {
+    Vec3f velocityDirection = GetPosition() + (GetVelocity().normalize() / 2.0f);
+    debugger->DrawLine(GetPosition(), velocityDirection, {1.0f, 0.0f, 0.0f, 1.0f});
+  }
+}
+
 }  // namespace flux

@@ -26,4 +26,11 @@ class I_DebuggerAdapter
   bool m_DrawBody = false;
   bool m_DrawDirection = false;
 };
+
+// ==================================================================
+class I_Debuggable
+{
+ public:
+  virtual void DebugDraw(I_DebuggerAdapter* debuggerAdapter){};
+};
 }  // namespace flux

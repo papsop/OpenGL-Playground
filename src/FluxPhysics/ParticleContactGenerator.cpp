@@ -31,24 +31,6 @@ void ParticleContactGenerator::GenerateContacts(T_Particles& particles, T_Contac
       }
     }
   }
-
-  // Particle links
-  for (auto& particleLink : m_ParticleLinks)
-  {
-    particleLink->GenerateContactForLink(contactsOutput);
-  }
-}
-
-// =======================================================================
-void ParticleContactGenerator::AddParticleLink(ParticleLink* particleLink)
-{
-  m_ParticleLinks.push_back(std::unique_ptr<ParticleLink>(particleLink));
-}
-
-// =======================================================================
-ParticleContactGenerator::T_ParticleLinks& ParticleContactGenerator::GetParticleLinks()
-{
-  return m_ParticleLinks;
 }
 
 }  // namespace flux

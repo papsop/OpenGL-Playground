@@ -1,12 +1,13 @@
 #pragma once
 #include <FluxPhysics/Utils/Vec.h>
+#include <FluxPhysics/Utils/DebuggerAdapter.h>
 
 namespace flux
 {
 class World;
 
 // TODO: add particle ID?
-class Particle
+class Particle : public I_Debuggable
 {
  public:
   void Destroy();
@@ -32,6 +33,8 @@ class Particle
   void SetRadius(float radius);
   float GetRadius() const;
   // ==========================================
+
+  virtual void DebugDraw(I_DebuggerAdapter* debugger) override;
 
  protected:
   Particle(World* world);

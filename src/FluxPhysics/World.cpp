@@ -19,7 +19,7 @@ flux::Particle* World::CreateParticle()
 // =======================================================================
 void World::AddParticleLink(ParticleLink* particleLink)
 {
-  m_ContactGenerator.AddParticleLink(particleLink);
+  m_ParticleLinks.push_back(std::unique_ptr<ParticleLink>(particleLink));
 }
 
 // =======================================================================
@@ -69,6 +69,13 @@ void World::Step(float dt)
 
   // 3. Generate contacts between new particle positions
   std::vector<ParticleContact> contacts;
+
+  // 3.1 Particle links
+  for (auto& particleLink : m_ParticleLinks)
+  {
+    particleLink->GenerateContactForLink(contacts);
+  }
+  // 3.2 Collision contacts
   m_ContactGenerator.GenerateContacts(m_Particles, contacts);
 
   // 4. Solve these contacts and apply corresponding impulses to the particles
@@ -84,23 +91,12 @@ void World::DebugDraw()
 
   for (const auto& particle : m_Particles)
   {
-    // Collider
-    if (m_Debugger->ShouldDrawBody())
-    {
-      m_Debugger->DrawCircle(particle->GetPosition(), particle->GetRadius(), {1.0f});
-    }
-
-    // Velocity direction
-    if (m_Debugger->ShouldDrawDirection())
-    {
-      Vec3f velocityDirection = particle->GetPosition() + (particle->GetVelocity().normalize() / 2.0f);
-      m_Debugger->DrawLine(particle->GetPosition(), velocityDirection, {1.0f, 0.0f, 0.0f, 1.0f});
-    }
+    particle->DebugDraw(m_Debugger);
   }
 
-  for (auto& particleLink : m_ContactGenerator.GetParticleLinks())
+  for (auto& particleLink : m_ParticleLinks)
   {
-    m_Debugger->DrawLine(particleLink->m_ParticleA->GetPosition(), particleLink->m_ParticleB->GetPosition(), particleLink->m_Color);
+    particleLink->DebugDraw(m_Debugger);
   }
 }
 

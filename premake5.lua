@@ -48,12 +48,15 @@ project "FluxPhysics"
 
     includedirs
     {
-        "src/"
+        "src/",
+        "libs/glm/",
     }
     vpaths { 
         ["Headers/"] = { "**.h", "**.inl" },
         ["Sources/"] = { "**.c", "**.cpp"},
     }
+
+    links { "GLM" }
 
     files { "src/FluxPhysics/**.cpp", "src/FluxPhysics/**.h", "src/FluxPhysics/**.inl"}
 -- ===========================================================================

@@ -59,6 +59,34 @@ project "FluxPhysics"
     links { "GLM" }
 
     files { "src/FluxPhysics/**.cpp", "src/FluxPhysics/**.h", "src/FluxPhysics/**.inl"}
+
+-- ===========================================================================
+project "TinyRenderer"
+    kind "StaticLib"
+    language "C++"
+    cppdialect "C++17"
+    architecture "x86_64"
+
+    targetdir "build/bin/%{cfg.buildcfg}"
+    objdir "build/obj/%{cfg.buildcfg}"
+
+    includedirs
+    {
+        "src/",
+        "libs/glad/include/",
+        "libs/glm/",
+        "libs/glfw/include/",
+        "libs/spdlog/include",
+    }
+    vpaths { 
+        ["Headers/"] = { "**.h", "**.inl" },
+        ["Sources/"] = { "**.c", "**.cpp"},
+    }
+
+    links { "GLM" }
+
+    files { "src/TinyRenderer/**.cpp", "src/TinyRenderer/**.h", "src/TinyRenderer/**.inl"}
+    
 -- ===========================================================================
 project "GLSandbox"
     kind "ConsoleApp"
@@ -85,7 +113,7 @@ project "GLSandbox"
 
     files { "src/GLSandbox/**.cpp", "src/GLSandbox/**.h", "src/GLSandbox/**.inl", "src/GLSandBox/**.cc"}
 
-    links { "GLCore", "FluxPhysics" }
+    links { "GLCore", "FluxPhysics", "TinyRenderer"}
     ignoredefaultlibraries { "libcmtd.lib" } -- causes LNK4098 if included
 
     filter "system:windows"

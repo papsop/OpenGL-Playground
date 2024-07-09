@@ -2,10 +2,12 @@
 #include <GLCore/Core/Layer.h>
 #include <GLCore/Core/Events.h>
 
-namespace GLSandbox {
-class DrawingLayer : public GLCore::I_Layer {
+namespace GLSandbox
+{
+class DrawingLayer : public GLCore::I_Layer
+{
  public:
-  DrawingLayer() : I_Layer("Drawing layer", false)
+  DrawingLayer(bool enabled) : I_Layer("Drawing layer", enabled)
   {
   }
 

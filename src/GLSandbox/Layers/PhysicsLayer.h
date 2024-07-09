@@ -14,7 +14,7 @@ namespace GLSandbox
 class PhysicsLayer : public GLCore::I_Layer
 {
  public:
-  PhysicsLayer() : I_Layer("Physics layer", true)
+  PhysicsLayer(bool enabled) : I_Layer("Physics layer", enabled)
   {
   }
 

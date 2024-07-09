@@ -8,10 +8,12 @@
 #include <GLSandbox/gltf/tiny_gltf.h>
 #include <string>
 
-namespace GLSandbox {
-class GLTFViewerLayer : public GLCore::I_Layer {
+namespace GLSandbox
+{
+class GLTFViewerLayer : public GLCore::I_Layer
+{
  public:
-  GLTFViewerLayer() : I_Layer("GLTF Viewer", false)
+  GLTFViewerLayer(bool enabled) : I_Layer("GLTF Viewer", enabled)
   {
   }
 

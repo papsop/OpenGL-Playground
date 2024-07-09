@@ -7,11 +7,12 @@
 #include <GLSandbox/Utils/SandWorld.h>
 #include <glm/vec4.hpp>
 
-namespace GLSandbox {
-
-class SandLayer : public GLCore::I_Layer {
+namespace GLSandbox
+{
+class SandLayer : public GLCore::I_Layer
+{
  public:
-  SandLayer() : I_Layer("Sand layer", false)
+  SandLayer(bool enabled) : I_Layer("Sand layer", enabled)
   {
   }
 

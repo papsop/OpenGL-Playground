@@ -7,6 +7,7 @@
 #include <glm/vec4.hpp>
 
 #include <TinyRenderer/Renderer.h>
+#include <TinyRenderer/utils/Model.h>
 
 namespace GLSandbox
 {
@@ -26,6 +27,7 @@ class TinyRendererLayer : public GLCore::I_Layer
   std::shared_ptr<GLCore::Texture> m_Texture;
   std::shared_ptr<GLCore::TextureBuffer> m_TextureBuffer;
 
+  tinyrenderer::Model m_Model;
   tinyrenderer::Renderer m_Renderer;
 };
 }  // namespace GLSandbox

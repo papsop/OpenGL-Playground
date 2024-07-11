@@ -1,5 +1,7 @@
 #include <GLCore/Utils/Texture.h>
 
+#include <glm/ext/scalar_common.hpp>
+
 namespace GLCore
 {
 
@@ -76,6 +78,8 @@ GLuint TextureBuffer::GetHeight()
 
 void TextureBuffer::SetPixel(size_t x, size_t y, Color col)
 {
+  x = x % (m_Width);
+  y = y % (m_Height);
   m_Data[y * m_Width + x] = col;
 }
 

@@ -13,7 +13,7 @@ namespace GLSandbox
 TinyRendererLayer::TinyRendererLayer(bool enabled) : I_Layer("Tiny Renderer", enabled)
 {
   m_Texture = std::make_shared<GLCore::Texture>();
-  m_TextureBuffer = std::make_shared<GLCore::TextureBuffer>(1000, 1000);
+  m_TextureBuffer = std::make_shared<GLCore::TextureBuffer>(200, 200);
 }
 
 void TinyRendererLayer::OnAttach()
@@ -31,26 +31,15 @@ void TinyRendererLayer::OnUpdate(GLCore::Timestep dt)
 
   m_Renderer.BindTextureBuffer(m_TextureBuffer);
 
-  // Render model
-  for (size_t i = 0; i < m_Model.FacesSize(); i++)
-  {
-    std::vector<int> face = m_Model.Face(i);
-    for (size_t j = 0; j < 3; j++)
-    {
-      // Get 3d points for given triangle face
-      glm::vec3 v0 = m_Model.Vertex(face[j]);
-      glm::vec3 v1 = m_Model.Vertex(face[(j + 1) % 3]);
+  // m_Renderer.DrawModelWireframe({400, 400}, m_Model);
 
-      // Remap these points to 2d texture coords
-      float width = m_TextureBuffer->GetWidth();
-      float height = m_TextureBuffer->GetHeight();
-      glm::vec2 p0 = {(v0.x + 1.) * width / 2., (v0.y + 1) * height / 2.};
-      glm::vec2 p1 = {(v1.x + 1.) * width / 2., (v1.y + 1) * height / 2.};
+  glm::vec2 t0[3] = {glm::vec2(10, 70), glm::vec2(50, 160), glm::vec2(70, 80)};
+  glm::vec2 t1[3] = {glm::vec2(180, 50), glm::vec2(150, 1), glm::vec2(70, 180)};
+  glm::vec2 t2[3] = {glm::vec2(180, 150), glm::vec2(120, 160), glm::vec2(130, 180)};
 
-      // draw line
-      m_Renderer.Line2D(p0, p1, GLCore::ColorLibrary::White);
-    }
-  }
+  m_Renderer.DrawTriangle(t0[0], t0[1], t0[2], GLCore::ColorLibrary::Red);
+  m_Renderer.DrawTriangle(t1[0], t1[1], t1[2], GLCore::ColorLibrary::White);
+  m_Renderer.DrawTriangle(t2[0], t2[1], t2[2], GLCore::ColorLibrary::Green);
 
   // Draw texture
   m_Texture->SetImageData(*m_TextureBuffer);

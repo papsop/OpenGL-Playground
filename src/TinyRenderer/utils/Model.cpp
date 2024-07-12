@@ -65,30 +65,30 @@ bool Model::LoadOBJModel(std::string filePath)
 }
 
 // ======================================================
-size_t Model::VertsSize()
+size_t Model::VertsSize() const
 {
   return m_Verts.size();
 }
 
 // ======================================================
-size_t Model::FacesSize()
+size_t Model::FacesSize() const
 {
   return m_Faces.size();
 }
 
 // ======================================================
-bool Model::IsLoaded()
+bool Model::IsLoaded() const
 {
   return VertsSize() > 0 && FacesSize() > 0;
 }
 
 // ======================================================
-glm::vec3 Model::Vertex(size_t i)
+glm::vec3 Model::Vertex(size_t i) const
 {
   return m_Verts[i];
 }
 
-std::vector<int>& Model::Face(size_t i)
+const std::vector<int>& Model::Face(size_t i) const
 {
   return m_Faces[i];
 }

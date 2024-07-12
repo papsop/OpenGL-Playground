@@ -14,13 +14,13 @@ class Model
   Model(const Model&) = delete;
   Model& operator=(const Model&) = delete;
 
-  size_t VertsSize();
-  size_t FacesSize();
+  size_t VertsSize() const;
+  size_t FacesSize() const;
 
-  bool IsLoaded();
+  bool IsLoaded() const;
 
-  glm::vec3 Vertex(size_t i);
-  std::vector<int>& Face(size_t i);
+  glm::vec3 Vertex(size_t i) const;
+  const std::vector<int>& Face(size_t i) const;
 
   bool LoadOBJModel(std::string filePath);
 

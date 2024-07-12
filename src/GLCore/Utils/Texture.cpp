@@ -85,7 +85,7 @@ void TextureBuffer::SetPixel(size_t x, size_t y, Color col)
 
 void TextureBuffer::SetPixel(glm::vec2 p, Color col)
 {
-  SetPixel(p.x, p.y, col);
+  SetPixel(floor(p.x), floor(p.y), col);
 }
 
 }  // namespace GLCore
